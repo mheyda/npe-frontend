@@ -7,7 +7,6 @@ import { selectFilter } from '../../features/parks/parksSlice.js';
 
 export default function ExploreTiles( { parks, itemsPerPage } ) {
 
-    const filter = useSelector(selectFilter);
     const [currentItems, setCurrentItems] = useState(null);
     const [pageCount, setPageCount] = useState(0);
     // If an item offset and current page exists in storage, start with that

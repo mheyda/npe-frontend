@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer, useMap, Marker, Popup, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { Link } from 'react-router-dom';
 import ManualSlideshow from '../slideShows/ManualSlideshow';
 import './Map.css';
