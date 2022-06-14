@@ -1,0 +1,17 @@
+.weather-current-container {
+    position: relative;
+    height: 100%;
+}
+
+.weather-current-icon {
+    margin-bottom: -24px;
+}
+
+.weather-current-container i {
+    font-size: 40px;
+}
+
+.weather-current-temp-main {
+    font-size: 26px;
+    font-weight: 600;
+}

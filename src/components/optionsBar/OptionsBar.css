@@ -1,0 +1,34 @@
+.options-bar {
+    display: block;
+}
+
+@media (min-width: 576px) {
+    .options-bar {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+}
+
+.view-btn {
+    z-index: 1;
+    position: fixed;
+    bottom: 7%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    background-color: black;
+    border: none;
+    border-radius: 1000px;
+    padding: 15px 20px;
+    transition: 0.1s;
+}
+
+.view-btn:hover {
+    padding: 17px 22px;
+    transform: translate(-50%, 1px);
+}
+
+.view-btn i {
+    padding: 5px;
+}

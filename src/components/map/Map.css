@@ -1,0 +1,65 @@
+/* Map */
+.map-container { 
+    /* 150px is height of navbar... if that changes change this */
+    position: absolute;
+    top: 150px;
+    width: 100vw;
+    height: calc(100vh - 150px);
+    z-index: 0;
+}
+
+.leaflet-popup-content-wrapper {
+    background: none;
+    padding: 0;
+}
+
+.leaflet-popup-content {
+    width: 300px;
+    margin: 0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.leaflet-container a.leaflet-popup-close-button {
+    transform: translateY(5px);
+    color: white;
+    background-color: rgba(0, 0, 0, 0.4);
+    margin-right: 5px;
+    border-radius: 100%;
+}
+
+.leaflet-container a.leaflet-popup-close-button:hover {
+    color: white;
+}
+
+.popup-container {
+    cursor: pointer;
+}
+
+.popup-img-container {
+    height: 200px;
+    width: 100%;
+    background-color: #dedede;
+}
+
+.popup-content {
+    display: grid;
+    grid-template-columns: 75% 25%;
+    font-weight: 600;
+    background-color: white;
+    padding: 0.5rem;
+}
+
+.popup-content > p {
+    margin: 0;
+}
+
+.popup-states {
+    text-align: right;
+}
+
+@media (min-width: 768px) {
+    .explore {
+        flex-direction: row;
+    }
+}

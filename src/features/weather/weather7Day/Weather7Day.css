@@ -1,0 +1,19 @@
+.weather-7day-container {
+    height: 200px;
+    overflow-y: scroll;
+}
+
+.weather-7day-item {
+    display: grid;
+    grid-template-columns: minmax(30%, 1fr) minmax(30%, 1fr) minmax(30%, 1fr);
+    align-items: center;
+}
+
+.weather-7day-item:first-child {
+    text-align: left;
+}
+
+.weather-7day-icon {
+    margin-bottom: -20px;
+    height: 60px;
+}
