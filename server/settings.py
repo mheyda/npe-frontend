@@ -33,7 +33,7 @@ NPS_API_KEY = env.str('NPS_API_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1', '0.0.0.0', 'ec2-3-19-234-56.us-east-2.compute.amazonaws.com', 'mheyda-server.herokuapp.com', 'mheyda-server-test.herokuapp.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', 'ec2-3-19-234-56.us-east-2.compute.amazonaws.com']
 
 
 # Application definition

@@ -109,6 +109,8 @@ COPY . .
 EXPOSE 8000
 
 RUN python manage.py collectstatic
+RUN python manage.py makemigrations
+RUN python manage.py migrate
 
 CMD gunicorn -b 0.0.0.0:80 server.wsgi
 # CMD ["gunicorn", "--config", "gunicorn_config.py", "server.wsgi:application"]
