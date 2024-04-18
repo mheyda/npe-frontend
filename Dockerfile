@@ -110,6 +110,6 @@ EXPOSE 8000
 
 RUN python manage.py collectstatic
 
-CMD gunicorn -b 0.0.0.0:8000 server.wsgi
+CMD gunicorn -b 0.0.0.0:80 server.wsgi
 # CMD ["gunicorn", "--config", "gunicorn_config.py", "server.wsgi:application"]
 # CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
