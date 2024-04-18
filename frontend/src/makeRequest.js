@@ -1,7 +1,7 @@
 
 //const baseUrl = 'http://127.0.0.1:8000/'; // For development
 //const baseUrl = 'https://mheyda-server-test.herokuapp.com/' // For production testing
-const baseUrl = 'https://ec2-3-19-234-56.us-east-2.compute.amazonaws.com/'; // For production
+const baseUrl = 'https://marshallsapi.xyz/'; // For production
 let authorization = null;
 
 export const makeRequest = async (options) => {
