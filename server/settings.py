@@ -33,7 +33,7 @@ NPS_API_KEY = env.str('NPS_API_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', 'mheyda-server.herokuapp.com', 'mheyda-server-test.herokuapp.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', 'ec2-3-19-234-56.us-east-2.compute.amazonaws.com', 'mheyda-server.herokuapp.com', 'mheyda-server-test.herokuapp.com']
 
 
 # Application definition
@@ -118,9 +118,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'npe_db',
-        'USER': env.str('DATABASE_USER'),
-        'PASSWORD': env.str('DATABASE_PASSWORD'),
-        'HOST': 'localhost',
+        'USER': env.str('POSTGRES_USER'),
+        'PASSWORD': env.str('POSTGRES_PASSWORD'),
+        'HOST': env.str('DATABASE_HOST'),
         'PORT': '5432',
     }
     # "default": {
