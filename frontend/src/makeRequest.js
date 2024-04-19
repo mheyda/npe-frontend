@@ -1,6 +1,5 @@
 
 //const baseUrl = 'http://127.0.0.1:8000/'; // For development
-//const baseUrl = 'https://mheyda-server-test.herokuapp.com/' // For production testing
 const baseUrl = 'https://marshallsapi.xyz/'; // For production
 let authorization = null;
 
