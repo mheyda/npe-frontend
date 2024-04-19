@@ -10,6 +10,7 @@ node_modules
 
 # misc
 .env
+.env*
 .DS_Store
 .env.local
 .env.development.local
@@ -75,3 +76,5 @@ db.sqlite3
 
 # Sphinx documentation
 docs/_build/
+
+docker-compose.yml
