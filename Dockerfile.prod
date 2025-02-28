@@ -6,7 +6,7 @@
 FROM python:3.10 as builder
 
 # set work directory
-WORKDIR /usr/src/app
+WORKDIR /home/app/web
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
