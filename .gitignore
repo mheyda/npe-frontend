@@ -78,3 +78,6 @@ db.sqlite3
 docs/_build/
 
 docker-compose.yml
+
+/static
+/staticfiles
