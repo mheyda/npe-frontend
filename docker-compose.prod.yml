@@ -8,7 +8,7 @@ services:
     command: gunicorn server.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - .:/home/app/web
-      - static_volume:/home/app/web/staticfiles
+      - static:/home/app/web/static
       - media_volume:/home/app/web/mediafiles
     expose:
       - 8000
@@ -30,7 +30,7 @@ services:
       - 443:443
       - 80:80
     volumes:
-      - static_volume:/home/app/web/staticfiles
+      - static:/home/app/web/staticfiles
       - media_volume:/home/app/web/mediafiles
       - certs:/etc/nginx/certs
       - html:/usr/share/nginx/html
@@ -53,7 +53,7 @@ services:
 
 volumes:
   postgres_data:
-  static_volume:
+  static:
   media_volume:
   certs:
   html:
