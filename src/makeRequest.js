@@ -1,6 +1,6 @@
 
 //const baseUrl = 'http://127.0.0.1:8000/'; // For development
-const baseUrl = 'https://marshallcodes.com/'; // For production
+const baseUrl = 'https://api.marshallcodes.com/'; // For production
 let authorization = null;
 
 export const makeRequest = async (options) => {
