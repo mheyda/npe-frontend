@@ -6,7 +6,7 @@
 
 .fade-in-image {
   opacity: 0;
-  transition: opacity 0.2s ease-in;
+  transition: opacity 0.3s ease-in;
 }
 
 .fade-in-image.loaded {
