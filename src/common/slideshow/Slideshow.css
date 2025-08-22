@@ -11,6 +11,7 @@
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     height: 100%;
+    overflow: hidden;
     touch-action: pan-y;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE and Edge */

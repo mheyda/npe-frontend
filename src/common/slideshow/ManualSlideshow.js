@@ -25,12 +25,12 @@ export default function ManualSlideshow( { images } ) {
         const distance = touchStartX - touchEndX;
 
         if (Math.abs(distance) > minSwipeDistance) {
-            if (distance > 0) {
-            // swipe left
-                setImgIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
-                } else {
-                // swipe right
-                setImgIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+            if (distance > 0 && imgIndex < images.length - 1) {
+                // swipe left → next image (if not at end)
+                setImgIndex((prev) => prev + 1);
+            } else if (distance < 0 && imgIndex > 0) {
+                // swipe right → previous image (if not at start)
+                setImgIndex((prev) => prev - 1);
             }
         }
 
