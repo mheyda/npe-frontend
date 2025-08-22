@@ -3,3 +3,12 @@
     height: 100%;
     object-fit: cover;
 }
+
+.fade-in-image {
+  opacity: 0;
+  transition: opacity 0.2s ease-in;
+}
+
+.fade-in-image.loaded {
+  opacity: 1;
+}

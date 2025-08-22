@@ -9,7 +9,7 @@ export default function HeaderNav({ loggedIn, handleLogout, userNavOpen, setUser
         <nav className='header-nav-container'>
             <div className='header-nav'>
                 <Link className='header-nav-logo' to={'/'}>
-                    <img src={require('../../../assets/images/nps-logo.png')} alt={'National Park Service Logo'} />
+                    <img src={require('../../../assets/images/buffalo-head.png')} alt={'National Park Service Logo'} />
                 </Link>
                 <p className='header-nav-title'>National<br></br>Park<br></br>Explorer</p>
                 <SearchBar />

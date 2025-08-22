@@ -13,7 +13,13 @@ export default function Image({ src, alt, style, className }) {
 
     return (
         <div className={className} ref={ref} style={style} >
-            <img className='slide-img' src={inView ? src : null} alt={alt} onLoad={() => setIsLoading(false)} onError={() => setIsLoading(false)} style={isLoading ? { display: 'none' } : { display: 'block' }} />
+            <img 
+                className={`slide-img fade-in-image ${isLoading ? '' : 'loaded'}`}
+                src={inView ? src : null} 
+                alt={alt} 
+                onLoad={() => setIsLoading(false)}
+                onError={() => setIsLoading(false)}
+            />
         </div>
     );
 }

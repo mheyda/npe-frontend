@@ -11,6 +11,13 @@
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     height: 100%;
+    touch-action: pan-y;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.slides::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
 }
   
 .slide {
@@ -97,7 +104,7 @@
 
 /* Don't need button navigation */
 @media (pointer: coarse) {
-    .slideshow-btns i, .slideshow-dots {
+    .slideshow-btns i {
       display: none;
     }
     .slides {
