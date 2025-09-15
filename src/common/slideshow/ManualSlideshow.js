@@ -1,84 +1,185 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Image from '../../common/image/Image.js';
 import './Slideshow.css';
 
 
 export default function ManualSlideshow( { images } ) {
 
-    const [imgIndex, setImgIndex] = useState(0);
+    const imagesWithBlankStart = [{ url: '', altText: '' }, ...images];
+    const lastIndex = imagesWithBlankStart.length - 1;
+    const [imgIndex, setImgIndex] = useState(1);
     const [dotsStyling, setDotsStyling] = useState({ transform: 'translateX(0px)', transition: '0.8s' })
     const [touchStartX, setTouchStartX] = useState(null);
     const [touchEndX, setTouchEndX] = useState(null);
+    const [isTransitioning, setIsTransitioning] = useState(false);
+    const [dragOffset, setDragOffset] = useState(0);
+    const [isDragging, setIsDragging] = useState(false);
+    const [touchStartTime, setTouchStartTime] = useState(null);
 
-    const minSwipeDistance = 50;
+    const slideshowRef = useRef(null);
+
+    const safeSetImgIndex = (newIndex) => {
+        if (isTransitioning) return;
+
+        if (newIndex === 0) {
+            newIndex = 1; // Snap back to first real image
+        }
+        setIsTransitioning(true);
+        setImgIndex(newIndex);
+    };
 
     const onTouchStart = (e) => {
-    setTouchStartX(e.touches[0].clientX);
+        setTouchStartX(e.touches[0].clientX);
+        setTouchStartTime(Date.now());
+        setIsDragging(true);
     };
 
     const onTouchMove = (e) => {
-    setTouchEndX(e.touches[0].clientX);
+        if (touchStartX === null) return;
+        const currentX = e.touches[0].clientX;
+        const delta = currentX - touchStartX;
+        setTouchEndX(currentX);
+        setDragOffset(delta);
     };
 
     const onTouchEnd = () => {
-        if (!touchStartX || !touchEndX) return;
-        const distance = touchStartX - touchEndX;
+        if (touchStartX === null || touchEndX === null) {
+            setIsDragging(false);
+            return;
+        }
 
-        if (Math.abs(distance) > minSwipeDistance) {
-            if (distance > 0 && imgIndex < images.length - 1) {
-                // swipe left → next image (if not at end)
-                setImgIndex((prev) => prev + 1);
-            } else if (distance < 0 && imgIndex > 0) {
-                // swipe right → previous image (if not at start)
-                setImgIndex((prev) => prev - 1);
+        const distance =  touchEndX - touchStartX;
+        const time = Date.now() - touchStartTime;
+        const velocity = Math.abs(distance) / time; // px/ms
+
+        // Thresholds
+        const containerWidth = slideshowRef.current?.offsetWidth || 0;
+        const minDistance = containerWidth * 0.5; // 50% of slideshow width
+        const minVelocity = 0.3; // px/ms
+
+        const shouldSwipe =
+            Math.abs(distance) > minDistance || velocity > minVelocity;
+
+        if (shouldSwipe) {
+            if (distance < 0 && imgIndex < lastIndex) {
+                safeSetImgIndex(imgIndex + 1); // Swipe left to next
+            } else if (distance > 0 && imgIndex > 1) {
+                safeSetImgIndex(imgIndex - 1); // Swipe right to previous real image
+            } else if (imgIndex === 1 && distance > 0) {
+                safeSetImgIndex(1); // Swipe right on first image -> snap back
             }
         }
 
-        // reset
+        // Reset
         setTouchStartX(null);
         setTouchEndX(null);
+        setTouchStartTime(null);
+        setDragOffset(0);
+        setIsDragging(false);
     };
 
     useEffect(() => {
-        if (images.length > 4) {
-            if (imgIndex > 1 && imgIndex < images.length - 2) {
-                setDotsStyling({ transform: `translateX(calc(${-imgIndex  * 22}px + 44px))`, transition: '0.8s' });
-            } else if (imgIndex === 0) {
+        if (imagesWithBlankStart.length > 4) {
+            if (imgIndex > 2 && imgIndex < imagesWithBlankStart.length - 2) {
+                setDotsStyling({ transform: `translateX(calc(${-imgIndex * 22}px + 44px))`, transition: '0.8s' });
+            } else if (imgIndex === 1) {
                 setDotsStyling({ transform: 'translateX(0px)', transition: '0.8s' });
-            }
-            else if (imgIndex === images.length - 1) {
-                setDotsStyling({ transform: `translateX(calc(${-imgIndex * 22}px + 88px))`, transition: '0.8s'})
+            } else if (imgIndex === imagesWithBlankStart.length - 1) {
+                setDotsStyling({ transform: `translateX(calc(${-imgIndex * 22}px + 88px))`, transition: '0.8s' })
             }
         }
-    }, [imgIndex, images.length])
+    }, [imgIndex, imagesWithBlankStart.length]);
+
+    useEffect(() => {
+        if (!isTransitioning) return;
+
+        const timeout = setTimeout(() => {
+            setIsTransitioning(false);
+        }, 300);
+
+        return () => clearTimeout(timeout);
+    }, [isTransitioning]);
 
     return (
-        <div className='slideshow'>
+        <div className='slideshow' ref={slideshowRef}>
             <div className='slideshow-btns'>
-                <i className='slideshow-left fa-solid fa-circle-arrow-left' onClick={(e) => {imgIndex === 0 ? setImgIndex(images.length - 1) : setImgIndex(imgIndex - 1); e.preventDefault()}}></i>
-                <i className="slideshow-right fa-solid fa-circle-arrow-right" onClick={(e) => {imgIndex === images.length - 1 ? setImgIndex(0) : setImgIndex(imgIndex + 1); e.preventDefault()}}></i>
+                <i 
+                    className='slideshow-left fa-solid fa-circle-arrow-left' 
+                    onClick={(e) => {
+                        e.preventDefault();
+                        imgIndex === 1 ? safeSetImgIndex(lastIndex) : safeSetImgIndex(imgIndex - 1); 
+                    }}
+                ></i>
+                <i 
+                    className="slideshow-right fa-solid fa-circle-arrow-right" 
+                    onClick={(e) => {
+                        e.preventDefault();
+                        imgIndex === lastIndex ? safeSetImgIndex(1) : safeSetImgIndex(imgIndex + 1); 
+                    }}
+                ></i>
             </div>
             <div className="slides" 
                 onTouchStart={onTouchStart}
                 onTouchMove={onTouchMove}
                 onTouchEnd={onTouchEnd}
             >
-                {images.map((image, index) => (                    
-                    <Image 
-                        className='slide' 
-                        key={index} 
-                        src={image.url} 
-                        alt={image.altText} 
-                        style={{ transform: `translateX(${-imgIndex * 100}%)`, transition: '0.5s' }} 
-                        loading='lazy' 
-                    />
-                ))}
+                {imagesWithBlankStart.map((image, index) => {   
+
+                    const baseTranslate = -imgIndex * 100;
+                    let dragTranslate = 0;
+                    const containerWidth = slideshowRef.current?.offsetWidth || window.innerWidth;
+
+                    if (isDragging) {
+                        if (imgIndex === 1 && dragOffset > 0) {
+                            // Allow dragging right to show whitespace (blank slide)
+                            dragTranslate = (dragOffset / containerWidth) * 30; // softened drag
+                        } else if (imgIndex === lastIndex && dragOffset < 0) {
+                            // Allow dragging left beyond last slide (whitespace)
+                            dragTranslate = (dragOffset / containerWidth) * 30;
+                        } else {
+                            dragTranslate = (dragOffset / containerWidth) * 100;
+                        }
+                    }
+
+                    const translateX = baseTranslate + dragTranslate;
+
+                    if (index === 0) {
+                        return (
+                            <div
+                                key="blank-slide"
+                                className="slide"
+                                style={{
+                                    backgroundColor: 'inherit',
+                                    transform: `translateX(${translateX}%)`,
+                                    transition: isDragging ? 'none' : 'transform 0.3s ease'
+                                }}
+                            />
+                        );
+                    }
+                    return (                
+                        <Image 
+                            className='slide' 
+                            key={index} 
+                            src={image.url} 
+                            alt={image.altText} 
+                            style={{ transform: `translateX(${translateX}%)`, transition: isDragging ? 'none' : 'transform 0.3s ease' }} 
+                            loading='lazy' 
+                        />
+                    );
+                })}
             </div>
             <div className='slideshow-dots-container'>
                 <div className="slideshow-dots" style={dotsStyling} >
-                    {images.map((_, index) => (
-                        <div key={index} className={`slideshow-dot${imgIndex === index ? " active" : ""}`} onClick={() => {setImgIndex(index);}}></div>
-                    ))}
+                    {imagesWithBlankStart.map((_, index) => {
+                        if (index === 0) return null; // skip blank slide dot
+                        return (
+                            <div
+                                key={index}
+                                className={`slideshow-dot${imgIndex === index ? " active" : ""}`}
+                                onClick={() => safeSetImgIndex(index)}
+                            ></div>
+                        );
+                    })}
                 </div>
             </div>
         </div>
