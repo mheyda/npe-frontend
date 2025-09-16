@@ -48,47 +48,48 @@ export default function ManualSlideshow( { images } ) {
             return;
         }
 
-        const distance =  touchEndX - touchStartX;
+        const distance = touchEndX - touchStartX;
         const time = Date.now() - touchStartTime;
-        const velocity = Math.abs(distance) / time; // px/ms
+        const velocity = Math.abs(distance) / time;
 
-        // Thresholds
         const containerWidth = slideshowRef.current?.offsetWidth || 0;
-        const minDistance = containerWidth * 0.5; // 50% of slideshow width
-        const minVelocity = 0.3; // px/ms
+        const minDistance = containerWidth * 0.5;
+        const minVelocity = 0.3;
 
-        const shouldSwipe =
-            Math.abs(distance) > minDistance || velocity > minVelocity;
+        const shouldSwipe = Math.abs(distance) > minDistance || velocity > minVelocity;
+
+        setDragOffset(0);
+        setIsDragging(false);
 
         if (shouldSwipe) {
             if (distance < 0 && imgIndex < lastIndex) {
-                safeSetImgIndex(imgIndex + 1); // Swipe left to next
+                safeSetImgIndex(imgIndex + 1);
             } else if (distance > 0 && imgIndex > 1) {
-                safeSetImgIndex(imgIndex - 1); // Swipe right to previous real image
+                safeSetImgIndex(imgIndex - 1);
             } else if (imgIndex === 1 && distance > 0) {
-                safeSetImgIndex(1); // Swipe right on first image -> snap back
+                safeSetImgIndex(1); // snap back to first
             }
         }
 
-        // Reset
+        // Always reset touch tracking
         setTouchStartX(null);
         setTouchEndX(null);
         setTouchStartTime(null);
-        setDragOffset(0);
-        setIsDragging(false);
     };
 
     useEffect(() => {
-        if (imagesWithBlankStart.length > 4) {
-            if (imgIndex > 2 && imgIndex < imagesWithBlankStart.length - 2) {
-                setDotsStyling({ transform: `translateX(calc(${-imgIndex * 22}px + 44px))`, transition: '0.8s' });
-            } else if (imgIndex === 1) {
+        const realIndex = imgIndex - 1;
+
+        if (images.length > 4) {
+            if (realIndex > 1 && realIndex < images.length - 2) {
+                setDotsStyling({ transform: `translateX(calc(${-realIndex * 22}px + 44px))`, transition: '0.8s' });
+            } else if (realIndex === 0) {
                 setDotsStyling({ transform: 'translateX(0px)', transition: '0.8s' });
-            } else if (imgIndex === imagesWithBlankStart.length - 1) {
-                setDotsStyling({ transform: `translateX(calc(${-imgIndex * 22}px + 88px))`, transition: '0.8s' })
+            } else if (realIndex === images.length - 1) {
+                setDotsStyling({ transform: `translateX(calc(${-realIndex * 22}px + 88px))`, transition: '0.8s' });
             }
         }
-    }, [imgIndex, imagesWithBlankStart.length]);
+    }, [imgIndex, images.length]);
 
     useEffect(() => {
         if (!isTransitioning) return;
@@ -129,12 +130,10 @@ export default function ManualSlideshow( { images } ) {
                     let dragTranslate = 0;
                     const containerWidth = slideshowRef.current?.offsetWidth || window.innerWidth;
 
-                    if (isDragging) {
+                    if (isDragging && !isTransitioning) {
                         if (imgIndex === 1 && dragOffset > 0) {
-                            // Allow dragging right to show whitespace (blank slide)
-                            dragTranslate = (dragOffset / containerWidth) * 30; // softened drag
+                            dragTranslate = (dragOffset / containerWidth) * 30;
                         } else if (imgIndex === lastIndex && dragOffset < 0) {
-                            // Allow dragging left beyond last slide (whitespace)
                             dragTranslate = (dragOffset / containerWidth) * 30;
                         } else {
                             dragTranslate = (dragOffset / containerWidth) * 100;
@@ -151,7 +150,7 @@ export default function ManualSlideshow( { images } ) {
                                 style={{
                                     backgroundColor: 'inherit',
                                     transform: `translateX(${translateX}%)`,
-                                    transition: isDragging ? 'none' : 'transform 0.3s ease'
+                                    transition: isDragging ? 'none' : 'transform 0.25s cubic-bezier(0.25, 0.8, 0.5, 1)'
                                 }}
                             />
                         );
@@ -162,7 +161,7 @@ export default function ManualSlideshow( { images } ) {
                             key={index} 
                             src={image.url} 
                             alt={image.altText} 
-                            style={{ transform: `translateX(${translateX}%)`, transition: isDragging ? 'none' : 'transform 0.3s ease' }} 
+                            style={{ transform: `translateX(${translateX}%)`, transition: isDragging ? 'none' : 'transform 0.25s cubic-bezier(0.25, 0.8, 0.5, 1)' }} 
                             loading='lazy' 
                         />
                     );
