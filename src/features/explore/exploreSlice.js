@@ -32,7 +32,7 @@ export const exploreSlice = createSlice({
       stateCodes: [],
     },
     query: '',
-    view: 'list',
+    view: sessionStorage.getItem('preferredView') || 'list',
     parksStatus: 'idle',
     error: null,
   },
@@ -48,6 +48,7 @@ export const exploreSlice = createSlice({
     },
     setView: (state, action) => {
       state.view = action.payload.view;
+      sessionStorage.setItem('preferredView', action.payload.view);
     },
     filterParks: (state) => {
       // Reinitialize parks
