@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -29,6 +31,20 @@ export default function ExploreMap( { parks }) {
     const initialCenter = storedCenter ? JSON.parse(storedCenter) : [38, -97];
     const initialZoom = storedZoom ? parseInt(storedZoom, 10) : 3;
 
+    const [searchParams, setSearchParams] = useSearchParams();
+    const openPopup = searchParams.get('currentPark');
+    const markerRefs = useRef({});
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            if (openPopup && markerRefs.current[openPopup]) {
+                markerRefs.current[openPopup].openPopup();
+            }
+        }, 100);
+
+        return () => clearTimeout(timeout);
+    }, [openPopup, parks]);
+
     return (
         <MapContainer 
             className={'map-container'} 
@@ -53,7 +69,21 @@ export default function ExploreMap( { parks }) {
                     }
 
                     return (
-                        <Marker key={index} position={[park.latitude, park.longitude]}>
+                        <Marker 
+                            key={index} 
+                            position={[park.latitude, park.longitude]}
+                            ref={(ref) => {
+                                if (ref) markerRefs.current[park.name] = ref;
+                            }}
+                            eventHandlers={{
+                                click: () => {
+                                    setSearchParams({ currentPark: park.name });
+                                },
+                                popupclose: () => {
+                                    setSearchParams({});
+                                }
+                            }}
+                        >
                             <Popup className="popup-container">
                                 <Link
                                     to={`${park.fullName}/${park.parkCode}`}
