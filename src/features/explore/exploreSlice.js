@@ -1,6 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { makeRequest } from '../../makeRequest';
 
+const EXTRA_NATIONAL_PARKS = [
+  "Redwood National and State Parks",
+  "National Park of American Samoa"
+];
 
 export const fetchParks = createAsyncThunk('parks/fetchAllParks', async (options, { rejectWithValue }) => {
   
@@ -51,58 +55,95 @@ export const exploreSlice = createSlice({
       sessionStorage.setItem('preferredView', action.payload.view);
     },
     filterParks: (state) => {
-      // Reinitialize parks
-      state.mapParks = state.allParks;
-      state.listParks = state.allParks;
+      const allParks = state.allParks;
 
-      // Filter by query
+      let filteredMapParks = [...allParks];
+      let filteredListParks = [...allParks];
+
+      // ----- Filter by query -----
       if (state.query) {
-        const query = state.query;
-        let tokens = query.toLowerCase().split(' ').filter(token => token.trim() !== ''); // Tokenize the query
-        let queryRegex = new RegExp(tokens.join('|'), 'gim'); // Create regex
-        let parkStrings = []; // Create park strings to compare regex to... park properties that are used are specified
-        state.allParks.map((park, index) => {
-          parkStrings[index] = { id: park.id, string: '' };
-          for (let key in park) {
-            if (key === 'fullName' || key === 'description' || key === 'activities' || key === 'topics') { // Park properties to use for the search
-              if (park.hasOwnProperty(key) && park[key] !== '') {
-                parkStrings[index].string += park[key].toString().toLowerCase().trim() + ' ';
-              }
-            }
-          }
-          return true;
+        const tokens = state.query
+          .toLowerCase()
+          .split(' ')
+          .filter(token => token.trim() !== '');
+
+        const queryRegex = new RegExp(tokens.join('|'), 'gi');
+
+        const matches = allParks.filter(park => {
+          const searchableText = [
+            park.fullName,
+            park.description,
+            ...(park.activities || []).map(a => a.name),
+            ...(park.topics || []).map(t => t.name)
+          ]
+            .filter(Boolean)
+            .join(' ')
+            .toLowerCase();
+
+          return queryRegex.test(searchableText);
         });
-        const matches = parkStrings.filter(parkString => parkString.string.match(queryRegex)); // Park string objects that the search matched
-        state.listParks = matches.map(match => state.allParks.find(park => park.id === match.id));
-        state.mapParks = matches.map(match => state.allParks.find(park => park.id === match.id));
+
+        filteredMapParks = matches;
+        filteredListParks = matches;
       }
 
-      // Filter by state codes
+      // ----- Filter by state codes -----
       if (state.filter.stateCodes.length > 0) {
-        state.mapParks = state.mapParks.filter(park => park.states.split(',').some(element => state.filter.stateCodes.includes(element)));
-        state.listParks = state.listParks.filter(park => park.states.split(',').some(element => state.filter.stateCodes.includes(element)));
+        const normalizedStateCodes = state.filter.stateCodes.map(code => code.trim().toUpperCase());
+
+        filteredMapParks = filteredMapParks.filter(park =>
+          park.states.split(',').some(code => normalizedStateCodes.includes(code.trim()))
+        );
+
+        filteredListParks = filteredListParks.filter(park =>
+          park.states.split(',').some(code => normalizedStateCodes.includes(code.trim()))
+        );
       }
 
-      // Filter by designation
+      // ----- Filter by designation -----
       if (state.filter.designations.length > 0) {
-        state.mapParks = state.mapParks.filter(park => state.filter.designations.some(designation => park.designation.includes(designation)));
-        state.listParks = state.listParks.filter(park => state.filter.designations.some(designation => park.designation.includes(designation)));
+        const includesNationalPark = state.filter.designations.includes("National Park");
+
+        const otherDesignations = state.filter.designations.filter(d => d !== "National Park");
+
+        const designationMatch = (designation, filter) =>
+          designation?.toLowerCase().includes(filter.toLowerCase());
+
+        const filterByDesignation = park => {
+          const matchesNormalDesignation = otherDesignations.some(designation =>
+            designationMatch(park.designation, designation)
+          );
+
+          const isManuallyIncluded =
+            includesNationalPark && EXTRA_NATIONAL_PARKS.includes(park.fullName);
+
+          const matchesNationalPark =
+            includesNationalPark &&
+            designationMatch(park.designation, 'National Park');
+
+          return matchesNormalDesignation || matchesNationalPark || isManuallyIncluded;
+        };
+
+        filteredMapParks = filteredMapParks.filter(filterByDesignation);
+        filteredListParks = filteredListParks.filter(filterByDesignation);
+        console.log(filteredMapParks);
       }
 
-      // Sort parks
-      switch(state.sort) {
+      // ----- Sort -----
+      switch (state.sort) {
         case 'Alphabetical (A-Z)':
-          state.listParks = state.listParks.sort((a, b) => a.fullName.localeCompare(b.fullName));
+          filteredListParks.sort((a, b) => a.fullName.localeCompare(b.fullName));
           break;
         case 'Reverse Alphabetical (Z-A)':
-          state.listParks = state.listParks.sort((a, b) => b.fullName.localeCompare(a.fullName));
+          filteredListParks.sort((a, b) => b.fullName.localeCompare(a.fullName));
           break;
         default:
-          return;
+          break;
       }
 
-      // Only display x-number of parks at a time in list view
-      state.listParks = state.listParks.slice(0, state.interval);
+      // ----- Paginate -----
+      state.mapParks = filteredMapParks;
+      state.listParks = filteredListParks.slice(0, state.interval);
     },
     getNextParks: (state) => {
       state.mapParks.slice(state.listParks.length, state.listParks.length + state.interval).map(park => state.listParks.push(park))
