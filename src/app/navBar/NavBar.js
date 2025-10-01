@@ -38,7 +38,7 @@ export default function NavBar() {
     return (
         <>
             <HeaderNav loggedIn={loggedIn} handleLogout={handleLogout} userNavOpen={userNavOpen} setUserNavOpen={setUserNavOpen} />
-            <FooterNav loggedIn={loggedIn} handleLogout={handleLogout} />
+            <FooterNav loggedIn={loggedIn} handleLogout={handleLogout} userNavOpen={userNavOpen} setUserNavOpen={setUserNavOpen} />
         </>
     );
 }

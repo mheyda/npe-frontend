@@ -62,9 +62,32 @@
     background-color: inherit;
 }
 
+
+/* Hide user navigation menu on mobile */
+.header-nav-content {
+    display: none;
+}
+
 @media (min-width: 768px) {
     .header-nav-toggler {
         display: flex;
+    }
+    
+    /* User navigation menu */
+    .header-nav-content {
+        display: block;
+        position: absolute;
+        bottom: 1rem;
+        transform: translateY(100%);
+        right: 2rem;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 5px 29px 0px;
+        border: 1px solid var(--neutral-light);
+        border-radius: 10px;
+        overflow: hidden;
+        background-color: white;
+        width: 220px;
+        transition: transform 0.3s ease-in-out;
+        z-index: 1000;
     }
 }
 
@@ -77,30 +100,51 @@
     font-size: 24px;
 }
 
-/* User navigation menu */
-.header-nav-content {
-    position: absolute;
-    bottom: 1rem;
-    transform: translateY(100%);
-    right: 2rem;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 5px 29px 0px;
-    border: 1px solid var(--neutral-light);
-    border-radius: 10px;
-    overflow: hidden;
-    background-color: white;
-    width: 200px;
-}
-
 .header-nav-link {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     background-color: inherit;
     border: none;
     width: 100%;
     height: 3rem;
-    padding: 0 15px;
+    padding: 0 1rem;
+    font-size: 1rem;
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    gap: 0.75rem;
 }
 
 .header-nav-link:hover {
     font-weight: 700;
+    background-color: var(--neutral-light);
+}
+
+/* Left icon */
+.header-nav-link i:first-child {
+    font-size: 1.2rem;
+    width: 24px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+/* Text label */
+.header-nav-link span {
+    flex-grow: 1;
+    text-align: left;
+}
+
+/* Right chevron */
+.header-nav-link .chevron {
+    color: #999;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+/* Visual separator above My Profile */
+.header-nav-separator {
+    height: 1px;
+    background-color: var(--neutral-light);
+    margin: 0.5rem 0;
 }

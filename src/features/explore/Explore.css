@@ -133,30 +133,85 @@
 }
 
 .park-toggle-favorite {
-    position: absolute;
     top: 0;
     right: 0;
     margin-top: 10px;
     margin-right: 10px;
+}
+
+.park-toggle-visited {
+    top: 0;
+    right: 0;
+    margin-top: 10px;
+    margin-right: 42px;
+}
+
+.park-toggle-favorite,
+.park-toggle-visited {
+    position: absolute;
     background-color: transparent;
     border: none;
 }
 
-.park-toggle-favorite:hover > i {
-    font-size: 28px;
-    transform: translate(2px, -2px);
+.park-toggle-favorite:hover .fa-stack-2x:not(.selected),
+.park-toggle-visited:hover .fa-stack-2x:not(.selected) {
+    color: white; /* circle turns white */
 }
 
-.park-toggle-favorite > i {
-    color: rgba(0, 0, 0, 0.4);
-    font-size: 24px;
-    stroke: 1px white;
-    -webkit-text-stroke-width: 1px;
-    -webkit-text-stroke-color: white;
+/* HOVER: Icon changes to darker color for contrast */
+.park-toggle-favorite:hover .fa-stack-1x:not(.selected),
+.park-toggle-visited:hover .fa-stack-1x:not(.selected) {
+    color: #484848; /* dark icon on white */
 }
 
-.park-toggle-favorite > i.selected {
-    color: crimson;
+.park-toggle-favorite .fa-stack,
+.park-toggle-visited .fa-stack {
+    font-size: 13px;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+/* DEFAULT (UNTOGGLED) ICON COLORS */
+.park-toggle-favorite .fa-stack-2x,
+.park-toggle-visited .fa-stack-2x {
+    color: #d0d0d0; /* circle bg matches slideshow buttons */
+}
+
+.park-toggle-favorite .fa-stack-1x,
+.park-toggle-visited .fa-stack-1x {
+    color: black; /* icon on top */
+}
+
+.park-toggle-visited .fa-stack-2x.selected {
+    color: #1a5d1a; /* dark green circle */
+}
+
+.park-toggle-visited .fa-stack-1x.selected {
+    color: #9dff9d; /* light green check */
+}
+
+.park-toggle-favorite .fa-stack-2x.selected {
+    color: #0e3c61;
+}
+
+.park-toggle-favorite .fa-stack-1x.selected {
+    color: #4fc3ff;
+}
+
+.park-toggle-favorite:hover .fa-stack-2x.selected,
+.park-toggle-visited:hover .fa-stack-2x.selected {
+    filter: brightness(1.2);
+}
+
+.park-toggle-favorite:hover .fa-stack-1x.selected,
+.park-toggle-visited:hover .fa-stack-1x.selected {
+    filter: brightness(1.2);
+}
+
+.park-toggle-favorite .fa-stack-1x,
+.park-toggle-favorite .fa-stack-2x,
+.park-toggle-visited .fa-stack-1x,
+.park-toggle-visited .fa-stack-2x {
+    transition: color 0.2s ease-in-out, filter 0.2s ease-in-out;
 }
 
 @media (min-width: 576px) {

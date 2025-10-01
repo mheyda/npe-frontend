@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -14,6 +14,7 @@ import Explore from '../features/explore/Explore.js';
 import Authenticate from '../features/user/authenticate/Authenticate';
 import ExplorePark from '../features/explore/explorePark/ExplorePark';
 import Favorites from '../features/favorites/Favorites';
+import Visited from '../features/visited/Visited';
 import User from '../features/user/User';
 import NavBar from './navBar/NavBar';
 import NotFound from '../features/notFound/NotFound';
@@ -50,6 +51,7 @@ function App() {
         <Route path="/user" element={<User />} />
         <Route path="/user/:format" element={<Authenticate />} />
         <Route path="/user/favorites" element={<Favorites />} />
+        <Route path="/user/visited" element={<Visited />} />
         <Route path="/:parkFullName/:parkCode" element={<ExplorePark />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

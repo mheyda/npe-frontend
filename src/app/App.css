@@ -80,3 +80,11 @@ h1, h2, h3, h4, h5, h6 {
 .underline {
   text-decoration: underline;
 }
+
+.loading-spinner {
+  font-size: 2rem;
+  color: var(--neutral-dark);
+  display: block;
+  margin: 2rem auto;
+  text-align: center;
+}
