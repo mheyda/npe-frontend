@@ -85,3 +85,30 @@
         flex-direction: row;
     }
 }
+
+.search-result-string.map {
+    position: absolute;
+    left: 0;
+    margin-left: 60px;
+    margin-top: 10px;
+    background-color: white;
+    padding: 0.3rem 0.5rem;
+    border-radius: 10px;
+    border: 1px solid lightgray;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    z-index: 1;
+    max-width: 300px;
+    color: var(--neutral-dark);
+    font-size: 0.8rem;
+    font-weight: 400;
+    line-height: 1.2;
+}
+
+
+.filter-btn.map {
+    position: absolute;
+    right: 0;
+    margin-right: 10px;
+    margin-top: 10px;
+    z-index: 1;
+}

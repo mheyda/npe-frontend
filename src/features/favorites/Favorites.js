@@ -75,11 +75,13 @@ export default function Favorites() {
     return (
         <main>
             <h2 className='favorites-title'>My Saved Parks</h2>
-            <div className="image-container">
-                <img className="no-saved-parks-image" src="/images/mountain.png" alt="Mountains" />
-            </div>
-            <div className="empty-message">
-                Oops, you have nothing saved! <Link className="underline" to={'/'}>Click here</Link> to explore your national parks.
+            <div className='no-results'>
+                <img
+                    src={require('../../assets/images/tent.svg').default}
+                    alt="No parks found"
+                    className='no-results-img'
+                />
+                <p className="no-results-label">Oops, you have nothing saved!<br></br><Link className="underline" to={'/'}>Click here</Link> to explore.</p>
             </div>
         </main>
     )

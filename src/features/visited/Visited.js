@@ -75,11 +75,13 @@ export default function Visited() {
     return (
         <main>
             <h2 className='visited-title'>My Visited Parks</h2>
-            <div className="image-container">
-                <img className="no-saved-parks-image" src="/images/pines.png" alt="Pine Tree" />
-            </div>
-            <div className="empty-message">
-                Oops, you haven't visited any parks yet! <Link className="underline" to={'/'}>Explore here</Link> to help you get out there.
+            <div className='no-results'>
+                <img
+                    src={require('../../assets/images/tent.svg').default}
+                    alt="No parks found"
+                    className='no-results-img'
+                />
+                <p className="no-results-label">Oops, you haven't visited any parks yet!<br></br><Link className="underline" to={'/'}>Click here</Link> to explore.</p>
             </div>
         </main>
     );

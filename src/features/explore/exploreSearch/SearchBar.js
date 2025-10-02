@@ -26,8 +26,8 @@ export default function SearchBar() {
     return (
         <form onSubmit={handleSearch} className='search-bar'>
             <input type='text' id='queryTerm' value={currentQuery} onChange={(e) => setCurrentQuery(e.target.value)} placeholder='Search' />
-            {currentQuery !== '' ? <button className='clear-search-bar' type='button' onClick={() => setCurrentQuery('')}><i className="fa-solid fa-xmark"></i></button> : <></>}
-            <button id='submit-search' className='search-btn' type='submit'><i className="fa-solid fa-magnifying-glass"></i></button>
+            {currentQuery !== '' ? <button className='clear-search-bar' title="Clear search" type='button' onClick={() => {setCurrentQuery(''); dispatch(setQuery(''));}}><i className="fa-solid fa-xmark"></i></button> : <></>}
+            <button id='submit-search' title="Search" className='search-btn' type='submit'><i className="fa-solid fa-magnifying-glass"></i></button>
         </form>  
     );
 }

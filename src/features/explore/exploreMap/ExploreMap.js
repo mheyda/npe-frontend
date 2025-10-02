@@ -24,7 +24,7 @@ function formatStates(statesString) {
     return statesArray.join(', ');
 }
 
-export default function ExploreMap({ parks }) {
+export default function ExploreMap({ parks, searchMessage, filterMessage, filterCount, areFiltersEmpty, onOpenFilters }) {
     const favorites = useSelector(selectFavorites);
     const visited = useSelector(selectVisited);
     const dispatch = useDispatch();
@@ -74,83 +74,96 @@ export default function ExploreMap({ parks }) {
     };
 
     return (
-        <MapContainer 
-            className={'map-container'} 
-            center={initialCenter} 
-            zoom={initialZoom} 
-            scrollWheelZoom={true} 
-            maxBounds={[[-90, -360], [90, 360]]} 
-            maxBoundsViscosity={1}
-        >
-            <MapEventHandler onMoveEnd={onMoveEnd} />
-            <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            {parks && parks.length > 0 &&
-                parks.map((park, index) => {
-                    const states = formatStates(park.states);
+        <div style={{ position: 'relative' }}>
+            {/* Message and Filter Button/Box */}
+            <div className='search-result-string map'>
+                <div>{searchMessage}</div>
+                <div>{filterMessage}</div>
+            </div>
+            <button 
+                className={areFiltersEmpty ? 'filter-btn map' : 'filter-btn active map'} 
+                onClick={onOpenFilters}
+                >
+                Filter {filterCount > 0 ? `(${filterCount})` : ''}
+            </button>
+            <MapContainer 
+                className={'map-container'} 
+                center={initialCenter} 
+                zoom={initialZoom} 
+                scrollWheelZoom={true} 
+                maxBounds={[[-90, -360], [90, 360]]} 
+                maxBoundsViscosity={1}
+            >
+                <MapEventHandler onMoveEnd={onMoveEnd} />
+                <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                {parks && parks.length > 0 &&
+                    parks.map((park, index) => {
+                        const states = formatStates(park.states);
 
-                    return (
-                        <Marker 
-                            key={park.id} 
-                            position={[park.latitude, park.longitude]}
-                            ref={(ref) => {
-                                if (ref) markerRefs.current[park.name] = ref;
-                            }}
-                            eventHandlers={{
-                                click: () => onMarkerClick(park.name),
-                                popupclose: () => onPopupClose(),
-                            }}
-                        >
-                            <Popup className="popup-container">
-                                <Link
-                                    to={`${park.fullName}/${park.parkCode}`}
-                                    onClick={() => sessionStorage.setItem('currentPark', JSON.stringify(park))}
-                                >
-                                    <div className="popup-img-container">
-                                        <ManualSlideshow images={park.images} />
-                                    </div>
-                                    <div className="popup-content">
-                                        <p className="popup-title">{park.name}<br />{park.designation}</p>
-                                        <p className="popup-states">{states}</p>
-                                    </div>
-                                </Link>
-                                <button 
-                                    onClick={() => dispatch(toggleVisited({id: park.id}))} 
-                                    className='park-toggle-visited'
-                                    title={visited && visited.includes(park.id) ? "Unmark as visited" : "Mark as visited"}
-                                >
-                                    {visited && visited.includes(park.id) ?
-                                    <span className="fa-stack">
-                                        <i className="fa-solid fa-circle fa-stack-2x selected"></i>
-                                        <i className="fa-solid fa-check fa-stack-1x selected"></i>
-                                    </span> :
-                                    <span className="fa-stack">
-                                        <i className="fa-solid fa-circle fa-stack-2x"></i>
-                                        <i className="fa-solid fa-check fa-stack-1x"></i>
-                                    </span>}
-                                </button>
-                                <button 
-                                    onClick={() => dispatch(toggleFavorite({id: park.id}))} 
-                                    className='park-toggle-favorite'
-                                    title={favorites && favorites.includes(park.id) ? "Unsave this park" : "Save this park"}
-                                >
-                                    {favorites && favorites.includes(park.id) ?
-                                    <span className="fa-stack">
-                                        <i className="fa-solid fa-circle fa-stack-2x selected"></i>
-                                        <i className="fa-solid fa-bookmark fa-stack-1x selected"></i>
-                                    </span> :
-                                    <span className="fa-stack">
-                                        <i className="fa-solid fa-circle fa-stack-2x"></i>
-                                        <i className="fa-regular fa-bookmark fa-stack-1x"></i>
-                                    </span>}
-                                </button>
-                            </Popup>
-                        </Marker>
-                    );
-                })
-            }
-        </MapContainer>
+                        return (
+                            <Marker 
+                                key={park.id} 
+                                position={[park.latitude, park.longitude]}
+                                ref={(ref) => {
+                                    if (ref) markerRefs.current[park.name] = ref;
+                                }}
+                                eventHandlers={{
+                                    click: () => onMarkerClick(park.name),
+                                    popupclose: () => onPopupClose(),
+                                }}
+                            >
+                                <Popup className="popup-container">
+                                    <Link
+                                        to={`${park.fullName}/${park.parkCode}`}
+                                        onClick={() => sessionStorage.setItem('currentPark', JSON.stringify(park))}
+                                    >
+                                        <div className="popup-img-container">
+                                            <ManualSlideshow images={park.images} />
+                                        </div>
+                                        <div className="popup-content">
+                                            <p className="popup-title">{park.name}<br />{park.designation}</p>
+                                            <p className="popup-states">{states}</p>
+                                        </div>
+                                    </Link>
+                                    <button 
+                                        onClick={() => dispatch(toggleVisited({id: park.id}))} 
+                                        className='park-toggle-visited'
+                                        title={visited && visited.includes(park.id) ? "Unmark as visited" : "Mark as visited"}
+                                    >
+                                        {visited && visited.includes(park.id) ?
+                                        <span className="fa-stack">
+                                            <i className="fa-solid fa-circle fa-stack-2x selected"></i>
+                                            <i className="fa-solid fa-check fa-stack-1x selected"></i>
+                                        </span> :
+                                        <span className="fa-stack">
+                                            <i className="fa-solid fa-circle fa-stack-2x"></i>
+                                            <i className="fa-solid fa-check fa-stack-1x"></i>
+                                        </span>}
+                                    </button>
+                                    <button 
+                                        onClick={() => dispatch(toggleFavorite({id: park.id}))} 
+                                        className='park-toggle-favorite'
+                                        title={favorites && favorites.includes(park.id) ? "Unsave this park" : "Save this park"}
+                                    >
+                                        {favorites && favorites.includes(park.id) ?
+                                        <span className="fa-stack">
+                                            <i className="fa-solid fa-circle fa-stack-2x selected"></i>
+                                            <i className="fa-solid fa-bookmark fa-stack-1x selected"></i>
+                                        </span> :
+                                        <span className="fa-stack">
+                                            <i className="fa-solid fa-circle fa-stack-2x"></i>
+                                            <i className="fa-regular fa-bookmark fa-stack-1x"></i>
+                                        </span>}
+                                    </button>
+                                </Popup>
+                            </Marker>
+                        );
+                    })
+                }
+            </MapContainer>
+        </div>
     );
 }
