@@ -173,6 +173,7 @@ export const exploreSlice = createSlice({
 export const { setFilter, setSort, setQuery, setView, filterParks, getNextParks } = exploreSlice.actions;
 
 export const selectAllParks = (state) => state.explore.allParks;
+export const selectParksStatus = (state) => state.explore.parksStatus;
 export const selectMapParks = (state) => state.explore.mapParks;
 export const selectListParks = (state) => state.explore.listParks;
 export const selectInterval = (state) => state.explore.interval;

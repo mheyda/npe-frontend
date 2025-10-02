@@ -1,6 +1,6 @@
 import './Authenticate.css';
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import Login from './login/Login';
 import Signup from './signup/Signup';
@@ -13,6 +13,10 @@ export default function Authenticate() {
     const { format } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const searchParams = new URLSearchParams(location.search);
+    const nextPath = searchParams.get('next') || '/';
 
     const [checkedAuth, setCheckedAuth] = useState(false);
     const [username, setUsername] = useState('');
@@ -41,7 +45,7 @@ export default function Authenticate() {
             setPassword('');
         } else {
             localStorage.setItem('tokens', JSON.stringify(login.data));
-            window.location.href = '/';
+            window.location.href = nextPath;
         }
     }
 
@@ -73,13 +77,13 @@ export default function Authenticate() {
         const checkAuth = async () => {
             const loggedIn = await refreshTokens();
             if (loggedIn) {
-                navigate('/user');
+                navigate(nextPath);
             } else {
                 setCheckedAuth(true);
             }
         }
         checkAuth();
-    }, [dispatch]);
+    }, [dispatch, navigate, nextPath]);
 
     
     if (format === 'login' && checkedAuth) {

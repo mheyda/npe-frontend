@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import ManualSlideshow from '../../../common/slideshow/ManualSlideshow';
 import { useInView } from 'react-intersection-observer';
 import { selectFavorites, toggleFavorite } from '../../favorites/favoritesSlice';
+import { selectVisited, toggleVisited } from '../../visited/visitedSlice';
 import { useSelector, useDispatch } from 'react-redux';
 
 
@@ -11,6 +12,7 @@ export default function ExploreTile( { park } ) {
     let states = park.states.split(',').join(', ');
     const statesLength = park.states.split(',').length;
     const favorites = useSelector(selectFavorites);
+    const visited = useSelector(selectVisited);
 
     if (statesLength > 2) {
         states = states.split(',').slice(0, 3).join(', ') + ', & More'
@@ -39,10 +41,35 @@ export default function ExploreTile( { park } ) {
                         <p className='explore-tile-states'>{states}</p>
                     </div>
                 </Link>
-                <button onClick={() => dispatch(toggleFavorite({id: park.id}))} className='park-toggle-favorite'>
+                <button 
+                    onClick={() => dispatch(toggleVisited({id: park.id}))} 
+                    className='park-toggle-visited'
+                    title={visited && visited.includes(park.id) ? "Unmark as visited" : "Mark as visited"}
+                >
+                    {visited && visited.includes(park.id) ?
+                    <span className="fa-stack">
+                        <i className="fa-solid fa-circle fa-stack-2x selected"></i>
+                        <i className="fa-solid fa-check fa-stack-1x selected"></i>
+                    </span> :
+                    <span className="fa-stack">
+                        <i className="fa-solid fa-circle fa-stack-2x"></i>
+                        <i className="fa-solid fa-check fa-stack-1x"></i>
+                    </span>}
+                </button>
+                <button 
+                    onClick={() => dispatch(toggleFavorite({id: park.id}))} 
+                    className='park-toggle-favorite'
+                    title={favorites && favorites.includes(park.id) ? "Unsave this park" : "Save this park"}
+                >
                     {favorites && favorites.includes(park.id) ?
-                    <i className="fa-solid fa-heart selected"></i> :
-                    <i className="fa-solid fa-heart"></i>}
+                    <span className="fa-stack">
+                        <i className="fa-solid fa-circle fa-stack-2x selected"></i>
+                        <i className="fa-solid fa-bookmark fa-stack-1x selected"></i>
+                    </span> :
+                    <span className="fa-stack">
+                        <i className="fa-solid fa-circle fa-stack-2x"></i>
+                        <i className="fa-regular fa-bookmark fa-stack-1x"></i>
+                    </span>}
                 </button>
             </li>
         );

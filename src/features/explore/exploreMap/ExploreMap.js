@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaf
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import ManualSlideshow from '../../../common/slideshow/ManualSlideshow';
+import { selectVisited, toggleVisited } from '../../visited/visitedSlice';
 import { selectFavorites, toggleFavorite } from '../../favorites/favoritesSlice';
 import './ExploreMap.css';
 
@@ -25,6 +26,7 @@ function formatStates(statesString) {
 
 export default function ExploreMap({ parks }) {
     const favorites = useSelector(selectFavorites);
+    const visited = useSelector(selectVisited);
     const dispatch = useDispatch();
     const markerRefs = useRef({});
 
@@ -114,15 +116,35 @@ export default function ExploreMap({ parks }) {
                                         <p className="popup-states">{states}</p>
                                     </div>
                                 </Link>
-                                <button
-                                    onClick={() => dispatch(toggleFavorite({ id: park.id }))}
-                                    className="park-toggle-favorite"
+                                <button 
+                                    onClick={() => dispatch(toggleVisited({id: park.id}))} 
+                                    className='park-toggle-visited'
+                                    title={visited && visited.includes(park.id) ? "Unmark as visited" : "Mark as visited"}
                                 >
-                                    {favorites && favorites.includes(park.id) ? (
-                                        <i className="fa-solid fa-heart selected"></i>
-                                    ) : (
-                                        <i className="fa-solid fa-heart"></i>
-                                    )}
+                                    {visited && visited.includes(park.id) ?
+                                    <span className="fa-stack">
+                                        <i className="fa-solid fa-circle fa-stack-2x selected"></i>
+                                        <i className="fa-solid fa-check fa-stack-1x selected"></i>
+                                    </span> :
+                                    <span className="fa-stack">
+                                        <i className="fa-solid fa-circle fa-stack-2x"></i>
+                                        <i className="fa-solid fa-check fa-stack-1x"></i>
+                                    </span>}
+                                </button>
+                                <button 
+                                    onClick={() => dispatch(toggleFavorite({id: park.id}))} 
+                                    className='park-toggle-favorite'
+                                    title={favorites && favorites.includes(park.id) ? "Unsave this park" : "Save this park"}
+                                >
+                                    {favorites && favorites.includes(park.id) ?
+                                    <span className="fa-stack">
+                                        <i className="fa-solid fa-circle fa-stack-2x selected"></i>
+                                        <i className="fa-solid fa-bookmark fa-stack-1x selected"></i>
+                                    </span> :
+                                    <span className="fa-stack">
+                                        <i className="fa-solid fa-circle fa-stack-2x"></i>
+                                        <i className="fa-regular fa-bookmark fa-stack-1x"></i>
+                                    </span>}
                                 </button>
                             </Popup>
                         </Marker>

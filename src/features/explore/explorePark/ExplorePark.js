@@ -1,16 +1,22 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import getStateFullName from '../../../utilityFunctions/getStateFullName.js';
 import ManualSlideshow from '../../../common/slideshow/ManualSlideshow.js';
 import WeatherCurrent from '../../weather/weatherCurrent/WeatherCurrent.js';
 import WeatherForecast from '../../weather/weatherForecast/WeatherForecast.js';
 import WeatherFormatToggler from '../../weather/WeatherFormatToggler.js';
+import { selectVisited, toggleVisited } from '../../visited/visitedSlice';
+import { selectFavorites, toggleFavorite } from '../../favorites/favoritesSlice';
 import './ExplorePark.css';
 
 
 export default function ExplorePark() {
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const favorites = useSelector(selectFavorites);
+    const visited = useSelector(selectVisited);
     const park = JSON.parse(sessionStorage.getItem('currentPark'));
 
     useEffect(() => {
@@ -38,6 +44,36 @@ export default function ExplorePark() {
                     <p>{park.addresses[0].city}, {park.addresses[0].stateCode}</p>
                 </div>
                 <img src={park.images[0].url} onError={handleImageError} alt={park.images[0].altText} />
+                <button 
+                    onClick={() => dispatch(toggleVisited({id: park.id}))} 
+                    className='park-toggle-visited'
+                    title={visited && visited.includes(park.id) ? "Unmark as visited" : "Mark as visited"}
+                >
+                    {visited && visited.includes(park.id) ?
+                    <span className="fa-stack">
+                        <i className="fa-solid fa-circle fa-stack-2x selected"></i>
+                        <i className="fa-solid fa-check fa-stack-1x selected"></i>
+                    </span> :
+                    <span className="fa-stack">
+                        <i className="fa-solid fa-circle fa-stack-2x"></i>
+                        <i className="fa-solid fa-check fa-stack-1x"></i>
+                    </span>}
+                </button>
+                <button 
+                    onClick={() => dispatch(toggleFavorite({id: park.id}))} 
+                    className='park-toggle-favorite'
+                    title={favorites && favorites.includes(park.id) ? "Unsave this park" : "Save this park"}
+                >
+                    {favorites && favorites.includes(park.id) ?
+                    <span className="fa-stack">
+                        <i className="fa-solid fa-circle fa-stack-2x selected"></i>
+                        <i className="fa-solid fa-bookmark fa-stack-1x selected"></i>
+                    </span> :
+                    <span className="fa-stack">
+                        <i className="fa-solid fa-circle fa-stack-2x"></i>
+                        <i className="fa-regular fa-bookmark fa-stack-1x"></i>
+                    </span>}
+                </button>
             </header>
             <nav className='park-nav'>
                 <button className='park-nav-btn active' onClick={() => setActiveSection(0)}><i className="fa-solid fa-file-lines"></i>Overview</button>

@@ -16,8 +16,8 @@ import FilterPage from './exploreFilter/FilterPage.js';
 import { useEffect, useState } from 'react';
 import './Explore.css';
 import { useNavigate } from 'react-router-dom';
-import { getFavorites, setToggleStatus, selectToggleStatus } from '../favorites/favoritesSlice.js';
-
+import { getFavorites, selectToggleStatus as selectFavoritesToggleStatus, setToggleStatus as setFavoritesToggleStatus } from '../favorites/favoritesSlice.js';
+import { getVisited, selectToggleStatus as selectVisitedToggleStatus, setToggleStatus as setVisitedToggleStatus } from '../visited/visitedSlice.js';
 
 export default function Explore() {
     
@@ -30,7 +30,8 @@ export default function Explore() {
     const sort = useSelector(selectSort);
     const parksStatus = useSelector(state => state.explore.parksStatus);
     const error = useSelector(selectError);
-    const toggleStatus = useSelector(selectToggleStatus);
+    const favoritesToggleStatus = useSelector(selectFavoritesToggleStatus);
+    const visitedToggleStatus = useSelector(selectVisitedToggleStatus);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -45,18 +46,27 @@ export default function Explore() {
         }
     }).reduce((partialSum, a) => partialSum + a, 0)
 
-    // Make request to get user's favorites.
+    // Make request to get user's favorite and visited parks.
     useEffect(() => {
         dispatch(getFavorites());
-    }, [])
+        dispatch(getVisited());
+    }, [dispatch])
 
-    // If there was an error toggling a park, redirect to login page
+    // If there was an error toggling a saved park, redirect to login page
     useEffect(() => {
-        if (toggleStatus === 'failed') {
+        if (favoritesToggleStatus === 'failed') {
             navigate('/user/login/');
-            dispatch(setToggleStatus('idle'));
+            dispatch(setFavoritesToggleStatus('idle'));
         }
-    }, [toggleStatus])
+    }, [favoritesToggleStatus, navigate, dispatch])
+
+    // If there was an error toggling a visited park, redirect to login page
+    useEffect(() => {
+        if (visitedToggleStatus === 'failed') {
+            navigate('/user/login/');
+            dispatch(setVisitedToggleStatus('idle'));
+        }
+    }, [visitedToggleStatus, navigate, dispatch]);
 
     // If an error occured while fetching the parks
     if (error) {
@@ -120,7 +130,9 @@ export default function Explore() {
         }
         else if (parksStatus === 'idle' || parksStatus === 'loading') {
             return (
-                <main>Loading parks...</main>
+                <main>
+                    <i className="fa-solid fa-spinner fa-spin loading-spinner" aria-hidden="true"></i>
+                </main>
             );
         }
         else if (parksStatus === 'succeeded') {
