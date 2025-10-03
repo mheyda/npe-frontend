@@ -148,3 +148,106 @@
     background-color: var(--neutral-light);
     margin: 0.5rem 0;
 }
+
+
+
+
+/* Login prompt for unauthenticated users */
+.header-nav-login-prompt {
+    padding: 1rem;
+    text-align: center;
+}
+
+.header-nav-prompt-heading {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.header-nav-prompt-message {
+    font-size: 0.95rem;
+    color: var(--neutral-dark);
+    margin-bottom: 1rem;
+}
+
+.header-nav-login-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.btn-login-cancel {
+    background: none;
+    border: none;
+    color: var(--neutral-dark);
+    text-decoration: underline;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.header-nav-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 2000;
+}
+
+/* Modal box */
+.header-nav-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border-radius: 10px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 400px;
+  z-index: 2001;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+  text-align: center;
+}
+
+/* Modal heading */
+.header-nav-modal-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 0.75rem;
+}
+
+/* Modal message */
+.header-nav-modal-message {
+  font-size: 1rem;
+  color: var(--neutral-dark);
+  margin-bottom: 1rem;
+}
+
+/* Modal buttons */
+.header-nav-modal-buttons {
+  display: flex;
+  flex-direction: column;
+}
+
+.header-nav-modal-login-btn {
+  background-color: var(--primary);
+  color: white;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  text-align: center;
+}
+
+.header-nav-modal-login-btn:hover {
+  background-color: var(--primary-dark);
+}
+
+.header-nav-modal-cancel-btn {
+  background: none;
+  border: none;
+  color: var(--neutral-dark);
+  text-decoration: underline;
+  font-size: 0.9rem;
+  cursor: pointer;
+}

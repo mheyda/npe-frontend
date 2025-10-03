@@ -85,7 +85,7 @@ export default function Explore() {
                     <main className='explore-container'>
                         <div className='filter-bar'>
                             <div className='search-result-string'>
-                                <div>{searchMessage}</div>
+                                <div title={searchMessage}>{searchMessage}</div>
                                 <div>{filterMessage}</div>
                             </div>
                             <button 

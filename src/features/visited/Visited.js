@@ -80,6 +80,8 @@ export default function Visited() {
                     src={require('../../assets/images/tent.svg').default}
                     alt="No parks found"
                     className='no-results-img'
+                    height='600'
+                    width='400'
                 />
                 <p className="no-results-label">Oops, you haven't visited any parks yet!<br></br><Link className="underline" to={'/'}>Click here</Link> to explore.</p>
             </div>

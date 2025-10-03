@@ -1,17 +1,28 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Link } from "react-router-dom";
 import SearchBar from '../../../features/explore/exploreSearch/SearchBar.js';
+import capitalizeFirstLetters from '../../../utilityFunctions/capitalizeFirstLetters.js';
 import './HeaderNav.css';
 
 
 export default function HeaderNav({ loggedIn, handleLogout, userNavOpen, setUserNavOpen }) {
 
     const menuRef = useRef();
+    const toggleButtonRef = useRef();
+    const [navPromptTarget, setNavPromptTarget] = useState(null);
 
     useEffect(() => {
         function handleClickOutside(event) {
-            if (menuRef.current && !menuRef.current.contains(event.target)) {
+            if (
+                menuRef.current &&
+                !menuRef.current.contains(event.target) &&
+                toggleButtonRef.current &&
+                !toggleButtonRef.current.contains(event.target) &&
+                !event.target.closest('.header-nav-modal') &&
+                !event.target.closest('.header-nav-modal-overlay')
+            ) {
                 setUserNavOpen(false);
+                setNavPromptTarget(null);
             }
         }
 
@@ -21,7 +32,6 @@ export default function HeaderNav({ loggedIn, handleLogout, userNavOpen, setUser
             document.removeEventListener('mousedown', handleClickOutside);
         }
 
-        // Cleanup
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
@@ -35,7 +45,12 @@ export default function HeaderNav({ loggedIn, handleLogout, userNavOpen, setUser
                 </Link>
                 <p className='header-nav-title'>National<br></br>Park<br></br>Explorer</p>
                 <SearchBar />
-                <button className='header-nav-toggler' type='button' onClick={() => setUserNavOpen(prev => !prev)} >
+                <button
+                    ref={toggleButtonRef}
+                    className='header-nav-toggler'
+                    type='button'
+                    onClick={() => setUserNavOpen(prev => !prev)}
+                >
                     <i className="fa-solid fa-bars"></i>
                     <i className="fa-solid fa-user"></i>
                 </button>
@@ -43,37 +58,37 @@ export default function HeaderNav({ loggedIn, handleLogout, userNavOpen, setUser
                     <div ref={menuRef} className='header-nav-content'>
                         {loggedIn ? (
                             <>
-                            <Link onClick={() => setUserNavOpen(false)} className='header-nav-link' to={'/'}>
-                                <i className="fa-solid fa-magnifying-glass"></i>
-                                <span>Explore</span>
-                                <i className="fa-solid fa-chevron-right chevron"></i>
-                            </Link>
+                                <Link onClick={() => setUserNavOpen(false)} className='header-nav-link' to={'/'}>
+                                    <i className="fa-solid fa-magnifying-glass"></i>
+                                    <span>Explore</span>
+                                    <i className="fa-solid fa-chevron-right chevron"></i>
+                                </Link>
 
-                            <Link onClick={() => setUserNavOpen(false)} className='header-nav-link' to={'user/favorites'}>
-                                <i className="fa-regular fa-bookmark"></i>
-                                <span>Saved Parks</span>
-                                <i className="fa-solid fa-chevron-right chevron"></i>
-                            </Link>
+                                <Link onClick={() => setUserNavOpen(false)} className='header-nav-link' to={'user/favorites'}>
+                                    <i className="fa-regular fa-bookmark"></i>
+                                    <span>Saved Parks</span>
+                                    <i className="fa-solid fa-chevron-right chevron"></i>
+                                </Link>
 
-                            <Link onClick={() => setUserNavOpen(false)} className='header-nav-link' to={'user/visited'}>
-                                <i className="fa-regular fa-circle-check"></i>
-                                <span>Visited Parks</span>
-                                <i className="fa-solid fa-chevron-right chevron"></i>
-                            </Link>
+                                <Link onClick={() => setUserNavOpen(false)} className='header-nav-link' to={'user/visited'}>
+                                    <i className="fa-regular fa-circle-check"></i>
+                                    <span>Visited Parks</span>
+                                    <i className="fa-solid fa-chevron-right chevron"></i>
+                                </Link>
 
-                            <div className="header-nav-separator"></div>
+                                <div className="header-nav-separator"></div>
 
-                            <Link onClick={() => setUserNavOpen(false)} className='header-nav-link' to={'user'}>
-                                <i className="fa-regular fa-user"></i>
-                                <span>My Profile</span>
-                                <i className="fa-solid fa-chevron-right chevron"></i>
-                            </Link>
+                                <Link onClick={() => setUserNavOpen(false)} className='header-nav-link' to={'user'}>
+                                    <i className="fa-regular fa-user"></i>
+                                    <span>My Profile</span>
+                                    <i className="fa-solid fa-chevron-right chevron"></i>
+                                </Link>
 
-                            <button onClick={handleLogout} className='header-nav-link'>
-                                <i className="fa-solid fa-right-from-bracket"></i>
-                                <span>Log out</span>
-                                <i className="fa-solid fa-chevron-right chevron"></i>
-                            </button>
+                                <button onClick={handleLogout} className='header-nav-link'>
+                                    <i className="fa-solid fa-right-from-bracket"></i>
+                                    <span>Log out</span>
+                                    <i className="fa-solid fa-chevron-right chevron"></i>
+                                </button>
                             </>
                         ) : (
                             <>
@@ -83,39 +98,39 @@ export default function HeaderNav({ loggedIn, handleLogout, userNavOpen, setUser
                                     <i className="fa-solid fa-chevron-right chevron"></i>
                                 </Link>
 
-                                <Link 
-                                    onClick={() => setUserNavOpen(false)} 
+                                <button
+                                    onClick={() => setNavPromptTarget('saved')}
                                     className='header-nav-link'
-                                    to={`/user/login?next=${encodeURIComponent('/user/favorites')}`}
                                 >
                                     <i className="fa-regular fa-bookmark"></i>
                                     <span>Saved Parks</span>
                                     <i className="fa-solid fa-chevron-right chevron"></i>
-                                </Link>
+                                </button>
 
-                                <Link 
-                                    onClick={() => setUserNavOpen(false)} 
-                                    className='header-nav-link' 
-                                    to={`/user/login?next=${encodeURIComponent('/user/visited')}`}
+                                <button
+                                    onClick={() => setNavPromptTarget('visited')}
+                                    className='header-nav-link'
                                 >
                                     <i className="fa-regular fa-circle-check"></i>
                                     <span>Visited Parks</span>
                                     <i className="fa-solid fa-chevron-right chevron"></i>
-                                </Link>
+                                </button>
 
                                 <div className="header-nav-separator"></div>
 
-                                <Link 
+                                <Link
                                     className='header-nav-link'
-                                    to={`user/login`}
-                                    onClick={() => setUserNavOpen(false)}>
+                                    to={`/user/login`}
+                                    onClick={() => setUserNavOpen(false)}
+                                >
                                     <i className="fa-solid fa-right-to-bracket"></i>
                                     <span>Log in</span>
                                     <i className="fa-solid fa-chevron-right chevron"></i>
                                 </Link>
-                                <Link 
+
+                                <Link
                                     className='header-nav-link'
-                                    to={`/user/signup`} 
+                                    to={`/user/signup`}
                                     onClick={() => setUserNavOpen(false)}
                                 >
                                     <i className="fa-solid fa-user-plus"></i>
@@ -127,6 +142,40 @@ export default function HeaderNav({ loggedIn, handleLogout, userNavOpen, setUser
                     </div>
                 }
             </div>
+
+            {navPromptTarget && (
+                <>
+                    <div
+                        className="header-nav-modal-overlay"
+                        onClick={() => setNavPromptTarget(null)}
+                    ></div>
+                    <div className="header-nav-modal">
+                        <h3 className="header-nav-modal-title">
+                            {capitalizeFirstLetters(navPromptTarget)} Parks
+                        </h3>
+                        <p className="header-nav-modal-message">
+                            Log in to view or edit your {navPromptTarget} parks
+                        </p>
+                        <div className="header-nav-modal-buttons">
+                            <Link
+                                to={`/user/login?next=${navPromptTarget === 'saved' ? '/user/favorites' : '/user/visited'}`}
+                                className="btn-login"
+                                onClick={() => {
+                                    setNavPromptTarget(null);
+                                }}
+                            >
+                                Log in
+                            </Link>
+                            <button
+                                className="header-nav-modal-cancel-btn"
+                                onClick={() => setNavPromptTarget(null)}
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </>
+            )}
         </nav>
     );
 }

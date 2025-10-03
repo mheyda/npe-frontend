@@ -23,12 +23,12 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    border-top: 1px solid var(--neutral-light);
 }
 
 .footer-nav i {
-    color: black;
+    color: var(--neutral-medium);
     font-size: 24px;
-    line-height: 1;
 }
 
 .footer-nav-link {
@@ -38,15 +38,28 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    flex-grow: 1;
     height: 100%;
+    flex: 1 0 0%;
     padding: 0;
     margin: 0;
     text-decoration: none;
+    line-height: 1;
 }
 
 .footer-nav span {
-    font-size: 0.8rem;
+    padding-top: 4px;
+    font-size: 0.7rem;
+}
+
+.footer-nav-link.active i {
+  color: var(--primary);
+  transition: color 0.3s ease;
+}
+
+.footer-nav-link.active span {
+  color: var(--primary);
+  font-weight: 700;
+  transition: color 0.3s ease;
 }
 
 .footer-nav-menu-content {
@@ -70,8 +83,8 @@
     transform: translateY(0);
 }
 
-.footer-nav-menu-content a,
-.footer-nav-menu-content button {
+.footer-nav-menu-content .logged-in a,
+.footer-nav-menu-content .logged-in button {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -82,7 +95,7 @@
     font-size: 1rem;
     border: none;
     background: none;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--neutral-light);
     color: inherit;
 }
 
@@ -102,7 +115,7 @@
 
 /* Right chevron */
 .footer-nav-menu-content .chevron {
-    color: #999;
+    color: var(--neutral-dark);
     font-size: 0.9rem;
 }
 
@@ -122,4 +135,35 @@
   inset: 0;
   background-color: rgba(0,0,0,0.3);
   z-index: 999;
+}
+
+.footer-nav-menu-heading {
+    padding: 0.75rem 1rem;
+}
+
+.footer-nav-close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--neutral-dark);
+    z-index: 1001;
+    cursor: pointer;
+}
+
+.footer-nav-close-btn:hover {
+    color: var(--primary);
+}
+
+.login-prompt-message {
+    font-size: 1rem;
+    padding: 0 1rem;
+    color: var(--neutral-dark);
+}
+
+.login-prompt-btn {
+    text-align: center;
+    padding: 2rem 0 1rem 0;
 }

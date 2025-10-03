@@ -77,7 +77,7 @@ export default function ExploreMap({ parks, searchMessage, filterMessage, filter
         <div style={{ position: 'relative' }}>
             {/* Message and Filter Button/Box */}
             <div className='search-result-string map'>
-                <div>{searchMessage}</div>
+                {searchMessage && <div>{searchMessage}</div>}
                 <div>{filterMessage}</div>
             </div>
             <button 

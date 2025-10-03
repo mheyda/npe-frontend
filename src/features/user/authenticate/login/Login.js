@@ -38,7 +38,7 @@ export default function Login({
                         </button>
                     </div>
                 </label>
-                <button type='submit'>Log in</button>
+                <button class="btn-login" type='submit'>Log in</button>
             </form>
             <p className='authenticate-toggle-format'>
                 <span>Don't have an account yet? </span>

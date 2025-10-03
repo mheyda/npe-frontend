@@ -1,0 +1,30 @@
+.not-found-container {
+  display: flex;
+  align-items: top;
+  justify-content: center;
+  min-height: 80vh;
+  text-align: center;
+  padding: 2rem;
+}
+
+.not-found-image {
+  max-height: 50vh;
+  width: 80vw;
+}
+
+.not-found-home-link {
+  display: inline-block;
+  margin-top: 1rem;
+  color: var(--primary);
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.not-found-heading {
+    
+}
+
+.not-found-message {
+    padding: 0.5rem 0;
+    font-weight: 500;
+}
