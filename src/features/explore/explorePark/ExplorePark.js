@@ -37,7 +37,12 @@ export default function ExplorePark() {
     return (
         <>
             <header className='park-header'>
-                <button className='park-back-btn' onClick={(e) => {e.preventDefault(); navigate(-1)}} ><i className="fa-solid fa-circle-chevron-left"></i></button>
+                <button className='park-back-btn' onClick={(e) => {e.preventDefault(); navigate(-1)}} >
+                    <span className="fa-stack">
+                        <i className="fa-solid fa-circle fa-stack-2x"></i>
+                        <i className="fa-solid fa-chevron-left fa-stack-1x"></i>
+                    </span>
+                </button>
                 <div className='park-header-title'>
                     <h1>{park.name}</h1>
                     <h1>{park.designation}</h1>

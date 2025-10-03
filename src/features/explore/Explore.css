@@ -105,15 +105,15 @@
 .park-toggle-favorite {
     top: 0;
     right: 0;
-    margin-top: 23px;
+    margin-top: 16px;
     margin-right: 10px;
 }
 
 .park-toggle-visited {
     top: 0;
     right: 0;
-    margin-top: 23px;
-    margin-right: 65px;
+    margin-top: 16px;
+    margin-right: 60px;
 }
 
 .park-toggle-favorite,
@@ -152,12 +152,12 @@
         top: 0;
         right: 0;
         margin-top: 10px;
-        margin-right: 54px;
+        margin-right: 46px;
     }
     
     .park-toggle-favorite .fa-stack,
     .park-toggle-visited .fa-stack {
-        font-size: 18px;
+        font-size: 16px;
     }
 }
 

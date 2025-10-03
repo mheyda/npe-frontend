@@ -41,18 +41,43 @@
   z-index: 1;
   color: rgb(208, 208, 208, 0.8);
   border-radius: 100%;
-  font-size: 40px;
-  margin-left: 15px;
-  margin-top: 15px;
+  font-size: 20px;
+  margin-left: 10px;
+  margin-top: 18px;
   background-color: transparent;
   border: none;
+  cursor: pointer;
+  padding: 0;
 }
+
+.park-back-btn .fa-stack {
+  transition: color 0.2s ease-in-out, filter 0.2s ease-in-out;
+}
+
+/* Default colors */
+.park-back-btn .fa-stack-2x {
+  color: rgba(208, 208, 208, 0.8); /* gray circle bg */
+}
+
+.park-back-btn .fa-stack-1x {
+  color: black; /* black chevron */
+}
+
+/* Hover styles */
+.park-back-btn:hover .fa-stack-2x {
+  color: white; /* circle turns white */
+}
+
+.park-back-btn:hover .fa-stack-1x {
+  color: #484848; /* chevron turns dark gray */
+}
+
 
 @media (min-width: 768px) {
   .park-back-btn {
-    font-size: 32px;
+    font-size: 18px;
     margin-left: 15px;
-    margin-top: 12px;
+    margin-top: 15px;
   }
 }
 

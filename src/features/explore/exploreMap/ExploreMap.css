@@ -48,10 +48,12 @@
     width: 32px;
     height: 32px;
     line-height: 30px;
+    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, filter 0.2s ease-in-out;
 }
 
 .leaflet-container a.leaflet-popup-close-button:hover {
     background-color: white;
+    color: #484848; /* match hover color of other icons */
 }
 
 .popup-container {
@@ -69,7 +71,7 @@
     top: 0;
     right: 0;
     margin-top: 10px;
-    margin-right: 50px;
+    margin-right: 46px;
 }
 
 .popup-container .park-toggle-favorite .fa-stack,

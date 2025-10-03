@@ -48,18 +48,20 @@
 
 .footer-nav span {
     padding-top: 4px;
-    font-size: 0.7rem;
+    font-size: 0.9rem;
+}
+
+.footer-nav-link.active {
+    border-top: 3px solid var(--primary);
+    padding-bottom: 3px;
 }
 
 .footer-nav-link.active i {
   color: var(--primary);
-  transition: color 0.3s ease;
 }
 
 .footer-nav-link.active span {
   color: var(--primary);
-  font-weight: 700;
-  transition: color 0.3s ease;
 }
 
 .footer-nav-menu-content {
@@ -138,13 +140,13 @@
 }
 
 .footer-nav-menu-heading {
-    padding: 0.75rem 1rem;
+    padding: 0.75rem 1rem 1.5rem 1rem;
 }
 
 .footer-nav-close-btn {
     position: absolute;
-    top: 1rem;
-    right: 1rem;
+    top: 1.5rem;
+    right: 2rem;
     background: none;
     border: none;
     font-size: 1.5rem;
