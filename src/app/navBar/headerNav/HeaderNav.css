@@ -1,7 +1,7 @@
 /* Header navigation */
 .header-nav-container {
     background-color: white;
-    z-index: 2;
+    z-index: 1001;
     border-bottom: 5px solid var(--neutral-dark);
     position: -webkit-sticky;
 	position: sticky;
@@ -87,7 +87,7 @@
         background-color: white;
         width: 220px;
         transition: transform 0.3s ease-in-out;
-        z-index: 1000;
+        z-index: 1;
     }
 }
 

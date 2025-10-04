@@ -10,6 +10,7 @@
     border-radius: 1000px;
     padding: 15px 20px;
     transition: 0.1s;
+    z-index: 401;
 }
 
 @media (min-width: 768px) {
