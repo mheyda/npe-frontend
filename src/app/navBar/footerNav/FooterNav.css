@@ -47,7 +47,7 @@
 }
 
 .footer-nav span {
-    padding-top: 4px;
+    padding-top: 3px;
     font-size: 0.9rem;
 }
 
@@ -168,4 +168,57 @@
 .login-prompt-btn {
     text-align: center;
     padding: 2rem 0 1rem 0;
+}
+
+/* Skeleton base */
+.skeleton {
+  background-color: #ddd;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Skeleton shimmer animation */
+.skeleton::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150px;
+  height: 100%;
+  width: 150px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(300px);
+  }
+}
+
+/* Skeleton sizes */
+.skeleton-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin-bottom: 6px;
+}
+
+.skeleton-text {
+  width: 36px;
+  height: 16px;
+  border-radius: 4px;
+}
+
+/* Skeleton nav button */
+.skeleton-nav-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;  
+  justify-content: center;
+  padding: 8px 0;
+  flex: 1 0 0%;        
+  box-sizing: border-box;
 }

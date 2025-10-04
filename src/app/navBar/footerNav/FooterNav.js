@@ -3,10 +3,27 @@ import { Link, useLocation } from "react-router-dom";
 import capitalizeFirstLetters from '../../../utilityFunctions/capitalizeFirstLetters';
 import './FooterNav.css';
 
-export default function FooterNav({ loggedIn, handleLogout, userNavOpen, setUserNavOpen }) {
+export default function FooterNav({ loggedIn, authLoading, handleLogout, userNavOpen, setUserNavOpen }) {
 
     const location = useLocation();
     const [navPromptTarget, setNavPromptTarget] = useState(null);
+
+    const skeletonButtons = [1, 2, 3, 4].map((_, i) => (
+        <div key={i} className="skeleton-nav-button" aria-hidden="true">
+            <div className="skeleton skeleton-icon"></div>
+            <div className="skeleton skeleton-text"></div>
+        </div>
+    ));
+
+    if (authLoading) {
+        return (
+            <nav className='footer-nav-container'>
+                <div className='footer-nav'>
+                {skeletonButtons}
+                </div>
+            </nav>
+        );
+    }
 
     return (
         <nav className='footer-nav-container'>
