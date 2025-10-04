@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { makeRequest } from '../../makeRequest';
+import { AuthService } from '../../services/AuthService';
 
 const EXTRA_NATIONAL_PARKS = [
   "Redwood National and State Parks",
@@ -8,7 +8,7 @@ const EXTRA_NATIONAL_PARKS = [
 
 export const fetchParks = createAsyncThunk('parks/fetchAllParks', async (options, { rejectWithValue }) => {
   
-  const parks = await makeRequest({
+  const parks = await AuthService.makeRequest({
     urlExtension: 'getParks?start=0&limit=500&sort=fullName&stateCode=',
     method: 'GET',
     body: null,

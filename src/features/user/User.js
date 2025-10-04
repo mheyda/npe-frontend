@@ -1,7 +1,7 @@
 import './User.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { makeRequest } from '../../makeRequest';
+import { AuthService } from '../../services/AuthService';
 
 
 export default function User() {
@@ -11,16 +11,13 @@ export default function User() {
     const [checkedAuth, setCheckedAuth] = useState(false);
     const [editingUserInfo, setEditingUserInfo] = useState(false);
     const navigate = useNavigate();
+    const firstRender = useRef(true);
 
     // Make request to get user's info. If they are not logged in, redirect to login page.
     useEffect(() => {
         const getUserInfo = async () => {
-            const userInfo = await makeRequest({
-                urlExtension: 'user/info/',
-                method: 'GET',
-                body: null,
-                authRequired: true,
-            });
+            const userInfo = await AuthService.makeRequest({ urlExtension: 'user/info/', method: 'GET', body: null });
+            
             if (userInfo.error) {
                 navigate('/user/login');
             } else {
@@ -29,17 +26,17 @@ export default function User() {
                 setCheckedAuth(true);
             }
         }
-        getUserInfo();
-    }, [])
+        
+        if (firstRender.current) {
+            firstRender.current = false;
+            getUserInfo();
+        }
+
+    }, [navigate])
 
     const handleEdit = async (e) => {
         e.preventDefault();
-        const response = await makeRequest({
-            urlExtension: 'user/info/',
-            method: 'PUT',
-            body: newUserInfo,
-            authRequired: true,
-        });
+        const response = await AuthService.makeRequest({ urlExtension: 'user/info/', method: 'PUT', body: newUserInfo });
 
         if (response.error) {
             navigate('/user/login');

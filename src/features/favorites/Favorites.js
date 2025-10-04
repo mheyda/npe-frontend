@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAllParks, selectParksStatus } from '../explore/exploreSlice';
-import { selectFavorites, selectFavoritesStatus, selectToggleStatus, getFavorites, setToggleStatus } from './favoritesSlice';
+import { selectFavorites, selectFavoritesStatus, selectToggleStatus, setToggleStatus } from './favoritesSlice';
 import ExploreTile from '../explore/exploreList/ExploreTile';
 
 
@@ -24,12 +24,6 @@ export default function Favorites() {
         parksStatus === 'idle' ||
         parksStatus === 'loading' ||
         (favoritesStatus === 'succeeded' && favoriteParks.length === 0 && favoriteIds.length > 0);
-
-
-    // Make request to get user's favorites. If not successful, redirect to login page.
-    useEffect(() => {
-        dispatch(getFavorites());
-    }, [dispatch])
 
     // If there was an error getting parks or toggling a park, redirect to login page
     useEffect(() => {

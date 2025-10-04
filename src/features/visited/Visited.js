@@ -1,9 +1,9 @@
 import './Visited.css';
 import { useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { selectAllParks, selectParksStatus } from '../explore/exploreSlice';
-import { selectVisited, selectVisitedStatus, selectToggleStatus, getVisited, setToggleStatus } from './visitedSlice';
+import { selectVisited, selectVisitedStatus } from './visitedSlice';
 import ExploreTile from '../explore/exploreList/ExploreTile';
 
 
@@ -14,9 +14,6 @@ export default function Visited() {
     const visitedIds = useSelector(selectVisited);
     const [visitedParks, setVisitedParks] = useState([]);
     const visitedStatus = useSelector(selectVisitedStatus);
-    const toggleStatus = useSelector(selectToggleStatus);
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
 
     const isLoading =
         visitedStatus === 'idle' ||
@@ -24,20 +21,6 @@ export default function Visited() {
         parksStatus === 'idle' ||
         parksStatus === 'loading' ||
         (visitedStatus === 'succeeded' && visitedParks.length === 0 && visitedIds.length > 0);
-
-
-    // Make request to get user's visited parks. If not successful, redirect to login page.
-    useEffect(() => {
-        dispatch(getVisited());
-    }, [dispatch])
-
-    // If there was an error getting parks or toggling a park, redirect to login page
-    useEffect(() => {
-        if (visitedStatus === 'failed' || toggleStatus === 'failed') {
-            navigate('/user/login?next=/user/visited');
-            dispatch(setToggleStatus('idle'));
-        }
-    }, [visitedStatus, toggleStatus, navigate, dispatch])
 
     // Get visited parks everytime the user changes their visited parks
     useEffect(() => {

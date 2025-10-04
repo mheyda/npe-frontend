@@ -1,11 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { makeRequest } from '../../makeRequest';
-
+import { AuthService } from '../../services/AuthService';
 
 export const getFavorites = createAsyncThunk('favorites/getFavorites', async (options, { rejectWithValue }) => {
   // Make request to get user's favorites.
 
-  const favorites = await makeRequest({ 
+  const favorites = await AuthService.makeRequest({ 
       urlExtension: 'user/favorites/', 
       method: 'GET', 
       body: null,
@@ -23,7 +22,7 @@ export const toggleFavorite = createAsyncThunk('favorites/toggleFavorite', async
   // Make request to toggle the "favorite" status of a park for a user.
   const { id } = options;
 
-  const updatedFavorites = await makeRequest({ 
+  const updatedFavorites = await AuthService.makeRequest({ 
     urlExtension: 'user/favorites/', 
     method: 'POST', 
     body: id,

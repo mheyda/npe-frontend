@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { makeRequest } from '../../makeRequest';
+import { AuthService } from '../../services/AuthService';
 
 
 export const getVisited = createAsyncThunk('visited/getVisited', async (options, { rejectWithValue }) => {
   // Make request to get user's visited parks.
 
-  const visited = await makeRequest({ 
+  const visited = await AuthService.makeRequest({ 
       urlExtension: 'user/visited/', 
       method: 'GET', 
       body: null,
@@ -23,7 +23,7 @@ export const toggleVisited = createAsyncThunk('visited/toggleVisited', async (op
   // Make request to toggle the "visited" status of a park for a user.
   const { id } = options;
 
-  const updatedVisited = await makeRequest({ 
+  const updatedVisited = await AuthService.makeRequest({ 
     urlExtension: 'user/visited/', 
     method: 'POST', 
     body: id,
