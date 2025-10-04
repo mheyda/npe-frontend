@@ -33,13 +33,29 @@ body.modal-open {
     border-radius: 10px 10px 0 0;
     text-align: center;
     box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.filter-page-scroll-wrapper {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
 }
 
 .filter-page-scrollable {
     flex: 1;
-    overflow-y: scroll;
-    padding: 0 1rem;
+    overflow-y: auto;
+    padding: 0 1rem 3rem 1rem;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+.filter-page-scrollable,
+.filter-page-scroll-wrapper,
+.options {
+  -webkit-tap-highlight-color: transparent; /* removes tap highlight */
+  touch-action: manipulation; /* improves tap responsiveness */
 }
 
 .filter-page-scrollable::-webkit-scrollbar {
@@ -53,6 +69,18 @@ body.modal-open {
 
 .filter-page-scrollable::-webkit-scrollbar-track {
     background: transparent;
+}
+
+.filter-page-scroll-fade {
+    content: '';
+    position: absolute;
+    bottom: 0; /* height of .filter-page-footer + spacing */
+    left: 0;
+    right: 0;
+    height: 5rem;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), white);
+    pointer-events: none;
+    z-index: 2;
 }
 
 @media (min-width: 576px) {

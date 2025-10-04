@@ -17,11 +17,13 @@ export default function FilterPage({ setFiltersOpen }) {
     const [newSort, setNewSort] = useState(sort);
 
     const updateFilter = (key, value, checked) => {
-        const updated = checked
-            ? [...newFilter[key], value]
-            : newFilter[key].filter(v => v !== value);
+        setNewFilter(prevFilter => {
+            const updated = checked
+            ? [...prevFilter[key], value]
+            : prevFilter[key].filter(v => v !== value);
 
-        setNewFilter({ ...newFilter, [key]: updated });
+            return { ...prevFilter, [key]: updated };
+        });
     };
 
     const updateStateCodes = e => updateFilter('stateCodes', e.target.value, e.target.checked);
@@ -82,44 +84,47 @@ export default function FilterPage({ setFiltersOpen }) {
                     </button>
                 </p>
 
-                <div className="filter-page-scrollable">
-                    {view === 'list' && (
-                    <>
-                        <p className="filter-page-subheading">
-                            Sort by
-                            {newSort !== 'Alphabetical (A-Z)' && (
-                                <button className="clear-sort-btn" type="button" onClick={clearSort}>
-                                    Reset
-                                </button>
-                            )}
-                        </p>
-                        <Select
-                            name={''}
-                            options={sortOptions}
-                            defaultValue={sort}
-                            onChange={updateSort}
-                            clearSort={clearSort}
-                        />
-                    </>
-                    )}
+                <div className="filter-page-scroll-wrapper">
+                    <div className="filter-page-scrollable">
+                        {view === 'list' && (
+                        <>
+                            <p className="filter-page-subheading">
+                                Sort by
+                                {newSort !== 'Alphabetical (A-Z)' && (
+                                    <button className="clear-sort-btn" type="button" onClick={clearSort}>
+                                        Reset
+                                    </button>
+                                )}
+                            </p>
+                            <Select
+                                name={''}
+                                options={sortOptions}
+                                defaultValue={sort}
+                                onChange={updateSort}
+                                clearSort={clearSort}
+                            />
+                        </>
+                        )}
 
-                    <p className="filter-page-subheading">Filter by</p>
-                    <FilterSelector
-                        name={'Park Designation'}
-                        filterTitle={'designations'}
-                        options={designationOptions}
-                        newFilter={newFilter}
-                        setNewFilter={setNewFilter}
-                        handleChange={updateDesignations}
-                    />
-                    <FilterSelector
-                        name={'State & Territory'}
-                        filterTitle={'stateCodes'}
-                        options={stateOptions}
-                        newFilter={newFilter}
-                        setNewFilter={setNewFilter}
-                        handleChange={updateStateCodes}
-                    />
+                        <p className="filter-page-subheading">Filter by</p>
+                        <FilterSelector
+                            name={'Park Designation'}
+                            filterTitle={'designations'}
+                            options={designationOptions}
+                            newFilter={newFilter}
+                            setNewFilter={setNewFilter}
+                            handleChange={updateDesignations}
+                        />
+                        <FilterSelector
+                            name={'State & Territory'}
+                            filterTitle={'stateCodes'}
+                            options={stateOptions}
+                            newFilter={newFilter}
+                            setNewFilter={setNewFilter}
+                            handleChange={updateStateCodes}
+                        />
+                    </div>
+                    <div className="filter-page-scroll-fade" aria-hidden="true" />
                 </div>
 
                 <p className="filter-page-footer">

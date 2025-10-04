@@ -7,7 +7,7 @@ export default function NotFound() {
             <div className="not-found-content">
                 <img
                     src={require('../../assets/images/map2.svg').default}
-                    height='600'
+                    height='300'
                     width='400'
                     alt="Lost in the wilderness"
                     className="not-found-image"

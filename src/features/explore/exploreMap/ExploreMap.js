@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -36,7 +36,15 @@ export default function ExploreMap({ parks, searchMessage, filterMessage, filter
     
     const initialCenter = storedCenter ? storedCenter.split(',').map(Number) : [38, -97];
     const initialZoom = storedZoom ? parseInt(storedZoom, 10) : 3;
-    const initialCurrentPark = storedCurrentPark ? JSON.parse(storedCurrentPark).name : null;
+    const initialCurrentPark = useMemo(() => {
+        if (storedCurrentPark) {
+            return JSON.parse(storedCurrentPark).name;
+        } else if (parks && parks.length > 0) {
+            const randomIndex = Math.floor(Math.random() * parks.length);
+            return parks[randomIndex].name;
+        }
+        return null;
+    }, [storedCurrentPark, parks]);
     
     const currentParkRef = useRef(initialCurrentPark);
     
@@ -62,6 +70,20 @@ export default function ExploreMap({ parks, searchMessage, filterMessage, filter
 
         openPopupWithRetry();
     }, [parks, initialCurrentPark]);
+
+    useEffect(() => {
+        const setVH = () => {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        };
+
+        setVH();
+        window.addEventListener('resize', setVH);
+
+        return () => {
+            window.removeEventListener('resize', setVH);
+        };
+    }, []);
 
     const onMarkerClick = (parkName) => {
         currentParkRef.current = parkName;
