@@ -68,7 +68,7 @@ export default function FilterPage({ setFiltersOpen }) {
         window.scrollTo(0, scrollY);
         document.body.style.top = '';
         };
-    }, []);
+    }, [view]);
 
     return (
         <div className="filter-page-container" onClick={handleClickOutside}>
