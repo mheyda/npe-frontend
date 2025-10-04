@@ -127,3 +127,12 @@ h1, h2, h3, h4, h5, h6 {
     cursor: pointer;
     margin: 1rem;
 }
+
+/* Remove default highlight on tap for mobile devices */
+button,
+a,
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+    -webkit-tap-highlight-color: transparent;
+}
