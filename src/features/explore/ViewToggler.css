@@ -19,11 +19,6 @@
     }
 }
 
-.view-btn:hover {
-    padding: 17px 22px;
-    transform: translate(-50%, 1px);
-}
-
 .view-btn i {
     padding: 5px;
 }
