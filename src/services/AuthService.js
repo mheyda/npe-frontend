@@ -1,8 +1,8 @@
 // // const baseUrl = 'http://localhost:8000/'; // For development
 // const baseUrl = 'http://api.marshallcodes.local:81/'; // For production
 
-// const baseUrl = 'http://127.0.0.1:8000/'; // For development
-const baseUrl = 'https://api.marshallcodes.com/'; // For production
+const baseUrl = 'http://127.0.0.1:8000/'; // For development
+// const baseUrl = 'https://api.marshallcodes.com/'; // For production
 
 export const AuthService = {
     
@@ -40,9 +40,11 @@ export const AuthService = {
         }
     },
 
-    async makeRequestData({ urlExtension, method, body }) {
+    async makeRequestData({ urlExtension, method, body, skipRefresh = false }) {
         // Refresh tokens before request
-        await this.refreshTokens();
+        if (!skipRefresh) {
+            await this.refreshTokens();
+        }
         const authorization = localStorage.getItem('tokens') ? `JWT ${JSON.parse(localStorage.getItem('tokens')).access}` : null;
 
         const response = await fetch((baseUrl + urlExtension), {
@@ -84,8 +86,8 @@ export const AuthService = {
         return this.refreshTokensData();
     },
 
-    makeRequest({ urlExtension, method, body }) {
-        return this.makeRequestData({ urlExtension, method, body });
+    makeRequest({ urlExtension, method, body, skipRefresh = false }) {
+        return this.makeRequestData({ urlExtension, method, body, skipRefresh });
     },
 
 }

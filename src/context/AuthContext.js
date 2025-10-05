@@ -54,13 +54,17 @@ export const AuthProvider = ({ children }) => {
         }
 
         const logout = await AuthService.makeRequest({
-            urlExtension: 'blacklist',
+            urlExtension: 'blacklist/',
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
             body: { refresh },
+            skipRefresh: true,
         });
 
         if (logout.error) {
-            alert('Sorry! Something went wrong.');
+            console.log(logout);
         }
 
         localStorage.removeItem("tokens");
