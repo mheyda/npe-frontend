@@ -11,8 +11,8 @@ export default function NavBar() {
 
     return (
         <>
-            <HeaderNav loggedIn={isLoggedIn} authLoading={authLoading} handleLogout={handleLogout} userNavOpen={userNavOpen} setUserNavOpen={setUserNavOpen} />
-            <FooterNav loggedIn={isLoggedIn} authLoading={authLoading} handleLogout={handleLogout} userNavOpen={userNavOpen} setUserNavOpen={setUserNavOpen} />
+            <HeaderNav isLoggedIn={isLoggedIn} authLoading={authLoading} handleLogout={handleLogout} userNavOpen={userNavOpen} setUserNavOpen={setUserNavOpen} />
+            <FooterNav isLoggedIn={isLoggedIn} authLoading={authLoading} handleLogout={handleLogout} userNavOpen={userNavOpen} setUserNavOpen={setUserNavOpen} />
         </>
     );
 }

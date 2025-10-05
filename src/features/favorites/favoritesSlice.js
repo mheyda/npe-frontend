@@ -8,7 +8,6 @@ export const getFavorites = createAsyncThunk('favorites/getFavorites', async (op
       urlExtension: 'user/favorites/', 
       method: 'GET', 
       body: null,
-      authRequired: true,
   });
 
   if (favorites.error) {
@@ -26,7 +25,6 @@ export const toggleFavorite = createAsyncThunk('favorites/toggleFavorite', async
     urlExtension: 'user/favorites/', 
     method: 'POST', 
     body: id,
-    authRequired: true,
   });
 
   if (updatedFavorites.error) {
@@ -48,6 +46,13 @@ export const favoritesSlice = createSlice({
   reducers: {
     setToggleStatus: (state, action) => {
       state.toggleStatus = action.payload;
+    },
+    clearFavorites(state) {
+      state.favorites = [];
+      state.favoritesStatus = 'idle';
+      state.favoritesError = null;
+      state.toggleStatus = 'idle';
+      state.toggleError = null;
     }
   },
   extraReducers(builder) {
@@ -79,7 +84,7 @@ export const favoritesSlice = createSlice({
   },
 });
 
-export const { setToggleStatus } = favoritesSlice.actions;
+export const { setToggleStatus, clearFavorites } = favoritesSlice.actions;
 
 export const selectFavorites = (state) => state.favorites.favorites;
 export const selectFavoritesStatus = (state) => state.favorites.favoritesStatus;

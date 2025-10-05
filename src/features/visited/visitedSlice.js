@@ -9,7 +9,6 @@ export const getVisited = createAsyncThunk('visited/getVisited', async (options,
       urlExtension: 'user/visited/', 
       method: 'GET', 
       body: null,
-      authRequired: true,
   });
 
   if (visited.error) {
@@ -27,7 +26,6 @@ export const toggleVisited = createAsyncThunk('visited/toggleVisited', async (op
     urlExtension: 'user/visited/', 
     method: 'POST', 
     body: id,
-    authRequired: true,
   });
 
   if (updatedVisited.error) {
@@ -49,6 +47,13 @@ export const visitedSlice = createSlice({
   reducers: {
     setToggleStatus: (state, action) => {
       state.toggleStatus = action.payload;
+    },
+    clearVisited(state) {
+      state.visited = [];
+      state.visitedStatus = 'idle';
+      state.visitedError = null;
+      state.toggleStatus = 'idle';
+      state.toggleError = null;
     }
   },
   extraReducers(builder) {
@@ -80,7 +85,7 @@ export const visitedSlice = createSlice({
   },
 });
 
-export const { setToggleStatus } = visitedSlice.actions;
+export const { setToggleStatus, clearVisited } = visitedSlice.actions;
 
 export const selectVisited = (state) => state.visited.visited;
 export const selectVisitedStatus = (state) => state.visited.visitedStatus;

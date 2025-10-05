@@ -15,8 +15,9 @@ import FilterPage from './exploreFilter/FilterPage.js';
 import { useEffect, useState } from 'react';
 import './Explore.css';
 import { useNavigate } from 'react-router-dom';
-import { getFavorites, selectToggleStatus as selectFavoritesToggleStatus, setToggleStatus as setFavoritesToggleStatus } from '../favorites/favoritesSlice.js';
-import { getVisited, selectToggleStatus as selectVisitedToggleStatus, setToggleStatus as setVisitedToggleStatus } from '../visited/visitedSlice.js';
+import { selectToggleStatus as selectFavoritesToggleStatus, setToggleStatus as setFavoritesToggleStatus } from '../favorites/favoritesSlice.js';
+import { selectToggleStatus as selectVisitedToggleStatus, setToggleStatus as setVisitedToggleStatus } from '../visited/visitedSlice.js';
+import Loader from '../../common/loader/Loader.js';
 
 const DEFAULT_SORT = 'Alphabetical (A-Z)';
 
@@ -47,12 +48,6 @@ export default function Explore() {
         : `${mapParks.length} parks found`;
 
     const areFiltersEmpty = () => Object.values(filter).every(value => value.length === 0);
-
-    // Make request to get user's favorite and visited parks.
-    useEffect(() => {
-        dispatch(getFavorites());
-        dispatch(getVisited());
-    }, [dispatch])
 
     // If there was an error toggling a saved park, redirect to login page
     useEffect(() => {
@@ -124,7 +119,7 @@ export default function Explore() {
         else if (parksStatus === 'idle' || parksStatus === 'loading') {
             return (
                 <main>
-                    <i className="fa-solid fa-spinner fa-spin loading-spinner" aria-hidden="true"></i>
+                    <Loader />
                 </main>
             );
         }

@@ -27,7 +27,9 @@ export const AuthService = {
 
             if (response.ok) {
                 const newTokens = await response.json();
-                localStorage.setItem('tokens', JSON.stringify(newTokens));
+                const existingTokens = JSON.parse(localStorage.getItem('tokens')) || {};
+                const updatedTokens = { ...existingTokens, ...newTokens };
+                localStorage.setItem('tokens', JSON.stringify(updatedTokens));
                 return true;
             }
 
@@ -35,59 +37,60 @@ export const AuthService = {
 
 
         } catch (error) {
-            console.log(error);
+            console.error(`[AuthService] ${error}`);
             return false;
         }
     },
 
-    async makeRequestData({ urlExtension, method, body, skipRefresh = false }) {
-        // Refresh tokens before request
-        if (!skipRefresh) {
-            await this.refreshTokens();
-        }
-        const authorization = localStorage.getItem('tokens') ? `JWT ${JSON.parse(localStorage.getItem('tokens')).access}` : null;
+    async makeRequestData({ urlExtension, method, body, retrying = false }) {
+        const tokens = JSON.parse(localStorage.getItem('tokens'));
+        const access = tokens?.access;
 
-        const response = await fetch((baseUrl + urlExtension), {
-            method: method, // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors', // no-cors, *cors, same-origin
-            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-            credentials: 'include', // include, *same-origin, omit
+        const response = await fetch(baseUrl + urlExtension, {
+            method,
             headers: {
-                'Authorization': authorization,
+                'Authorization': access ? `JWT ${access}` : undefined,
                 'Content-Type': 'application/json',
                 'accept': 'application/json',
             },
-            redirect: 'follow', // manual, *follow, error
             body: body ? JSON.stringify(body) : null,
+            credentials: 'include',
         });
-    
-        // Read response body. If it's not empty, parse the JSON from it. If I don't do this, it causes a problem when the server doesn't return anything.
+
         let json = null;
         try {
             json = await response.json();
-        } catch (e) {
-            // If it's not JSON, ignore
-        }
-    
+        } catch {}
+
+        // If successful, return
         if (response.ok) {
-            return {
-                data: json,
-                error: false
-            };
+            return { data: json, error: false };
         }
-    
+
+        // Handle 401 (unauthorized) once, if not already retried
+        if (response.status === 401 && !retrying) {
+            console.warn(`[AuthService] Received 401 — trying to refresh token...`);
+            const refreshed = await this.refreshTokens();
+            if (refreshed) {
+                // Retry original request once after refreshing
+                return this.makeRequestData({ urlExtension, method, body, retrying: true });
+            } else {
+                console.error(`[AuthService] Token refresh failed`);
+            }
+        }
+
         return {
             data: json,
-            error: true
-        }
+            error: true,
+        };
     },
 
     refreshTokens() {
         return this.refreshTokensData();
     },
 
-    makeRequest({ urlExtension, method, body, skipRefresh = false }) {
-        return this.makeRequestData({ urlExtension, method, body, skipRefresh });
+    makeRequest({ urlExtension, method, body }) {
+        return this.makeRequestData({ urlExtension, method, body });
     },
 
 }

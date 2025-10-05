@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import capitalizeFirstLetters from '../../../utilityFunctions/capitalizeFirstLetters';
 import './FooterNav.css';
 
-export default function FooterNav({ loggedIn, authLoading, handleLogout, userNavOpen, setUserNavOpen }) {
+export default function FooterNav({ isLoggedIn, authLoading, handleLogout, userNavOpen, setUserNavOpen }) {
 
     const location = useLocation();
     const [navPromptTarget, setNavPromptTarget] = useState(null);
@@ -28,7 +28,7 @@ export default function FooterNav({ loggedIn, authLoading, handleLogout, userNav
     return (
         <nav className='footer-nav-container'>
             <div className='footer-nav'>
-                {loggedIn ? (
+                {isLoggedIn ? (
                     <>
                         <Link className={`footer-nav-link ${location.pathname === '/' ? 'active' : ''}`} to={'/'}>
                             <i className="fa-solid fa-magnifying-glass"></i>
@@ -96,7 +96,7 @@ export default function FooterNav({ loggedIn, authLoading, handleLogout, userNav
                     >
                         <i className="fa-solid fa-xmark"></i>
                     </button>
-                    {loggedIn ? (
+                    {isLoggedIn ? (
                         <div className='logged-in'>
                             <h3 className='footer-nav-menu-heading'>My Account</h3>
                             <Link to="/user" onClick={() => setUserNavOpen(false)}>

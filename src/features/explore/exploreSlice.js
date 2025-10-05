@@ -12,7 +12,6 @@ export const fetchParks = createAsyncThunk('parks/fetchAllParks', async (options
     urlExtension: 'getParks?start=0&limit=500&sort=fullName&stateCode=',
     method: 'GET',
     body: null,
-    authRequired: false,
   })
 
   if (parks.error) {
@@ -126,7 +125,6 @@ export const exploreSlice = createSlice({
 
         filteredMapParks = filteredMapParks.filter(filterByDesignation);
         filteredListParks = filteredListParks.filter(filterByDesignation);
-        console.log(filteredMapParks);
       }
 
       // ----- Sort -----

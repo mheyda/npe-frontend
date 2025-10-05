@@ -5,7 +5,7 @@ import capitalizeFirstLetters from '../../../utilityFunctions/capitalizeFirstLet
 import './HeaderNav.css';
 
 
-export default function HeaderNav({ loggedIn, authLoading, handleLogout, userNavOpen, setUserNavOpen }) {
+export default function HeaderNav({ isLoggedIn, authLoading, handleLogout, userNavOpen, setUserNavOpen }) {
 
     const menuRef = useRef();
     const toggleButtonRef = useRef();
@@ -62,7 +62,7 @@ export default function HeaderNav({ loggedIn, authLoading, handleLogout, userNav
                                 <div className="skeleton skeleton-line"></div>
                                 <div className="skeleton skeleton-line short"></div>
                             </div>
-                        ) : loggedIn ? (
+                        ) : isLoggedIn ? (
                             <>
                                 <Link onClick={() => setUserNavOpen(false)} className='header-nav-link' to={'/'}>
                                     <i className="fa-solid fa-magnifying-glass"></i>

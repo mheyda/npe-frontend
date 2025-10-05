@@ -1,6 +1,9 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 import { AuthService } from '../services/AuthService';
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
+import { clearFavorites } from '../features/favorites/favoritesSlice';
+import { clearVisited } from '../features/visited/visitedSlice';
+import { useDispatch } from 'react-redux';
 
 
 const AuthContext = createContext();
@@ -19,10 +22,15 @@ export const AuthProvider = ({ children }) => {
     const [passwordError, setPasswordError] = useState('');
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const location = useLocation();
     
 
     const handleLogin = async (e) => {
         e.preventDefault();
+
+        const params = new URLSearchParams(location.search);
+        const nextPath = params.get('next') || '/';
 
         const login = await AuthService.makeRequest({ 
             urlExtension: 'token/obtain/', 
@@ -32,15 +40,16 @@ export const AuthProvider = ({ children }) => {
                 'password': password
             } 
         });
+
         if (login.error) {
             setUsernameError(login.data.detail);
             setPassword('');
         } else {
             localStorage.setItem('tokens', JSON.stringify(login.data));
             setIsLoggedIn(true);
-            navigate('/');
+            navigate(nextPath, { replace: true });
         }
-    }
+    };
 
     const handleLogout = async () => {
         const tokens = JSON.parse(localStorage.getItem("tokens"));
@@ -60,13 +69,14 @@ export const AuthProvider = ({ children }) => {
                 'Content-Type': 'application/json',
             },
             body: { refresh },
-            skipRefresh: true,
         });
 
         if (logout.error) {
-            console.log(logout);
+            console.error('[AuthContext] Error logging out');
         }
 
+        dispatch(clearFavorites());
+        dispatch(clearVisited());
         localStorage.removeItem("tokens");
         navigate('/user/login');
         setIsLoggedIn(false);
@@ -74,6 +84,9 @@ export const AuthProvider = ({ children }) => {
 
     const handleSignup = async (e) => {
         e.preventDefault();
+
+        const params = new URLSearchParams(location.search);
+        const next = params.get('next') || '/';
 
         const signup = await AuthService.makeRequest({ 
             urlExtension: 'user/create/', 
@@ -91,21 +104,27 @@ export const AuthProvider = ({ children }) => {
             setPasswordError(signup.data.password);
             setPassword('');
         } else {
+            const currentPath = location.pathname;
+            navigate(`${currentPath}?next=${encodeURIComponent(next)}`, { replace: true });
             handleLogin(e);
         }
-    }
+    };
 
     useEffect(() => {
-        AuthService.refreshTokens()
-            .then((data) => {
-                setIsLoggedIn(data);
-            })
-            .catch((err) => {
-                console.log(err);
-            })
-            .finally(() => {
+        let isMounted = true;
+
+        const refreshAuth = async () => {
+            console.log("[AuthContext] Refreshing tokens...");
+            const success = await AuthService.refreshTokens();
+
+            if (isMounted) {
+                console.log("[AuthContext] Setting isLoggedIn to", success);
+                setIsLoggedIn(success);
                 setAuthLoading(false);
-            })
+            }
+        };
+
+        refreshAuth();
 
         const syncLogout = (event) => {
             if (event.key === 'tokens' && event.newValue === null) {
@@ -116,9 +135,10 @@ export const AuthProvider = ({ children }) => {
         window.addEventListener("storage", syncLogout);
 
         return () => {
+            isMounted = false;
             window.removeEventListener("storage", syncLogout);
         };
-    }, [])
+    }, []);
 
     return (
         <AuthContext.Provider 
