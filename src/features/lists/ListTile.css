@@ -1,5 +1,3 @@
-/* src/features/visited/ListTile.css */
-
 .list-tile {
     list-style: none;
     margin: 0;
@@ -82,25 +80,69 @@
 }
 
 .list-tile-overlay {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.3);
-  z-index: 1001;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 1001;
+    opacity: 1;
+    transition: opacity 0.2s ease;
 }
 
-/* Modal Container */
+.list-tile-overlay.fade-in {
+    opacity: 1;
+}
+
+.list-tile-overlay.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
 .list-tile-modal {
-  position: absolute;
-  top: 3rem;
-  right: 1.5rem;
-  width: 300px;
-  background: white;
-  border-radius: 8px;
-  padding: 0.5rem 0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 1001;
-  display: flex;
-  flex-direction: column;
+    position: absolute;
+    right: 1.5rem;
+    width: 300px;
+    background: white;
+    border-radius: 8px;
+    padding: 0.5rem 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1002;
+    display: flex;
+    flex-direction: column;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.list-tile-modal.down {
+    top: 3rem;
+    bottom: auto;
+}
+
+.list-tile-modal.up {
+    bottom: 3rem;
+    top: auto;
+}
+
+.list-tile-modal.slide-fade-in.down {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.list-tile-modal.slide-fade-out.down {
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+}
+
+.list-tile-modal.slide-fade-in.up {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.list-tile-modal.slide-fade-out.up {
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
 }
 
 .list-tile-modal-header {
@@ -108,51 +150,48 @@
     padding: 0.5rem 1rem;
 }
 
-/* Modal Title */
 .list-tile-modal-title {
-  font-size: 1rem;
-  font-weight: bold;
+    font-size: 1rem;
+    font-weight: bold;
 }
 
-/* Modal Buttons */
 .list-tile-modal button {
-  display: flex;
-  align-items: center;
-  background: none;
-  border: none;
-  font-size: 1rem;
-  cursor: pointer;
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
 }
 
 .list-tile-modal button:not(.list-tile-modal-close-btn) {
-  display: flex;
-  align-items: center;
-  background: none;
-  border: none;
-  width: 100%;
-  font-size: 1rem;
-  padding: 0.75rem 1rem;
-  color: inherit;
-  cursor: pointer;
-  border-top: 1px solid var(--neutral-light);
-  justify-content: flex-start;
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    width: 100%;
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+    color: inherit;
+    cursor: pointer;
+    border-top: 1px solid var(--neutral-light);
+    justify-content: flex-start;
 }
 
 .list-tile-modal button:not(.list-tile-modal-close-btn):first-of-type {
-  border-top: none;
+    border-top: none;
 }
 
-/* Hover state for toggle buttons */
 .list-tile-modal button:not(.list-tile-modal-close-btn):hover {
-  background-color: var(--neutral-xlight);
+    background-color: var(--neutral-xlight);
 }
 
 .list-tile-modal button:last-child {
-  border-bottom: none;
+    border-bottom: none;
 }
 
 .list-tile-modal .menu-label {
-  margin-left: 0.75rem;
+    margin-left: 0.75rem;
 }
 
 .list-tile-modal-content i {

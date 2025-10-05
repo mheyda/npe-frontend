@@ -5,45 +5,68 @@ import { selectFavorites, toggleFavorite } from '../favorites/favoritesSlice';
 import { selectVisited, toggleVisited } from '../visited/visitedSlice';
 import { useSelector, useDispatch } from 'react-redux';
 
-
 export default function ListTile({ park }) {
-
     const [menuOpen, setMenuOpen] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [animateIn, setAnimateIn] = useState(false);
+    const [modalPosition, setModalPosition] = useState('down');
     const menuRef = useRef(null);
-    
+    const buttonRef = useRef(null);
+
     const dispatch = useDispatch();
     const favorites = useSelector(selectFavorites);
     const visited = useSelector(selectVisited);
+    
+    const openMenu = () => {
+        setModalVisible(true);
+        setMenuOpen(true);
+    };
 
-    // Close menu when clicking outside
+    const closeMenu = () => {
+        setAnimateIn(false);
+        setMenuOpen(false);
+        setTimeout(() => setModalVisible(false), 200);
+    };
+
     useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (menuRef.current && !menuRef.current.contains(event.target)) {
-                setMenuOpen(false);
-            }
-        };
-        if (menuOpen) {
-            document.addEventListener('mousedown', handleClickOutside);
+        if (modalVisible) {
+            // Allow next tick to add animateIn to trigger CSS transition
+            const timeout = setTimeout(() => setAnimateIn(true), 10);
+            return () => clearTimeout(timeout);
+        } else {
+            setAnimateIn(false);
         }
-        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [modalVisible]);
+
+    useEffect(() => {
+        if (menuOpen && buttonRef.current && menuRef.current) {
+            const buttonRect = buttonRef.current.getBoundingClientRect();
+            const modalHeight = menuRef.current.offsetHeight;
+            const viewportHeight = window.innerHeight;
+            const spaceBelow = viewportHeight - buttonRect.bottom;
+
+            if (spaceBelow < modalHeight + 16) {
+                setModalPosition('up');
+            } else {
+                setModalPosition('down');
+            }
+        }
     }, [menuOpen]);
 
-    // Format states string
     let states = park.states.split(',').join(', ');
     const statesLength = park.states.split(',').length;
     if (statesLength > 2) {
-        states = states.split(',').slice(0, 3).join(', ') + ', & More'
+        states = states.split(',').slice(0, 3).join(', ') + ', & More';
     }
 
-    // Action handlers (placeholder)
     const handleToggleSaved = () => {
         dispatch(toggleFavorite({ id: park.id }));
-        setMenuOpen(false);
+        closeMenu();
     };
 
     const handleToggleVisited = () => {
         dispatch(toggleVisited({ id: park.id }));
-        setMenuOpen(false);
+        closeMenu();
     };
 
     return (
@@ -65,18 +88,24 @@ export default function ListTile({ park }) {
 
                 <button
                     className="list-tile-menu-button"
-                    onClick={() => setMenuOpen(!menuOpen)}
+                    onClick={() => (menuOpen ? closeMenu() : openMenu())}
                     aria-label="More actions"
+                    ref={buttonRef}
                 >
                     <i className="fa-solid fa-ellipsis-vertical"></i>
                 </button>
             </div>
 
-            {/* Menu rendering */}
-            {menuOpen && (
+            {modalVisible && (
                 <>
-                    <div className="list-tile-overlay" onClick={() => setMenuOpen(false)}></div>
-                    <div className="list-tile-modal" ref={menuRef}>
+                    <div
+                        className={`list-tile-overlay ${menuOpen ? 'fade-in' : 'fade-out'}`}
+                        onClick={closeMenu}
+                    ></div>
+                    <div
+                        className={`list-tile-modal ${modalPosition} ${animateIn ? 'slide-fade-in' : 'slide-fade-out'}`}
+                        ref={menuRef}
+                    >
                         <div className="list-tile-modal-header">
                             <div className='list-tile-modal-title'>
                                 {park.fullName}
@@ -84,7 +113,7 @@ export default function ListTile({ park }) {
                             <button
                                 className="list-tile-modal-close-btn"
                                 aria-label="Close menu"
-                                onClick={() => setMenuOpen(false)}
+                                onClick={closeMenu}
                             >
                                 <i className="fa-solid fa-xmark"></i>
                             </button>
