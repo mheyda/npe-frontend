@@ -1,8 +1,5 @@
-// // const baseUrl = 'http://localhost:8000/'; // For development
-// const baseUrl = 'http://api.marshallcodes.local:81/'; // For production
-
-const baseUrl = 'http://127.0.0.1:8000/'; // For development
-// const baseUrl = 'https://api.marshallcodes.com/'; // For production
+// const baseUrl = 'http://127.0.0.1:8000/'; // For development
+const baseUrl = 'https://api.marshallcodes.com/'; // For production
 
 export const AuthService = {
     
