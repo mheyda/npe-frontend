@@ -1,11 +1,16 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { AuthService } from '../../services/AuthService';
 
 
 export const fetchWeather = createAsyncThunk('weather/fetchWeather', async (coordinates) => {
     const { lat, lng } = coordinates;
-    const response = await fetch(`https://api.marshallcodes.com/getWeather/?lat=${lat}&lng=${lng}`);
-    const json = await response.json();
-    return json;
+    const response = await AuthService.makeRequest({ 
+        urlExtension: `getWeather/?lat=${lat}&lng=${lng}`, 
+        method: 'GET', 
+        body: null,
+    });
+
+    return response.data;
 })
 
 export const weatherSlice = createSlice({
