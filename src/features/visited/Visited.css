@@ -1,6 +1,65 @@
 .visited-title {
     text-align: center;
-    padding-bottom: 2rem;
+    padding-bottom: 1.5rem;
+}
+
+.visited-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+/* Sort dropdown container */
+.sort-dropdown {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 100%;
+    width: 100%;
+}
+
+/* Label text */
+.sort-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--neutral-dark);
+    line-height: 1;
+}
+
+/* Dropdown select styling */
+.sort-select {
+    padding: 0.5rem 0.75rem; /* Match toggle buttons */
+    border: 1px solid var(--neutral-light, #ccc);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background-color: var(--neutral-xlight, #f9f9f9);
+    color: var(--neutral-dark, #333);
+    cursor: pointer;
+    height: 100%; /* Ensure vertical alignment */
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    line-height: 1.2;
+    flex-grow: 1;
+}
+
+.sort-select:hover,
+.sort-select:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+@media (min-width: 768px) {
+    .sort-dropdown {
+        width: auto;
+    }
+    .sort-select {
+        flex-grow: 0;
+    }
 }
 
 .image-container {
@@ -18,4 +77,60 @@
 .empty-message {
     padding-top: 2rem;
     text-align: center;
+}
+
+.view-toggle-icon-buttons {
+    display: flex;
+    justify-content: flex-end; /* Align to right */
+    gap: 0;
+    border: 1px solid var(--neutral-light, #ccc);
+    border-radius: 6px;
+    overflow: hidden;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: 0; /* Align to right */
+    background-color: var(--neutral-xlight, #f9f9f9);
+}
+
+.view-toggle-icon-buttons button {
+    padding: 0.5rem 0.75rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--neutral-medium, #666);
+    transition: background-color 0.2s ease, color 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.view-toggle-icon-buttons button:hover,
+.view-toggle-icon-buttons button:focus {
+    background-color: var(--neutral-light);
+    outline: none;
+}
+
+.view-toggle-icon-buttons button.active {
+    background-color: var(--neutral-dark);
+    color: white;
+}
+
+.icon-wrapper {
+    display: flex;
+    gap: 0.25rem;
+    align-items: center;
+}
+
+.icon-wrapper i {
+    font-size: 1.1rem;
+    margin-bottom: 0.2rem;
+}
+
+.icon-label {
+    font-size: 0.7rem;
+    font-weight: 500;
 }

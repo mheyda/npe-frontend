@@ -182,11 +182,11 @@
 }
 
 .park-toggle-favorite .fa-stack-2x.selected {
-    color: #0e3c61;
+    color: var(--dark-blue);
 }
 
 .park-toggle-favorite .fa-stack-1x.selected {
-    color: #4fc3ff;
+    color: var(--light-blue);
 }
 
 .park-toggle-favorite:hover .fa-stack-2x.selected,
