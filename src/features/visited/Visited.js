@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { selectAllParks, selectParksStatus } from '../explore/exploreSlice';
 import { selectVisited, selectVisitedStatus } from './visitedSlice';
 import ExploreTile from '../explore/exploreList/ExploreTile';
+import Loader from '../../common/loader/Loader';
 
 
 export default function Visited() {
@@ -37,7 +38,7 @@ export default function Visited() {
         return (
             <main>
                 <h2 className='visited-title'>My Visited Parks</h2>
-                <i className="fa-solid fa-spinner fa-spin loading-spinner" aria-hidden="true"></i>
+                <Loader />
             </main>
         );
     }

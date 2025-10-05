@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectAllParks, selectParksStatus } from '../explore/exploreSlice';
 import { selectFavorites, selectFavoritesStatus, selectToggleStatus, setToggleStatus } from './favoritesSlice';
 import ExploreTile from '../explore/exploreList/ExploreTile';
+import Loader from '../../common/loader/Loader';
 
 
 export default function Favorites() {
@@ -48,7 +49,7 @@ export default function Favorites() {
         return (
             <main>
                 <h2 className='favorites-title'>My Saved Parks</h2>
-                <i className="fa-solid fa-spinner fa-spin loading-spinner" aria-hidden="true"></i>
+                <Loader />
             </main>
         );
     }
