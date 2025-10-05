@@ -1,6 +1,9 @@
 :root {
   /* Color Variables */
   --primary: #2C6E49;
+  --danger: #b51414;
+  --dark-blue: #0e3c61;
+  --light-blue: #4fc3ff;
   --neutral-dark: #484848;
   --neutral-medium: #666666;
   --neutral-light: #d0d0d0;
