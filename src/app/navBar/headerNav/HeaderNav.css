@@ -116,6 +116,12 @@
     gap: 0.75rem;
 }
 
+.header-nav-link.active {
+  font-weight: 700;
+  background-color: var(--neutral-light);
+  border-left: 3px solid var(--primary);
+}
+
 .header-nav-link:hover {
     font-weight: 700;
     background-color: var(--neutral-light);
