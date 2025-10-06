@@ -1,3 +1,9 @@
+.explore-map-view {
+    overflow: hidden;
+    position: relative;
+    height: calc(var(--vh, 1vh) * 100);
+}
+
 /* Filter bar */
 .filter-bar {
     display: flex;

@@ -65,6 +65,19 @@ export default function Explore() {
         }
     }, [visitedToggleStatus, navigate, dispatch]);
 
+    useEffect(() => {
+        if (view === 'map') {
+            window.scrollTo(0, 0);
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [view]);
+
     // If an error occured while fetching the parks
     if (error) {
         return (
@@ -161,7 +174,7 @@ export default function Explore() {
                 );
             } else if (view === 'map') {
                 return (
-                    <div>
+                    <div className='explore-map-view'>
                         {filtersOpen && <FilterPage setFiltersOpen={setFiltersOpen} />}
                         <ExploreMap 
                             parks={mapParks} 
