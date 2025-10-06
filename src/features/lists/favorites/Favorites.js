@@ -107,6 +107,17 @@ export default function Favorites() {
         );
     }
 
+     if (favoritesStatus === 'failed' || parksStatus === 'failed') {
+        return (
+            <main>
+                <h2 className='list-title'>My Saved Parks</h2>
+                <div className='error-message'>
+                    <p>There was an error loading your saved parks. Please try again.</p>
+                </div>
+            </main>
+        );
+    }
+
     if (favoriteParks.length > 0) {
         return (
             <main>

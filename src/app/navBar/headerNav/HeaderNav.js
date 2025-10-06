@@ -94,7 +94,13 @@ export default function HeaderNav({ isLoggedIn, authLoading, handleLogout, userN
                                     <i className="fa-solid fa-chevron-right chevron"></i>
                                 </Link>
 
-                                <button onClick={handleLogout} className='header-nav-link'>
+                                <button 
+                                    onClick={() => {
+                                        handleLogout(); 
+                                        setUserNavOpen(false);
+                                    }} 
+                                    className='header-nav-link'
+                                >
                                     <i className="fa-solid fa-right-from-bracket"></i>
                                     <span>Log out</span>
                                     <i className="fa-solid fa-chevron-right chevron"></i>
@@ -172,13 +178,17 @@ export default function HeaderNav({ isLoggedIn, authLoading, handleLogout, userN
                                 className="btn-login"
                                 onClick={() => {
                                     setNavPromptTarget(null);
+                                    setUserNavOpen(false);
                                 }}
                             >
                                 Log in
                             </Link>
                             <button
                                 className="header-nav-modal-cancel-btn"
-                                onClick={() => setNavPromptTarget(null)}
+                                onClick={() => {
+                                    setNavPromptTarget(null)
+                                    setUserNavOpen(false);
+                                }}
                             >
                                 Cancel
                             </button>

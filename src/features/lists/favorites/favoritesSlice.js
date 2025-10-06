@@ -59,7 +59,7 @@ export const favoritesSlice = createSlice({
     builder
     .addCase(getFavorites.pending, (state) => {
       state.favoritesStatus = 'loading';
-      state.error = null;
+      state.favoritesError = null;
     })
     .addCase(getFavorites.fulfilled, (state, action) => {
       state.favoritesStatus = 'succeeded'
@@ -71,7 +71,7 @@ export const favoritesSlice = createSlice({
     })
     .addCase(toggleFavorite.pending, (state) => {
       state.toggleStatus = 'loading';
-      state.error = null;
+      state.favoritesError = null;
     })
     .addCase(toggleFavorite.fulfilled, (state, action) => {
       state.toggleStatus = 'succeeded'
