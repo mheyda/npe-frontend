@@ -1,8 +1,8 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 import { AuthService } from '../services/AuthService';
 import { useNavigate, useLocation } from 'react-router';
-import { clearFavorites } from '../features/favorites/favoritesSlice';
-import { clearVisited } from '../features/visited/visitedSlice';
+import { clearFavorites } from '../features/lists/favorites/favoritesSlice';
+import { clearVisited } from '../features/lists/visited/visitedSlice';
 import { useDispatch } from 'react-redux';
 
 

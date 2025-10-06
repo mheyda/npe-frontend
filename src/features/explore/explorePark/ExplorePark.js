@@ -6,8 +6,8 @@ import ManualSlideshow from '../../../common/slideshow/ManualSlideshow.js';
 import WeatherCurrent from '../../weather/weatherCurrent/WeatherCurrent.js';
 import WeatherForecast from '../../weather/weatherForecast/WeatherForecast.js';
 import WeatherFormatToggler from '../../weather/WeatherFormatToggler.js';
-import { selectVisited, toggleVisited } from '../../visited/visitedSlice';
-import { selectFavorites, toggleFavorite } from '../../favorites/favoritesSlice';
+import { selectVisited, toggleVisited } from '../../lists/visited/visitedSlice';
+import { selectFavorites, toggleFavorite } from '../../lists/favorites/favoritesSlice';
 import './ExplorePark.css';
 
 

@@ -3,8 +3,8 @@ import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaf
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import ManualSlideshow from '../../../common/slideshow/ManualSlideshow';
-import { selectVisited, toggleVisited } from '../../visited/visitedSlice';
-import { selectFavorites, toggleFavorite } from '../../favorites/favoritesSlice';
+import { selectVisited, toggleVisited } from '../../lists/visited/visitedSlice';
+import { selectFavorites, toggleFavorite } from '../../lists/favorites/favoritesSlice';
 import './ExploreMap.css';
 
 function MapEventHandler({ onMoveEnd }) {

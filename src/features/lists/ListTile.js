@@ -1,11 +1,11 @@
 import './ListTile.css';
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { selectFavorites, toggleFavorite } from '../favorites/favoritesSlice';
-import { selectVisited, toggleVisited } from '../visited/visitedSlice';
+import { selectFavorites, toggleFavorite } from './favorites/favoritesSlice';
+import { selectVisited, toggleVisited } from './visited/visitedSlice';
 import { useSelector, useDispatch } from 'react-redux';
 
-export default function ListTile({ park }) {
+export default function ListTile({ park, list }) {
     const [menuOpen, setMenuOpen] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const [animateIn, setAnimateIn] = useState(false);
@@ -69,6 +69,58 @@ export default function ListTile({ park }) {
         closeMenu();
     };
 
+    const renderModalContent = () => {
+        if (list === 'favorites') {
+            return (
+                <>
+                    <button onClick={handleToggleSaved} title={favorites && favorites.includes(park.id) ? "Unsave this park" : "Save this park"}>
+                        {favorites && favorites.includes(park.id) && (
+                            <i className="fa-solid fa-circle-xmark"></i>
+                        )}
+                        <span className="menu-label">
+                            Unsave this park
+                        </span>
+                    </button>
+                    <button onClick={handleToggleVisited} title={visited && visited.includes(park.id) ? "Unmark as visited" : "Mark as visited"}>
+                        {visited && visited.includes(park.id) ? (
+                            <i class="fa-regular fa-circle-xmark"></i>
+                        ) : (
+                            <i class="fa-regular fa-circle-check"></i>
+                        )}
+                        <span className="menu-label">
+                            {visited && visited.includes(park.id) ? "Unmark as visited" : "Mark as visited"}
+                        </span>
+                    </button>
+                </>
+            )
+        }
+
+        if (list === 'visited') {
+            return (
+                <>
+                    <button onClick={handleToggleVisited} title={visited && visited.includes(park.id) ? "Unmark as visited" : "Mark as visited"}>
+                        {visited && visited.includes(park.id) && (
+                            <i className="fa-solid fa-circle-xmark"></i>
+                        )}
+                        <span className="menu-label">
+                            Unmark as visited
+                        </span>
+                    </button>
+                    <button onClick={handleToggleSaved} title={favorites && favorites.includes(park.id) ? "Unsave this park" : "Save this park"}>
+                        {favorites && favorites.includes(park.id) ? (
+                            <i class="fa-regular fa-circle-xmark"></i>
+                        ) : (
+                            <i className="fa-regular fa-bookmark"></i>
+                        )}
+                        <span className="menu-label">
+                            {favorites && favorites.includes(park.id) ? "Unsave this park" : "Save this park"}
+                        </span>
+                    </button>
+                </>
+            )
+        }
+    }
+
     return (
         <li className="list-tile">
             <div className="list-tile-content">
@@ -119,20 +171,12 @@ export default function ListTile({ park }) {
                             </button>
                         </div>
                         <div className='list-tile-modal-content'>
-                            <button onClick={handleToggleVisited} title="Unmark as visited">
+                            {/* <button onClick={handleToggleVisited} title="Unmark as visited">
                                 <i className="fa-solid fa-circle-xmark"></i>
                                 <span className="menu-label">Remove from visited parks</span>
-                            </button>
-                            <button onClick={handleToggleSaved} title={favorites && favorites.includes(park.id) ? "Unsave this park" : "Save this park"}>
-                                {favorites && favorites.includes(park.id) ? (
-                                    <i className="fa-solid fa-bookmark"></i>
-                                ) : (
-                                    <i className="fa-regular fa-bookmark"></i>
-                                )}
-                                <span className="menu-label">
-                                    {favorites && favorites.includes(park.id) ? "Unsave this park" : "Save this park"}
-                                </span>
-                            </button>
+                            </button> */}
+
+                            {renderModalContent()}
                         </div>
                     </div>
                 </>

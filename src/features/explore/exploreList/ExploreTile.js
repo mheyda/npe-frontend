@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
 import ManualSlideshow from '../../../common/slideshow/ManualSlideshow';
 import { useInView } from 'react-intersection-observer';
-import { selectFavorites, toggleFavorite } from '../../favorites/favoritesSlice';
-import { selectVisited, toggleVisited } from '../../visited/visitedSlice';
+import { selectFavorites, toggleFavorite } from '../../lists/favorites/favoritesSlice';
+import { selectVisited, toggleVisited } from '../../lists/visited/visitedSlice';
 import { useSelector, useDispatch } from 'react-redux';
 
 

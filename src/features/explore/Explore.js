@@ -15,8 +15,8 @@ import FilterPage from './exploreFilter/FilterPage.js';
 import { useEffect, useState } from 'react';
 import './Explore.css';
 import { useNavigate } from 'react-router-dom';
-import { selectToggleStatus as selectFavoritesToggleStatus, setToggleStatus as setFavoritesToggleStatus } from '../favorites/favoritesSlice.js';
-import { selectToggleStatus as selectVisitedToggleStatus, setToggleStatus as setVisitedToggleStatus } from '../visited/visitedSlice.js';
+import { selectToggleStatus as selectFavoritesToggleStatus, setToggleStatus as setFavoritesToggleStatus } from '../lists/favorites/favoritesSlice.js';
+import { selectToggleStatus as selectVisitedToggleStatus, setToggleStatus as setVisitedToggleStatus } from '../lists/visited/visitedSlice.js';
 import Loader from '../../common/loader/Loader.js';
 
 const DEFAULT_SORT = 'Alphabetical (A-Z)';

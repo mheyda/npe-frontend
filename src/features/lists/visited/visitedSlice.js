@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { AuthService } from '../../services/AuthService';
+import { AuthService } from '../../../services/AuthService';
 
 
 export const getVisited = createAsyncThunk('visited/getVisited', async (options, { rejectWithValue }) => {

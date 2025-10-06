@@ -1,46 +1,51 @@
-import './Visited.css';
+import '../Lists.css';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectAllParks, selectParksStatus } from '../explore/exploreSlice';
-import { selectVisited, selectVisitedStatus } from './visitedSlice';
-import ExploreTile from '../explore/exploreList/ExploreTile';
-import Loader from '../../common/loader/Loader';
-import ListTile from '../lists/ListTile';
+import { useNavigate, Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectAllParks, selectParksStatus } from '../../explore/exploreSlice';
+import { selectFavorites, selectFavoritesStatus, selectToggleStatus, setToggleStatus } from './favoritesSlice';
+import ExploreTile from '../../explore/exploreList/ExploreTile';
+import ListTile from '../../lists/ListTile';
+import Loader from '../../../common/loader/Loader';
 
-
-export default function Visited() {
+export default function Favorites() {
 
     const allParks = useSelector(selectAllParks);
     const parksStatus = useSelector(selectParksStatus);
-    const visitedIds = useSelector(selectVisited);
-    const visitedStatus = useSelector(selectVisitedStatus);
+    const favoriteIds = useSelector(selectFavorites);
+    const [favoriteParks, setFavoriteParks] = useState([]);
+    const favoritesStatus = useSelector(selectFavoritesStatus);
+    const toggleStatus = useSelector(selectToggleStatus);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-    const [visitedParks, setVisitedParks] = useState([]);
     const [viewType, setViewType] = useState('list'); // 'detailed' or 'list'
     const [sortOption, setSortOption] = useState('name-asc');
 
     const isLoading =
-        visitedStatus === 'idle' ||
-        visitedStatus === 'loading' ||
+        favoritesStatus === 'idle' ||
+        favoritesStatus === 'loading' ||
         parksStatus === 'idle' ||
         parksStatus === 'loading' ||
-        (visitedStatus === 'succeeded' && visitedParks.length === 0 && visitedIds.length > 0);
+        (favoritesStatus === 'succeeded' && favoriteParks.length === 0 && favoriteIds.length > 0);
 
-    // Get visited parks everytime the user changes their visited parks
     useEffect(() => {
-        setVisitedParks(allParks.filter(park => visitedIds.includes(park.id)));
-    }, [visitedIds, allParks])
+        if (favoritesStatus === 'failed' || toggleStatus === 'failed') {
+            navigate('/user/login?next=/user/favorites');
+            dispatch(setToggleStatus('idle'));
+        }
+    }, [favoritesStatus, toggleStatus, navigate, dispatch]);
 
-    const handleViewToggle = (type) => {
-        setViewType(type);
-    };
+    useEffect(() => {
+        setFavoriteParks(allParks.filter(park => favoriteIds.includes(park.id)));
+    }, [favoriteIds, allParks]);
 
+    // Sorting handler
     const handleSortChange = (e) => {
         const value = e.target.value;
         setSortOption(value);
 
-        let sorted = [...visitedParks];
+        let sorted = [...favoriteParks];
 
         switch (value) {
             case 'name-asc':
@@ -59,7 +64,11 @@ export default function Visited() {
                 break;
         }
 
-        setVisitedParks(sorted);
+        setFavoriteParks(sorted);
+    };
+
+    const handleViewToggle = (type) => {
+        setViewType(type);
     };
 
     const renderToggleButtons = () => (
@@ -92,24 +101,24 @@ export default function Visited() {
     if (isLoading) {
         return (
             <main>
-                <h2 className='visited-title'>My Visited Parks</h2>
+                <h2 className='list-title'>My Saved Parks</h2>
                 <Loader />
             </main>
         );
     }
-    
-    if (visitedParks.length > 0) {
+
+    if (favoriteParks.length > 0) {
         return (
             <main>
-                <h2 className='visited-title'>My Visited Parks</h2>
-                <div className="visited-controls">
-                    <div className="sort-dropdown">
-                        <label htmlFor="sort-select" className="sort-label">Sort by:</label>
+                <h2 className='list-title'>My Saved Parks</h2>
+                <div className="list-controls"> {/* Reuse Visited.css class or rename */}
+                    <div className="list-sort-dropdown">
+                        <label htmlFor="list-sort-select" className="list-sort-label">Sort by:</label>
                         <select
-                            id="sort-select"
+                            id="list-sort-select"
                             value={sortOption}
                             onChange={handleSortChange}
-                            className="sort-select"
+                            className="list-sort-select"
                         >
                             <option value="name-asc">Name A-Z</option>
                             <option value="name-desc">Name Z-A</option>
@@ -120,14 +129,13 @@ export default function Visited() {
                     {renderToggleButtons()}
                 </div>
                 <ul className={viewType === 'detailed' ? 'explore-tiles' : 'list-tiles'}>
-                    {visitedParks.map((park, index) => {
+                    {favoriteParks.map((park, index) => {
                         return viewType === 'detailed' ? (
                             <ExploreTile key={index} park={park} />
                         ) : (
-                            <ListTile key={index} park={park} />
-                        )
+                            <ListTile key={index} park={park} list={"favorites"} />
+                        );
                     })}
-                    {console.log(visitedParks)}
                 </ul>
             </main>
         );
@@ -135,16 +143,16 @@ export default function Visited() {
 
     return (
         <main>
-            <h2 className='visited-title'>My Visited Parks</h2>
+            <h2 className='list-title'>My Saved Parks</h2>
             <div className='no-results'>
                 <img
-                    src={require('../../assets/images/tent.svg').default}
+                    src={require('../../../assets/images/tent.svg').default}
                     alt="No parks found"
                     className='no-results-img'
                     height='600'
                     width='400'
                 />
-                <p className="no-results-label">Oops, you haven't visited any parks yet!<br></br><Link className="underline" to={'/'}>Click here</Link> to explore.</p>
+                <p className="no-results-label">Oops, you have nothing saved!<br></br><Link className="underline" to={'/'}>Click here</Link> to explore.</p>
             </div>
         </main>
     );

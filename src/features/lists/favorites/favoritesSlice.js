@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { AuthService } from '../../services/AuthService';
+import { AuthService } from '../../../services/AuthService';
 
 export const getFavorites = createAsyncThunk('favorites/getFavorites', async (options, { rejectWithValue }) => {
   // Make request to get user's favorites.
