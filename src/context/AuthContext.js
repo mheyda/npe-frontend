@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }) => {
         } else {
             localStorage.setItem('tokens', JSON.stringify(login.data));
             setIsLoggedIn(true);
-            navigate(nextPath, { replace: true });
+            window.location.href = nextPath;
         }
     };
 
