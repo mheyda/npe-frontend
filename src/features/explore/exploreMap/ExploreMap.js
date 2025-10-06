@@ -39,12 +39,9 @@ export default function ExploreMap({ parks, searchMessage, filterMessage, filter
     const initialCurrentPark = useMemo(() => {
         if (storedCurrentPark) {
             return JSON.parse(storedCurrentPark).name;
-        } else if (parks && parks.length > 0) {
-            const randomIndex = Math.floor(Math.random() * parks.length);
-            return parks[randomIndex].name;
         }
         return null;
-    }, [storedCurrentPark, parks]);
+    }, [storedCurrentPark]);
     
     const currentParkRef = useRef(initialCurrentPark);
     
