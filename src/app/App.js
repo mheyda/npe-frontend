@@ -23,6 +23,7 @@ import { getFavorites, selectFavoritesStatus } from '../features/lists/favorites
 import { getVisited, selectVisitedStatus } from '../features/lists/visited/visitedSlice';
 import { useAuth } from '../context/AuthContext';
 import RequireAuth from '../features/user/RequireAuth.js';
+import ScrollToTop from '../utilityFunctions/ScrollToTop';
 import './App.css';
 
 function App() {
@@ -66,6 +67,7 @@ function App() {
 	return (
 		<>
 			<NavBar />
+			<ScrollToTop />
 			<Routes>
 				<Route index element={<Explore />} />
 				<Route path='/' element={<Explore />} />
