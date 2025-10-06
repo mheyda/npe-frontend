@@ -68,7 +68,7 @@ export default function Explore() {
     // If an error occured while fetching the parks
     if (error) {
         return (
-            <main>Sorry! Something went wrong.</main>
+            <main>Sorry, something went wrong. Please try again.</main>
         )
     }
 

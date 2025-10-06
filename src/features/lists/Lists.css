@@ -23,7 +23,7 @@
 
 /* Label text */
 .list-sort-label {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 500;
     color: var(--neutral-dark);
     line-height: 1;
@@ -31,7 +31,7 @@
 
 /* Dropdown select styling */
 .list-sort-select {
-    padding: 0.5rem 0.75rem;
+    padding: 0.5rem 3rem 0.5rem 0.75rem;
     border: 1px solid var(--neutral-light);
     border-radius: 6px;
     font-size: 0.9rem;
@@ -44,6 +44,13 @@
     align-items: center;
     line-height: 1.2;
     flex-grow: 1;
+
+    position: relative;
+    background: url('../../assets/images/chevron-down-solid.svg') no-repeat right 1rem center;
+    background-size: 12px;
+    -moz-appearance: none; 
+    -webkit-appearance: none; 
+    appearance: none;
 }
 
 .list-sort-select:hover,
@@ -104,7 +111,7 @@
 
 .icon-wrapper {
     display: flex;
-    gap: 0.25rem;
+    gap: 0.4rem;
     align-items: center;
 }
 
@@ -114,6 +121,6 @@
 }
 
 .icon-label {
-    font-size: 0.7rem;
+    font-size: 0.9rem;
     font-weight: 500;
 }

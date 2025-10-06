@@ -74,17 +74,6 @@ export default function Favorites() {
     const renderToggleButtons = () => (
         <div className="view-toggle-icon-buttons" role="group" aria-label="View type toggle">
             <button
-                className={viewType === 'detailed' ? 'active' : ''}
-                onClick={() => handleViewToggle('detailed')}
-                title="Detailed View"
-                aria-label="Detailed View"
-            >
-                <div className="icon-wrapper">
-                    <i className="fa-solid fa-table-cells-large"></i>
-                    <span className="icon-label">Grid</span>
-                </div>
-            </button>
-            <button
                 className={viewType === 'list' ? 'active' : ''}
                 onClick={() => handleViewToggle('list')}
                 title="List View"
@@ -93,6 +82,17 @@ export default function Favorites() {
                 <div className="icon-wrapper">
                     <i className="fa-solid fa-list"></i>
                     <span className="icon-label">List</span>
+                </div>
+            </button>
+            <button
+                className={viewType === 'detailed' ? 'active' : ''}
+                onClick={() => handleViewToggle('detailed')}
+                title="Detailed View"
+                aria-label="Detailed View"
+            >
+                <div className="icon-wrapper">
+                    <i className="fa-solid fa-table-cells-large"></i>
+                    <span className="icon-label">Grid</span>
                 </div>
             </button>
         </div>
