@@ -83,9 +83,9 @@ export default function ListTile({ park, list }) {
                     </button>
                     <button onClick={handleToggleVisited} title={visited && visited.includes(park.id) ? "Unmark as visited" : "Mark as visited"}>
                         {visited && visited.includes(park.id) ? (
-                            <i class="fa-regular fa-circle-xmark"></i>
+                            <i className="fa-regular fa-circle-xmark"></i>
                         ) : (
-                            <i class="fa-regular fa-circle-check"></i>
+                            <i className="fa-regular fa-circle-check"></i>
                         )}
                         <span className="menu-label">
                             {visited && visited.includes(park.id) ? "Unmark as visited" : "Mark as visited"}
@@ -108,7 +108,7 @@ export default function ListTile({ park, list }) {
                     </button>
                     <button onClick={handleToggleSaved} title={favorites && favorites.includes(park.id) ? "Unsave this park" : "Save this park"}>
                         {favorites && favorites.includes(park.id) ? (
-                            <i class="fa-regular fa-circle-xmark"></i>
+                            <i className="fa-regular fa-circle-xmark"></i>
                         ) : (
                             <i className="fa-regular fa-bookmark"></i>
                         )}

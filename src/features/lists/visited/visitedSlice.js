@@ -60,7 +60,7 @@ export const visitedSlice = createSlice({
     builder
     .addCase(getVisited.pending, (state) => {
       state.visitedStatus = 'loading';
-      state.error = null;
+      state.visitedError = null;
     })
     .addCase(getVisited.fulfilled, (state, action) => {
       state.visitedStatus = 'succeeded'
@@ -72,7 +72,7 @@ export const visitedSlice = createSlice({
     })
     .addCase(toggleVisited.pending, (state) => {
       state.toggleStatus = 'loading';
-      state.error = null;
+      state.visitedError = null;
     })
     .addCase(toggleVisited.fulfilled, (state, action) => {
       state.toggleStatus = 'succeeded'
@@ -89,6 +89,7 @@ export const { setToggleStatus, clearVisited } = visitedSlice.actions;
 
 export const selectVisited = (state) => state.visited.visited;
 export const selectVisitedStatus = (state) => state.visited.visitedStatus;
+export const selectVisitedError = (state) => state.visited.visitedError;
 export const selectToggleStatus = (state) => state.visited.toggleStatus;
 
 export default visitedSlice.reducer;

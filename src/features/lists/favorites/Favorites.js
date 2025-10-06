@@ -1,9 +1,9 @@
 import '../Lists.css';
-import { useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { selectAllParks, selectParksStatus } from '../../explore/exploreSlice';
-import { selectFavorites, selectFavoritesStatus, selectToggleStatus, setToggleStatus } from './favoritesSlice';
+import { selectFavorites, selectFavoritesStatus } from './favoritesSlice';
 import ExploreTile from '../../explore/exploreList/ExploreTile';
 import ListTile from '../../lists/ListTile';
 import Loader from '../../../common/loader/Loader';
@@ -13,14 +13,28 @@ export default function Favorites() {
     const allParks = useSelector(selectAllParks);
     const parksStatus = useSelector(selectParksStatus);
     const favoriteIds = useSelector(selectFavorites);
-    const [favoriteParks, setFavoriteParks] = useState([]);
     const favoritesStatus = useSelector(selectFavoritesStatus);
-    const toggleStatus = useSelector(selectToggleStatus);
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
 
     const [viewType, setViewType] = useState('list'); // 'detailed' or 'list'
     const [sortOption, setSortOption] = useState('name-asc');
+
+    
+    const favoriteParks = useMemo(() => {
+        let filtered = allParks.filter(park => favoriteIds.includes(park.id));
+
+        switch (sortOption) {
+            case 'name-asc':
+                return [...filtered].sort((a, b) => a.fullName.localeCompare(b.fullName));
+            case 'name-desc':
+                return [...filtered].sort((a, b) => b.fullName.localeCompare(a.fullName));
+            case 'state-asc':
+                return [...filtered].sort((a, b) => a.states.localeCompare(b.states));
+            case 'state-desc':
+                return [...filtered].sort((a, b) => b.states.localeCompare(a.states));
+            default:
+                return filtered;
+        }
+    }, [allParks, favoriteIds, sortOption]);
 
     const isLoading =
         favoritesStatus === 'idle' ||
@@ -29,42 +43,9 @@ export default function Favorites() {
         parksStatus === 'loading' ||
         (favoritesStatus === 'succeeded' && favoriteParks.length === 0 && favoriteIds.length > 0);
 
-    useEffect(() => {
-        if (favoritesStatus === 'failed' || toggleStatus === 'failed') {
-            navigate('/user/login?next=/user/favorites');
-            dispatch(setToggleStatus('idle'));
-        }
-    }, [favoritesStatus, toggleStatus, navigate, dispatch]);
-
-    useEffect(() => {
-        setFavoriteParks(allParks.filter(park => favoriteIds.includes(park.id)));
-    }, [favoriteIds, allParks]);
-
     // Sorting handler
     const handleSortChange = (e) => {
-        const value = e.target.value;
-        setSortOption(value);
-
-        let sorted = [...favoriteParks];
-
-        switch (value) {
-            case 'name-asc':
-                sorted.sort((a, b) => a.fullName.localeCompare(b.fullName));
-                break;
-            case 'name-desc':
-                sorted.sort((a, b) => b.fullName.localeCompare(a.fullName));
-                break;
-            case 'state-asc':
-                sorted.sort((a, b) => a.states.localeCompare(b.states));
-                break;
-            case 'state-desc':
-                sorted.sort((a, b) => b.states.localeCompare(a.states));
-                break;
-            default:
-                break;
-        }
-
-        setFavoriteParks(sorted);
+        setSortOption(e.target.value);
     };
 
     const handleViewToggle = (type) => {
@@ -98,22 +79,22 @@ export default function Favorites() {
         </div>
     );
 
-    if (isLoading) {
-        return (
-            <main>
-                <h2 className='list-title'>My Saved Parks</h2>
-                <Loader />
-            </main>
-        );
-    }
-
-     if (favoritesStatus === 'failed' || parksStatus === 'failed') {
+    if (favoritesStatus === 'failed' || parksStatus === 'failed') {
         return (
             <main>
                 <h2 className='list-title'>My Saved Parks</h2>
                 <div className='error-message'>
                     <p>There was an error loading your saved parks. Please try again.</p>
                 </div>
+            </main>
+        );
+    }
+
+    if (isLoading) {
+        return (
+            <main>
+                <h2 className='list-title'>My Saved Parks</h2>
+                <Loader />
             </main>
         );
     }
