@@ -48,7 +48,7 @@ export default function ExplorePark() {
                     <h1>{park.designation}</h1>
                     <p>{park.addresses[0].city}, {park.addresses[0].stateCode}</p>
                 </div>
-                <img src={park.images[0].url} onError={handleImageError} alt={park.images[0].altText} />
+                <img src={park.images[0].image_large} onError={handleImageError} alt={park.images[0].altText} />
                 <button 
                     onClick={() => dispatch(toggleVisited({id: park.id}))} 
                     className='park-toggle-visited'
@@ -224,7 +224,7 @@ export default function ExplorePark() {
                         })}
                         <div className='park-contact-info'>
                             <p><strong>Phone: </strong></p>
-                            <p>{park.contacts[0].phoneNumbers[0].phoneNumber} ({park.contacts[0].phoneNumbers[0].type})</p>
+                            <p>{park.contacts.phoneNumbers[0].phoneNumber} ({park.contacts.phoneNumbers[0].type})</p>
                             <br></br>
                             <strong><a target="_blank" rel="noreferrer" href={park.url}>Official Website <i className="fa-solid fa-up-right-from-square"></i></a></strong>
                         </div>

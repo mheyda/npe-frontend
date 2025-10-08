@@ -64,7 +64,7 @@ export default function ManualSlideshow( { images } ) {
                         <Image
                             className="slide"
                             key={index}
-                            src={image.url}
+                            src={image.image_large}
                             alt={image.altText}
                             style={style}
                             loading="lazy"
