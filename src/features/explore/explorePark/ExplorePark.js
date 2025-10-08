@@ -101,30 +101,39 @@ export default function ExplorePark() {
                 </section>
                 <section className='park-section'>
                     <h2 className='park-section-title'>Things to Do</h2>
-                    <ul className='activities-list'>
-                        {park.activities.map((activity, index) => {
-                            return <li className='activity-item' key={index}>{activity.name}</li>
-                        })}
-                    </ul>
+                    {park.activities && park.activities.length > 0 ? (
+                        <ul className='activities-list'>
+                            {park.activities.map((activity, index) => {
+                                return <li className='activity-item' key={index}>{activity.name}</li>
+                            })}
+                        </ul>
+                    ) : (
+                        <p>This park does not currently list any activities.</p>
+                    )}
                 </section>
                 <section className='park-section'>
                     <h2 className='park-section-title'>Tickets & Fees</h2>
-                    <ul>
-                        {park.entranceFees.map((fee, index) => {
-                            let { title, cost } = fee;
-                            if (cost === '0.00') {
-                                if (title.toLowerCase().includes('free')) {
-                                    cost = '';
+
+                    {park.entranceFees && park.entranceFees.length > 0 ? (
+                        <ul>
+                            {park.entranceFees.map((fee, index) => {
+                                let { title, cost } = fee;
+                                if (cost === '0.00') {
+                                    if (title.toLowerCase().includes('free')) {
+                                        cost = '';
+                                    }
+                                    else {
+                                        cost = ' (FREE)';
+                                    }
+                                } else {
+                                    cost = ': $' + cost;
                                 }
-                                else {
-                                    cost = ' (FREE)';
-                                }
-                            } else {
-                                cost = ': $' + cost;
-                            }
-                            return <li key={index}>{`${title}${cost}`}</li>
-                        })}
-                    </ul>
+                                return <li key={index}>{`${title}${cost}`}</li>
+                            })}
+                        </ul>
+                    ) : (
+                        <p>This park does not currently list any entrance fees.</p>
+                    )}
                 </section>
                 <section className='park-section'>
                     <h2 className='park-section-title'>Weather <WeatherFormatToggler /></h2>
@@ -147,13 +156,13 @@ export default function ExplorePark() {
                                 <div key={index} className='hours-section'>
                                     <h3>{hours.name.toLowerCase().trim().split(/\s+/).map(word => word[0].toUpperCase() + word.substr(1)).join(' ')}</h3>
                                     <div>
-                                        <p><strong>Sunday: </strong>{hours.standardHours.sunday}</p>
-                                        <p><strong>Monday: </strong>{hours.standardHours.monday}</p>
-                                        <p><strong>Tuesday: </strong>{hours.standardHours.tuesday}</p>
-                                        <p><strong>Wednesday: </strong>{hours.standardHours.wednesday}</p>
-                                        <p><strong>Thursday: </strong>{hours.standardHours.thursday}</p>
-                                        <p><strong>Friday: </strong>{hours.standardHours.friday}</p>
-                                        <p><strong>Saturday: </strong>{hours.standardHours.saturday}</p>
+                                        <p><strong>Sunday: </strong>{hours.standardHours[0].sunday}</p>
+                                        <p><strong>Monday: </strong>{hours.standardHours[0].monday}</p>
+                                        <p><strong>Tuesday: </strong>{hours.standardHours[0].tuesday}</p>
+                                        <p><strong>Wednesday: </strong>{hours.standardHours[0].wednesday}</p>
+                                        <p><strong>Thursday: </strong>{hours.standardHours[0].thursday}</p>
+                                        <p><strong>Friday: </strong>{hours.standardHours[0].friday}</p>
+                                        <p><strong>Saturday: </strong>{hours.standardHours[0].saturday}</p>
                                     </div>
                                 </div>
                             );
@@ -163,13 +172,13 @@ export default function ExplorePark() {
                                     <h3>{hours.name.toLowerCase().trim().split(/\s+/).map(word => word[0].toUpperCase() + word.substr(1)).join(' ')}</h3>
                                     <p className='park-section-paragraph'>{hours.description}</p>
                                     <div>
-                                        <p><strong>Sunday: </strong>{hours.standardHours.sunday}</p>
-                                        <p><strong>Monday: </strong>{hours.standardHours.monday}</p>
-                                        <p><strong>Tuesday: </strong>{hours.standardHours.tuesday}</p>
-                                        <p><strong>Wednesday: </strong>{hours.standardHours.wednesday}</p>
-                                        <p><strong>Thursday: </strong>{hours.standardHours.thursday}</p>
-                                        <p><strong>Friday: </strong>{hours.standardHours.friday}</p>
-                                        <p><strong>Saturday: </strong>{hours.standardHours.saturday}</p>
+                                        <p><strong>Sunday: </strong>{hours.standardHours[0].sunday}</p>
+                                        <p><strong>Monday: </strong>{hours.standardHours[0].monday}</p>
+                                        <p><strong>Tuesday: </strong>{hours.standardHours[0].tuesday}</p>
+                                        <p><strong>Wednesday: </strong>{hours.standardHours[0].wednesday}</p>
+                                        <p><strong>Thursday: </strong>{hours.standardHours[0].thursday}</p>
+                                        <p><strong>Friday: </strong>{hours.standardHours[0].friday}</p>
+                                        <p><strong>Saturday: </strong>{hours.standardHours[0].saturday}</p>
                                     </div>
                                 </div>
                             );
@@ -215,7 +224,7 @@ export default function ExplorePark() {
                         })}
                         <div className='park-contact-info'>
                             <p><strong>Phone: </strong></p>
-                            <p>{park.contacts.phoneNumbers[0].phoneNumber}</p>
+                            <p>{park.contacts[0].phoneNumbers[0].phoneNumber} ({park.contacts[0].phoneNumbers[0].type})</p>
                             <br></br>
                             <strong><a target="_blank" rel="noreferrer" href={park.url}>Official Website <i className="fa-solid fa-up-right-from-square"></i></a></strong>
                         </div>
