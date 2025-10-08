@@ -130,7 +130,7 @@ export default function ListTile({ park, list }) {
                     onClick={() => sessionStorage.setItem('currentPark', JSON.stringify(park))}
                 >
                     <div className="list-tile-image-container">
-                        <img src={park.images[0]?.url} alt={park.images[0]?.altText || park.fullName} className="list-tile-thumbnail" />
+                        <img src={park.images[0]?.image_thumbnail} alt={park.images[0]?.altText || park.fullName} className="list-tile-thumbnail" />
                     </div>
                     <div className="list-tile-info">
                         <h3 className="list-tile-title">{park.fullName}</h3>
