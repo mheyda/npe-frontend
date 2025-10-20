@@ -35,7 +35,7 @@ export const exploreSlice = createSlice({
       stateCodes: [],
     },
     query: '',
-    view: sessionStorage.getItem('preferredView') || 'map',
+    view: sessionStorage.getItem('preferredView') || 'list',
     parksStatus: 'idle',
     error: null,
   },
