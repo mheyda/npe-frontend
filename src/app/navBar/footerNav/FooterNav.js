@@ -7,8 +7,9 @@ export default function FooterNav({ isLoggedIn, authLoading, handleLogout, userN
 
     const location = useLocation();
     const [navPromptTarget, setNavPromptTarget] = useState(null);
+    const [parkGuideOpen, setParkGuideOpen] = useState(false);
 
-    const skeletonButtons = [1, 2, 3, 4].map((_, i) => (
+    const skeletonButtons = [1, 2, 3, 4, 5].map((_, i) => (
         <div key={i} className="skeleton-nav-button" aria-hidden="true">
             <div className="skeleton skeleton-icon"></div>
             <div className="skeleton skeleton-text"></div>
@@ -37,6 +38,16 @@ export default function FooterNav({ isLoggedIn, authLoading, handleLogout, userN
                         <Link className={`footer-nav-link ${location.pathname === '/user/favorites' ? 'active' : ''}`} to={'/user/favorites'}>
                             <i className="fa-regular fa-bookmark"></i>
                             <span>Saved</span>
+                        </Link>
+                        <Link
+                            className={`footer-nav-link ${location.pathname === '/guide' ? 'active' : ''} parkguide-btn`}
+                            to={'/guide'}
+                            aria-label="Open ParkGuide"
+                        >
+                            <div className="icon-circle">
+                                <i className="fa-regular fa-compass"></i>
+                            </div>
+                            <span>Guide<sup>AI</sup></span>
                         </Link>
                         <Link className={`footer-nav-link ${location.pathname === '/user/visited' ? 'active' : ''}`} to={'/user/visited'}>
                             <i className="fa-regular fa-circle-check"></i>
@@ -68,6 +79,16 @@ export default function FooterNav({ isLoggedIn, authLoading, handleLogout, userN
                             <i className="fa-regular fa-bookmark"></i>
                             <span>Saved</span>
                         </button>
+                        <Link
+                            className={`footer-nav-link ${location.pathname === '/guide' ? 'active' : ''} parkguide-btn`}
+                            to={'/guide'}
+                            aria-label="Open ParkGuide"
+                        >
+                            <div className="icon-circle">
+                                <i className="fa-regular fa-compass"></i>
+                            </div>
+                            <span>Guide<sup>AI</sup></span>
+                        </Link>
                         <button
                             className="footer-nav-link"
                             onClick={() => {

@@ -1,0 +1,305 @@
+/* Container */
+/* .chatbot-container {
+  position: fixed;
+  top: env(safe-area-inset-top, 70px);
+  bottom: env(safe-area-inset-bottom, 0);
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  z-index: 50;
+} */
+
+
+.chatbot-container { 
+    position: relative;
+    max-width: 100vw;
+    /* If header or footer navbar height changes, change this */
+    height: calc(100dvh - 75px - 60px);
+    overflow: hidden;
+    border-radius: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+@supports not (height: 100dvh) {
+    .chatbot-container {
+        height: calc(var(--vh, 1vh) * 100 - 75px - 60px);
+    }
+}
+
+@media (min-width: 576px) {
+    .chatbot-container { 
+        height: calc(100vh - 96px - 60px);
+    }
+}
+
+@media (min-width: 768px) {
+    .chatbot-container {
+        height: calc(100vh - 96px);
+    }
+}
+
+/* Messages area */
+.chatbot-messages-container {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  background-color: var(--neutral-xlight);
+  background: url('/src/assets/images/chatbot-background2.jpg') center/cover no-repeat;
+  background-size: cover;
+}
+
+.chatbot-messages {
+  padding: 2rem 0.75rem 0.75rem 0.75rem;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: var(--chatbot-container-width);
+}
+
+.chatbot-messages-end {
+  height: 5rem;
+  flex-shrink: 0;
+}
+
+.chatbot-message {
+  max-width: 80%;
+  padding: 8px 12px;
+  border-radius: 18px;
+  line-height: 1.4;
+  word-break: break-word;
+  white-space: pre-wrap; /* Preserve line breaks and wrapping */
+}
+
+.user-message {
+  background-color: #4a90e2;
+  color: white;
+  align-self: flex-end;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.bot-message {
+  background-color: var(--neutral-xlight);
+  background-color: white;
+  color: #000;
+  align-self: flex-start;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.scroll-to-bottom-button {
+  position: sticky;
+  bottom: 10px; /* sticks to bottom of messages container */
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--neutral-dark);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  padding: 1rem;
+  width: 2rem;
+  height: 2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, background-color 0.2s;
+}
+
+.scroll-to-bottom-button.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Input container */
+.chatbot-input-container {
+  border-top: 1px solid #ddd;
+  background-color: #fff;
+  padding-top: 0.5rem;
+  padding-right: 0.5rem;
+  padding-bottom: 1rem;
+  padding-left: 0.5rem;
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+    .chatbot-input-container {
+        padding-bottom: 0.5rem;
+    }
+}
+
+/* Input wrapper: border around textarea + footer */
+.chatbot-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  border-radius: 1rem;
+  padding: 0.25rem;
+  background-color: #fff;
+  max-width: var(--chatbot-container-width);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Textarea */
+.chatbot-textarea {
+  width: 100%;
+  resize: none;
+  padding: 0.25rem;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  font-family: inherit;
+  line-height: 1.4;
+  box-sizing: border-box;
+  min-height: 1rem;
+  max-height: 150px;
+  overflow-y: auto;
+  white-space: break-spaces;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  transition: border-color 0.2s;
+}
+
+/* Footer row: char count + send button */
+.chatbot-input-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-left: 0.25rem;
+  padding-right: 0rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0rem;
+}
+
+.chatbot-char-count {
+  font-size: 12px;
+  color: #28a745;
+}
+
+.chatbot-char-count-near-limit {
+  color: #d39e00; /* yellow */
+}
+
+/* Limit reached */
+.chatbot-char-count-limit {
+  color: #e14b4b; /* red */
+}
+
+/* Send button */
+.chatbot-send-button {
+  width: 2rem;
+  height: 2rem;
+  background-color: #4a90e2;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.chatbot-send-button:hover {
+  background-color: #357ab8;
+}
+
+.chatbot-send-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.7;
+  transform: none;
+}
+
+/* Custom blinking cursor for streamed text */
+.blinking-cursor {
+  display: inline-block;
+  width: 1px;
+  background-color: black;
+  animation: blink 1s step-start infinite;
+  margin-left: 2px;
+}
+
+@keyframes blink {
+  50% {
+    background-color: transparent;
+  }
+}
+
+/* Scrollbar styling inside textarea */
+.chatbot-textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chatbot-textarea::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 12px;
+  margin: 4px;
+  padding-right: 2px;
+}
+
+.chatbot-textarea::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.25);
+  border-radius: 6px;
+  border: 2px solid #fff;
+}
+
+.chatbot-textarea::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.35);
+}
+
+/* Typing/loading indicator */
+.loading-bubble {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 8px 12px;
+}
+
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 16px;
+}
+
+.typing-indicator span {
+  width: 6px;
+  height: 6px;
+  background-color: #666;
+  border-radius: 50%;
+  opacity: 0.5;
+  animation: typing-bounce 1.4s infinite ease-in-out both;
+}
+
+.typing-indicator span:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.typing-indicator span:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes typing-bounce {
+  0%, 80%, 100% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

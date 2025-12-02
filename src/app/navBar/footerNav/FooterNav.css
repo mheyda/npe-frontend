@@ -51,7 +51,7 @@
     font-size: 0.9rem;
 }
 
-.footer-nav-link.active {
+.footer-nav-link.active:not(.parkguide-btn) {
     border-top: 3px solid var(--primary);
     padding-bottom: 3px;
 }
@@ -221,4 +221,68 @@
   padding: 8px 0;
   flex: 1 0 0%;        
   box-sizing: border-box;
+}
+
+/* Featured ParkGuide button */
+.footer-nav .parkguide-btn {
+  position: relative;
+  flex: 1 0 0%;
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  margin-top: -10px; /* makes it peek above the bar slightly */
+  z-index: 2;
+}
+
+/* Circle background for the icon */
+.footer-nav .parkguide-btn .icon-circle {
+  background-color: var(--primary);
+  color: #fff;
+  border-radius: 50%;
+  width: 2.75rem;
+  height: 2.75rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  aspect-ratio: 1 / 1;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+/* Icon inside the circle */
+.footer-nav .parkguide-btn i {
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+/* Label text */
+.footer-nav .parkguide-btn span {
+  color: var(--primary);
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+/* Hover & tap animation */
+.footer-nav .parkguide-btn:hover .icon-circle,
+.footer-nav .parkguide-btn:active .icon-circle {
+  background-color: var(--primary);
+  
+}
+
+.footer-nav .parkguide-btn span sup {
+    font-size: 0.6rem;          /* match the superscript size */
+    vertical-align: text-top;   /* aligns nicely with the superscript text */
+}
+
+.footer-nav-link.parkguide-btn.active span {
+  font-weight: 600;
+}
+
+.footer-nav-link.parkguide-btn.active .icon-circle {
+  box-shadow: 0 0 12px rgba(44, 110, 73, 0.3), 0 6px 16px rgba(44, 110, 73, 0.4);
 }

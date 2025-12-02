@@ -73,7 +73,11 @@ export default function HeaderNav({ isLoggedIn, authLoading, handleLogout, userN
                                     <span>Explore</span>
                                     <i className="fa-solid fa-chevron-right chevron"></i>
                                 </Link>
-
+                                <Link onClick={() => setUserNavOpen(false)} className={`header-nav-link ${isActive('/guide') ? 'active' : ''}`} to={'/guide'}>
+                                    <i className="fa-regular fa-compass"></i>
+                                    <span>Guide<sup> AI</sup></span>
+                                    <i className="fa-solid fa-chevron-right chevron"></i>
+                                </Link>
                                 <Link onClick={() => setUserNavOpen(false)} className={`header-nav-link ${isActive('/user/favorites') ? 'active' : ''}`} to={'user/favorites'}>
                                     <i className="fa-regular fa-bookmark"></i>
                                     <span>Saved Parks</span>
@@ -113,7 +117,11 @@ export default function HeaderNav({ isLoggedIn, authLoading, handleLogout, userN
                                     <span>Explore</span>
                                     <i className="fa-solid fa-chevron-right chevron"></i>
                                 </Link>
-
+                                <Link onClick={() => setUserNavOpen(false)} className={`header-nav-link ${isActive('/guide') ? 'active' : ''}`} to={'/guide'}>
+                                    <i className="fa-regular fa-compass"></i>
+                                    <span>Guide<sup> AI</sup></span>
+                                    <i className="fa-solid fa-chevron-right chevron"></i>
+                                </Link>
                                 <button
                                     onClick={() => setNavPromptTarget('saved')}
                                     className={`header-nav-link ${isActive('/user/favorites') ? 'active' : ''}`}
@@ -122,7 +130,6 @@ export default function HeaderNav({ isLoggedIn, authLoading, handleLogout, userN
                                     <span>Saved Parks</span>
                                     <i className="fa-solid fa-chevron-right chevron"></i>
                                 </button>
-
                                 <button
                                     onClick={() => setNavPromptTarget('visited')}
                                     className={`header-nav-link ${isActive('/user/visited') ? 'active' : ''}`}

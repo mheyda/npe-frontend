@@ -297,3 +297,7 @@
 .skeleton-line.short {
   width: 70%;
 }
+
+.header-nav sup {
+    font-size: 0.6rem;
+}

@@ -1,0 +1,99 @@
+
+.welcome-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  padding: 2rem;
+  animation: fadeInOpacity 1s ease forwards;
+  background: url('/src/assets/images/chatbot-background2.jpg') center/cover no-repeat;
+  background-size: cover;
+}
+
+.welcome-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* background-color: rgba(255, 255, 255, 0.7); */
+  pointer-events: none;
+}
+
+.welcome-text {
+  color: white;
+  background-color: var(--neutral-dark);
+  padding: 1rem 3rem;
+  border-radius: 10rem;
+  animation: fadeInSlide 1s ease forwards;
+}
+
+.welcome-text h1 {
+    font-size: 1rem;
+}
+.welcome-container sup {
+  font-size: 0.6rem;
+}
+.welcome-text > .welcome-description {
+    font-size: 0.5rem;
+}
+.welcome-text > .dynamic-text {
+    font-size: 0.6rem;
+    padding-left: 1.75rem;
+}
+
+.welcome-text > * {
+  padding: 0.25rem;
+  font-size: 0.8rem;
+}
+
+.cursor {
+  display: inline-block;
+  width: 1px; /* slightly wider to be visible */
+  background-color: white; /* match your text color */
+  margin-left: 1px; /* optional spacing */
+  animation: blink 1s step-start infinite;
+}
+
+@keyframes blink {
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0; }
+}
+
+@keyframes fadeInOpacity {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInSlide {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Typewriter placeholder to prevent horizontal shift */
+.typewriter {
+  display: inline-block;
+  min-width: 120px; /* adjust based on longest suggestion */
+  text-align: left;
+}
+
+@media (min-width: 576px) {
+    .welcome-text {
+        border-radius: 10rem;
+    }
+    .welcome-text h1 {
+        font-size: 1.5rem;
+    }
+    .welcome-container sup {
+        font-size: 0.9rem;
+    }
+    .welcome-text > .welcome-description {
+        font-size: 1rem;
+    }
+    .welcome-text > .dynamic-text {
+        font-size: 0.8rem;
+        padding-left: 2.25rem;
+    }
+}

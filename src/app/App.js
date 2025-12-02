@@ -19,6 +19,7 @@ import Login from '../features/user/authenticate/login/Login.js';
 import Signup from '../features/user/authenticate/signup/Signup.js';
 import NavBar from './navBar/NavBar';
 import NotFound from '../features/notFound/NotFound';
+import Chatbot from '../features/chatbot/Chatbot.js';
 import { getFavorites, selectFavoritesStatus } from '../features/lists/favorites/favoritesSlice';
 import { getVisited, selectVisitedStatus } from '../features/lists/visited/visitedSlice';
 import { useAuth } from '../context/AuthContext';
@@ -71,6 +72,7 @@ function App() {
 			<Routes>
 				<Route index element={<Explore />} />
 				<Route path='/' element={<Explore />} />
+				<Route path='/guide' element={<Chatbot />} />
 				<Route path="/user" element={<User />} />
 				<Route path="/user/signup" element={<Signup />} />
 				<Route path="/user/login" element={<Login />} />
