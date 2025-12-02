@@ -1,5 +1,5 @@
 import { useEffect, useRef, useMemo } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents, AttributionControl } from 'react-leaflet';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import ManualSlideshow from '../../../common/slideshow/ManualSlideshow';
@@ -112,11 +112,16 @@ export default function ExploreMap({ parks, searchMessage, filterMessage, filter
                 scrollWheelZoom={true} 
                 maxBounds={[[-90, -360], [90, 360]]} 
                 maxBoundsViscosity={1}
+                attributionControl={false}
             >
                 <MapEventHandler onMoveEnd={onMoveEnd} />
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <AttributionControl
+                    position="bottomright"
+                    prefix={false} // This removes the "Leaflet" text
                 />
                 {parks && parks.length > 0 &&
                     parks.map((park, index) => {
