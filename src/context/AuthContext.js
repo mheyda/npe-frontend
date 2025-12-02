@@ -45,18 +45,18 @@ export const AuthProvider = ({ children }) => {
             setUsernameError(login.data.detail);
             setPassword('');
         } else {
-            localStorage.setItem('tokens', JSON.stringify(login.data));
+            sessionStorage.setItem('tokens', JSON.stringify(login.data));
             setIsLoggedIn(true);
             window.location.href = nextPath;
         }
     };
 
     const handleLogout = async () => {
-        const tokens = JSON.parse(localStorage.getItem("tokens"));
+        const tokens = JSON.parse(sessionStorage.getItem("tokens"));
         const refresh = tokens?.refresh;
 
         if (!refresh) {
-            localStorage.removeItem("tokens");
+            sessionStorage.removeItem("tokens");
             window.location.href = '/user/login';
             setIsLoggedIn(false);
             return;
@@ -77,7 +77,7 @@ export const AuthProvider = ({ children }) => {
 
         dispatch(clearFavorites());
         dispatch(clearVisited());
-        localStorage.removeItem("tokens");
+        sessionStorage.removeItem("tokens");
         navigate('/user/login');
         setIsLoggedIn(false);
     };
