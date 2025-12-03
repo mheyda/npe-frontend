@@ -64,31 +64,6 @@ function App() {
 		}
 	}, [authLoading, isLoggedIn, favoritesStatus, visitedStatus, dispatch]);
 
-	// Update viewport height variable for iOS
-	useEffect(() => {
-		function updateVH() {
-			const vh = window.visualViewport?.height
-			? window.visualViewport.height * 0.01
-			: window.innerHeight * 0.01;
-
-			document.documentElement.style.setProperty('--vh', `${vh}px`);
-		}
-
-		updateVH();
-
-		window.addEventListener('resize', updateVH);
-
-		if (window.visualViewport) {
-			window.visualViewport.addEventListener('resize', updateVH);
-		}
-
-		return () => {
-			window.removeEventListener('resize', updateVH);
-			if (window.visualViewport) {
-			window.visualViewport.removeEventListener('resize', updateVH);
-			}
-		};
-	}, []);
 
 	return (
 		<>
