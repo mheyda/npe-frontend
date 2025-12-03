@@ -4,7 +4,7 @@ const baseUrl = 'https://api.marshallcodes.com/'; // For production
 export const AuthService = {
     
     async refreshTokensData() {
-        const tokens = JSON.parse(localStorage.getItem('tokens'));
+        const tokens = JSON.parse(sessionStorage.getItem('tokens'));
 
         if (!tokens) return false;
 
@@ -24,9 +24,9 @@ export const AuthService = {
 
             if (response.ok) {
                 const newTokens = await response.json();
-                const existingTokens = JSON.parse(localStorage.getItem('tokens')) || {};
+                const existingTokens = JSON.parse(sessionStorage.getItem('tokens')) || {};
                 const updatedTokens = { ...existingTokens, ...newTokens };
-                localStorage.setItem('tokens', JSON.stringify(updatedTokens));
+                sessionStorage.setItem('tokens', JSON.stringify(updatedTokens));
                 return true;
             }
 
@@ -39,8 +39,8 @@ export const AuthService = {
         }
     },
 
-    async makeRequestData({ urlExtension, method, body, retrying = false }) {
-        const tokens = JSON.parse(localStorage.getItem('tokens'));
+    async makeRequestData({ urlExtension, method, body, retrying = false, stream = false }) {
+        const tokens = JSON.parse(sessionStorage.getItem('tokens'));
         const access = tokens?.access;
 
         const response = await fetch(baseUrl + urlExtension, {
@@ -54,31 +54,34 @@ export const AuthService = {
             credentials: 'include',
         });
 
-        let json = null;
-        try {
-            json = await response.json();
-        } catch {}
-
-        // If successful, return
-        if (response.ok) {
-            return { data: json, error: false };
-        }
-
         // Handle 401 (unauthorized) once, if not already retried
         if (response.status === 401 && !retrying) {
             console.warn(`[AuthService] Received 401 — trying to refresh token...`);
             const refreshed = await this.refreshTokens();
             if (refreshed) {
                 // Retry original request once after refreshing
-                return this.makeRequestData({ urlExtension, method, body, retrying: true });
+                return this.makeRequestData({ urlExtension, method, body, retrying: true, stream });
             } else {
                 console.error(`[AuthService] Token refresh failed`);
+                return { data: null, error: true };
             }
         }
 
+        // If streaming, return the raw stream immediately
+        if (stream && response.ok && response.body) {
+            return { data: response.body, error: false, streamed: true };
+        }
+
+        // Non-streaming json response
+        let json = null;
+        try {
+            json = await response.json();
+        } catch {}
+
         return {
-            data: json,
-            error: true,
+            data: response.ok ? json : json,
+            error: !response.ok,
+            streamed: false,
         };
     },
 
@@ -86,8 +89,8 @@ export const AuthService = {
         return this.refreshTokensData();
     },
 
-    makeRequest({ urlExtension, method, body }) {
-        return this.makeRequestData({ urlExtension, method, body });
+    makeRequest({ urlExtension, method, body, stream = false }) {
+        return this.makeRequestData({ urlExtension, method, body, stream });
     },
 
 }
