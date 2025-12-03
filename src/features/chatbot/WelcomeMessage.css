@@ -42,6 +42,7 @@
 .welcome-text > .dynamic-text {
     font-size: 1rem;
     text-align: center;
+    margin-left: 2.5rem;
 }
 
 .welcome-text > * {
@@ -50,7 +51,9 @@
 }
 
 .typewriter {
-  display: block;
+  display: inline-block;
+  text-align: left;
+  margin-left: 4px;
 }
 
 .cursor {
@@ -77,25 +80,19 @@
 }
 
 @media (min-width: 576px) {
-    .welcome-text {
-        border-radius: 10rem;
-    }
-    .welcome-text h1 {
-        font-size: 1.5rem;
-    }
-    .welcome-container sup {
-        font-size: 0.9rem;
-    }
-    .welcome-text > .welcome-description {
-        font-size: 0.9rem;
-    }
-    .welcome-text > .dynamic-text {
-        font-size: 1rem;
-        padding-left: 2.5rem;
-    }
-    .typewriter {
-      display: inline-block;
-      text-align: left;
-      margin-left: 4px;
-    }
+  .welcome-text {
+    border-radius: 10rem;
+  }
+  .welcome-text h1 {
+    font-size: 1.5rem;
+  }
+  .welcome-container sup {
+    font-size: 0.9rem;
+  }
+  .welcome-text > .welcome-description {
+    font-size: 0.9rem;
+  }
+  .welcome-text > .dynamic-text {
+    font-size: 1rem;
+  }
 }

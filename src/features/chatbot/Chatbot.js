@@ -11,7 +11,7 @@ import WelcomeMessage from './WelcomeMessage';
 import { setScrollPosition, selectScrollPosition } from './chatbotSlice';
 
 const MAX_CHARS = 1000;
-const MAX_TEXTAREA_HEIGHT = 150; // pixels
+const MAX_TEXTAREA_HEIGHT = 300; // pixels
 const BOTTOM_BUFFER_HEIGHT = 150;
 
 const Chatbot = () => {
@@ -216,12 +216,9 @@ const Chatbot = () => {
             rows={1}
             wrap="soft"
           />
-          <div className="chatbot-input-footer">
-            <div className={`chatbot-char-count`}>{input.length} / {MAX_CHARS}</div>
-            <button type="submit" className="chatbot-send-button" disabled={status === 'loading'}>
-              <i className="fa-solid fa-arrow-up"></i>
-            </button>
-          </div>
+          <button type="submit" className="chatbot-send-button" disabled={status === 'loading'}>
+            <i className="fa-solid fa-arrow-up"></i>
+          </button>
         </div>
       </form>
     </div>
