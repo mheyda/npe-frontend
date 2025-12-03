@@ -1,5 +1,6 @@
 
 .welcome-container {
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -7,8 +8,6 @@
   width: 100%;
   padding: 2rem;
   animation: fadeInOpacity 1s ease forwards;
-  background: url('/src/assets/images/chatbot-background2.jpg') center/cover no-repeat;
-  background-size: cover;
 }
 
 .welcome-container::before {
