@@ -50,7 +50,8 @@ const WelcomeMessage = () => {
         <p className='welcome-description'>
           Your personal guide to America's national parks.
         </p>
-        <p className='dynamic-text'> Try asking me about{' '}
+        <p className='dynamic-text'>
+          <span>Ask me about...</span>
           <span 
             className="typewriter" 
             style={{ minWidth: `${maxLength}ch` }}

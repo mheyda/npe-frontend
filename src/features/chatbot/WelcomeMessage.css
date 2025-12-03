@@ -25,28 +25,32 @@
 .welcome-text {
   color: white;
   background-color: var(--neutral-dark);
-  padding: 1rem 3rem;
+  padding: 1.5rem 3rem;
   border-radius: 10rem;
   animation: fadeInSlide 1s ease forwards;
 }
 
 .welcome-text h1 {
-    font-size: 1rem;
+    font-size: 1.2rem;
 }
 .welcome-container sup {
   font-size: 0.6rem;
 }
 .welcome-text > .welcome-description {
-    font-size: 0.5rem;
+    font-size: 0.8rem;
 }
 .welcome-text > .dynamic-text {
-    font-size: 0.6rem;
-    padding-left: 1.75rem;
+    font-size: 1rem;
+    text-align: center;
 }
 
 .welcome-text > * {
-  padding: 0.25rem;
+  padding: 0.35rem;
   font-size: 0.8rem;
+}
+
+.typewriter {
+  display: block;
 }
 
 .cursor {
@@ -72,13 +76,6 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Typewriter placeholder to prevent horizontal shift */
-.typewriter {
-  display: inline-block;
-  min-width: 120px; /* adjust based on longest suggestion */
-  text-align: left;
-}
-
 @media (min-width: 576px) {
     .welcome-text {
         border-radius: 10rem;
@@ -94,6 +91,11 @@
     }
     .welcome-text > .dynamic-text {
         font-size: 0.8rem;
-        padding-left: 2.25rem;
+        padding-left: 2.5rem;
+    }
+    .typewriter {
+      display: inline-block;
+      text-align: left;
+      margin-left: 4px;
     }
 }
