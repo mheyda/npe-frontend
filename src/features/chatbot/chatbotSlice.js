@@ -3,7 +3,9 @@ import { AuthService } from '../../services/AuthService';
 
 export const sendMessage = createAsyncThunk(
   'chatbot/sendMessage',
-  async (userMessage, { dispatch, rejectWithValue }) => {
+  async (userMessage, { dispatch, getState, rejectWithValue }) => {
+    const state = getState().chatbot;
+
     // Status tests
     if (userMessage === "__force_failed") {
       dispatch(addUserMessage("(TEST) forcing failed"));
@@ -35,7 +37,11 @@ export const sendMessage = createAsyncThunk(
       const response = await AuthService.makeRequest({
         urlExtension: 'api/ask',
         method: 'POST',
-        body: { question: userMessage, debug: 0 },
+        body: { 
+          question: userMessage, 
+          history: state.history, 
+          debug: 0 
+        },
         stream: true,
       });
 
@@ -94,6 +100,10 @@ export const sendMessage = createAsyncThunk(
                 // Always accumulate full text for final message
                 finalBotText += textToAppend;
                 break;
+              
+              case "history":
+                dispatch(setHistory(eventObj.updated_history));
+                break;
 
               case "error":
                 if (eventObj.type === "usage_limit") {
@@ -144,6 +154,7 @@ export const chatbotSlice = createSlice({
     status: 'idle', // idle | loading | succeeded | failed
     error: null,
     scrollPosition: 0,
+    history: [],
   },
   reducers: {
     addUserMessage: (state, action) => {
@@ -165,6 +176,9 @@ export const chatbotSlice = createSlice({
     setScrollPosition: (state, action) => {
       state.scrollPosition = action.payload;
     },
+    setHistory: (state, action) => {
+      state.history = action.payload;
+    },
   },
 });
 
@@ -175,6 +189,7 @@ export const {
   clearStreamedText,
   setStatus,
   setScrollPosition,
+  setHistory,
 } = chatbotSlice.actions;
 
 export const selectMessages = (state) => state.chatbot.messages;
