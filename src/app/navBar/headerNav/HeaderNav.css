@@ -1,7 +1,7 @@
 /* Header navigation */
 .header-nav-container {
     background-color: white;
-    z-index: 1001;
+    z-index: 1003;
     border-bottom: 5px solid var(--neutral-dark);
     position: -webkit-sticky;
 	position: sticky;
