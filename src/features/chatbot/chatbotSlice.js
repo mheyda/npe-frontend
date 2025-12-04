@@ -4,6 +4,27 @@ import { AuthService } from '../../services/AuthService';
 export const sendMessage = createAsyncThunk(
   'chatbot/sendMessage',
   async (userMessage, { dispatch, rejectWithValue }) => {
+    // Status tests
+    if (userMessage === "__force_failed") {
+      dispatch(addUserMessage("(TEST) forcing failed"));
+      dispatch(setStatus("failed"));
+      dispatch(addBotMessage("Something went wrong. Please try resending your message."));
+      return rejectWithValue("forced_failed");
+    }
+
+    if (userMessage === "__force_limit") {
+      dispatch(addUserMessage("(TEST) forcing limit reached"));
+      dispatch(setStatus("limit_reached"));
+      dispatch(addBotMessage("You've reached our monthly usage limit. Please try again next month."));
+      return rejectWithValue("forced_limit");
+    }
+
+    if (userMessage === "__force_starting") {
+      dispatch(addUserMessage("(TEST) forcing starting"));
+      dispatch(setStatus("starting"));
+      return userMessage;
+    }
+
     try {
       // Immediately add user's message
       dispatch(addUserMessage(userMessage));
@@ -22,25 +43,78 @@ export const sendMessage = createAsyncThunk(
       if (response.streamed && response.data) {
         const reader = response.data.getReader();
         const decoder = new TextDecoder();
-        let fullText = '';
+
         let firstChunk = true;
+        let buffer = "";
+        let finalBotText = "";
 
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
-          let chunk = decoder.decode(value, { stream: true });
 
-          if (firstChunk) {
-            chunk = chunk.trimStart();
-            firstChunk = false;
+          buffer += decoder.decode(value, { stream: true });
+
+          // Split into complete lines
+          let lines = buffer.split("\n");
+          buffer = lines.pop(); // keep incomplete line
+
+          for (const line of lines) {
+            if (!line.trim()) continue;
+
+            let eventObj;
+            try {
+              eventObj = JSON.parse(line);
+            } catch (err) {
+              console.error("Failed to parse line:", line, err);
+              continue;
+            }
+
+            // Handle events from backend
+            switch (eventObj.event) {
+              case "starting":
+                dispatch(setStatus("starting"));
+                break;
+
+              case "ready":
+                dispatch(setStatus("generating"));
+                break;
+
+              case "token":
+                let textToAppend = eventObj.text;
+
+                if (firstChunk) {
+                  // Trim only leading whitespace for the first chunk
+                  textToAppend = textToAppend.trimStart();
+                  firstChunk = false;
+                }
+
+                // Append to streaming state
+                dispatch(appendStreamedText(textToAppend));
+
+                // Always accumulate full text for final message
+                finalBotText += textToAppend;
+                break;
+
+              case "error":
+                if (eventObj.type === "usage_limit") {
+                  dispatch(setStatus("limit_reached"));
+                  dispatch(addBotMessage("You've reached our monthly usage limit. Please try again next month."));
+                } else {
+                  dispatch(setStatus("failed"));
+                  dispatch(addBotMessage("Something went wrong. Please try resending your message."));
+                }
+                return rejectWithValue(eventObj.type || "error");
+
+              case "done":
+                dispatch(addBotMessage(finalBotText));
+                dispatch(setStatus("succeeded"));
+                break;
+
+              default:
+                console.warn("Unknown event:", eventObj);
+            }
           }
-
-          fullText += chunk;
-          dispatch(appendStreamedText(chunk));
         }
-
-        dispatch(addBotMessage(fullText));
-        dispatch(setStatus('succeeded'));
       } 
       // --- Handle normal JSON response (non-streaming fallback) ---
       else if (response.data && !response.streamed) {

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   sendMessage,
@@ -9,6 +9,7 @@ import {
 import './Chatbot.css';
 import WelcomeMessage from './WelcomeMessage';
 import { setScrollPosition, selectScrollPosition } from './chatbotSlice';
+import EllipsisLoader from './EllipsisLoader';
 
 const MAX_CHARS = 1000;
 const MAX_TEXTAREA_HEIGHT = 300; // pixels
@@ -18,7 +19,9 @@ const Chatbot = () => {
   const dispatch = useDispatch();
   const messages = useSelector(selectMessages);
   const streamedText = useSelector(selectStreamedText);
+  // const streamedText = "some streaming text";
   const status = useSelector(selectStatus);
+  // const status = "failed";
   const [input, setInput] = useState('');
   const textareaRef = useRef(null);
   const messagesEndRef = useRef(null);
@@ -32,7 +35,7 @@ const Chatbot = () => {
     e.preventDefault();
     if (!input.trim()) return;
 
-    if (status === 'loading') return;
+    if (status === 'loading' || status === 'starting' || status === 'generating') return;
 
     dispatch(sendMessage(input.trim()));
     setInput('');
@@ -47,7 +50,7 @@ const Chatbot = () => {
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      if (status === 'loading') return;
+      if (status === 'loading' || status === 'starting') return;
       handleSubmit(e);
     }
   };
@@ -173,8 +176,9 @@ const Chatbot = () => {
                 {msg.text}
               </div>
             ))}
+
             {/* Bot is typing but hasn't started streaming yet */}
-            {status === 'loading' && !streamedText && (
+            {(status === 'loading' || status === 'generating') && !streamedText && (
               <div className="chatbot-message bot-message loading-bubble">
                 <div className="typing-indicator">
                   <span></span><span></span><span></span>
@@ -183,12 +187,21 @@ const Chatbot = () => {
             )}
 
             {/* Streaming response in progress */}
-            {status === 'loading' && streamedText && (
+            {status === 'generating' && streamedText && (
               <div className="chatbot-message bot-message">
                 {streamedText}
                 <span className="blinking-cursor">|</span>
               </div>
             )}
+            
+            {/* Bot is typing but hasn't started streaming yet */}
+            {status === 'starting' && !streamedText && (
+              <div className="chatbot-message bot-message starting-message">
+                <i className="fa-solid fa-circle status-icon"></i>
+                <div>Starting chat server — this may take a minute<EllipsisLoader /></div>
+              </div>
+            )}
+
             <button
               className={`scroll-to-bottom-button ${isButtonVisible ? 'show' : ''}`}
               onClick={() => {
@@ -198,7 +211,7 @@ const Chatbot = () => {
             >
               <i className="fa-solid fa-arrow-down"></i>
             </button>
-              <div className="chatbot-messages-end" />
+            <div className="chatbot-messages-end" />
             <div ref={messagesEndRef} />
           </div>
         }
@@ -216,7 +229,11 @@ const Chatbot = () => {
             rows={1}
             wrap="soft"
           />
-          <button type="submit" className="chatbot-send-button" disabled={status === 'loading'}>
+          <button 
+            type="submit" 
+            className="chatbot-send-button" 
+            disabled={status === 'loading' || status === 'starting' || status === 'generating'}
+          >
             <i className="fa-solid fa-arrow-up"></i>
           </button>
         </div>
