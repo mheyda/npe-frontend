@@ -92,9 +92,7 @@
 
 
 .scroll-to-bottom-button {
-  position: sticky;
-  bottom: 2rem; /* sticks to bottom of messages container */
-  margin: 0 auto;
+  margin: 0 auto 1rem auto;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -202,15 +202,6 @@ const Chatbot = () => {
               </div>
             )}
 
-            <button
-              className={`scroll-to-bottom-button ${isButtonVisible ? 'show' : ''}`}
-              onClick={() => {
-                messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-                setIsButtonVisible(false);
-              }}
-            >
-              <i className="fa-solid fa-arrow-down"></i>
-            </button>
             <div className="chatbot-messages-end" />
             <div ref={messagesEndRef} />
           </div>
@@ -218,6 +209,16 @@ const Chatbot = () => {
       </div>
 
       <form className="chatbot-input-container" onSubmit={handleSubmit}>
+        <button
+          className={`scroll-to-bottom-button ${isButtonVisible ? 'show' : ''}`}
+          type="button"
+          onClick={() => {
+            messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+            setIsButtonVisible(false);
+          }}
+        >
+          <i className="fa-solid fa-arrow-down"></i>
+        </button>
         <div className="chatbot-input-wrapper">
           <textarea
             ref={textareaRef}
