@@ -4,11 +4,14 @@ import {
   sendMessage,
   selectMessages,
   selectStreamedText,
+  selectInputMessage,
+  setInputMessage,
   selectStatus,
+  selectScrollPosition,
+  setScrollPosition
 } from './chatbotSlice';
 import './Chatbot.css';
 import WelcomeMessage from './WelcomeMessage';
-import { setScrollPosition, selectScrollPosition } from './chatbotSlice';
 import EllipsisLoader from './EllipsisLoader';
 
 const MAX_CHARS = 1000;
@@ -22,7 +25,7 @@ const Chatbot = () => {
   // const streamedText = "some streaming text";
   const status = useSelector(selectStatus);
   // const status = "failed";
-  const [input, setInput] = useState('');
+  const inputMessage = useSelector(selectInputMessage);
   const textareaRef = useRef(null);
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
@@ -33,12 +36,12 @@ const Chatbot = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    if (!inputMessage.trim()) return;
 
     if (status === 'loading' || status === 'starting' || status === 'generating') return;
 
-    dispatch(sendMessage(input.trim()));
-    setInput('');
+    dispatch(sendMessage(inputMessage.trim()));
+    dispatch(setInputMessage(''));
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto'; // Reset textarea height
       textareaRef.current.style.overflowY = 'hidden'; // Hide overflow
@@ -62,7 +65,7 @@ const Chatbot = () => {
       text = text.slice(0, MAX_CHARS);
     }
 
-    setInput(text);
+    dispatch(setInputMessage(text));
     autoResizeTextarea();
   };
 
@@ -79,7 +82,7 @@ const Chatbot = () => {
     if (el.scrollHeight > MAX_TEXTAREA_HEIGHT) {
       el.style.overflowY = 'auto';
 
-      if (selectionEnd === input.length) {
+      if (selectionEnd === inputMessage.length) {
         const style = window.getComputedStyle(el);
         const paddingBottom = parseInt(style.paddingBottom, 10);
         el.scrollTop = el.scrollHeight - el.clientHeight + paddingBottom;
@@ -224,7 +227,7 @@ const Chatbot = () => {
             ref={textareaRef}
             className="chatbot-textarea"
             placeholder="Ask a question..."
-            value={input}
+            value={inputMessage}
             onChange={handleChange}
             onKeyDown={handleKeyDown}
             rows={1}

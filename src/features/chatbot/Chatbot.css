@@ -142,7 +142,7 @@
   flex-direction: row;
   border: 1px solid #ccc;
   border-radius: 1rem;
-  padding: 0.25rem;
+  padding: 0.25rem 0.5rem;
   background-color: #fff;
   max-width: var(--chatbot-container-width);
   margin-left: auto;

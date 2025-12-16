@@ -156,6 +156,7 @@ export const sendMessage = createAsyncThunk(
 export const chatbotSlice = createSlice({
   name: 'chatbot',
   initialState: {
+    inputMessage: '',
     messages: [], // Array of { type: 'user' | 'bot', text: string }
     streamedText: '',
     status: 'idle', // idle | loading | succeeded | failed
@@ -177,6 +178,9 @@ export const chatbotSlice = createSlice({
     clearStreamedText: (state) => {
       state.streamedText = '';
     },
+    setInputMessage: (state, action) => {
+      state.inputMessage = action.payload;
+    },
     setStatus: (state, action) => {
       state.status = action.payload;
     },
@@ -194,6 +198,7 @@ export const {
   addBotMessage,
   appendStreamedText,
   clearStreamedText,
+  setInputMessage,
   setStatus,
   setScrollPosition,
   setHistory,
@@ -201,6 +206,7 @@ export const {
 
 export const selectMessages = (state) => state.chatbot.messages;
 export const selectStreamedText = (state) => state.chatbot.streamedText;
+export const selectInputMessage = (state) => state.chatbot.inputMessage;
 export const selectStatus = (state) => state.chatbot.status;
 export const selectScrollPosition = (state) => state.chatbot.scrollPosition;
 
