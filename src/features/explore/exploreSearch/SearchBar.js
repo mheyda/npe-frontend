@@ -18,7 +18,7 @@ export default function SearchBar() {
 
     const handleSearch = (e) => {
         e.preventDefault();
-        navigate('/');
+        navigate('/explore');
         const query = e.target.queryTerm.value;
         dispatch(setQuery(query));
     }

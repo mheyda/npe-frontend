@@ -68,7 +68,7 @@ export default function HeaderNav({ isLoggedIn, authLoading, handleLogout, userN
                             </div>
                         ) : isLoggedIn ? (
                             <>
-                                <Link onClick={() => setUserNavOpen(false)} className={`header-nav-link ${isActive('/') ? 'active' : ''}`} to={'/'}>
+                                <Link onClick={() => setUserNavOpen(false)} className={`header-nav-link ${isActive('/explore') ? 'active' : ''}`} to={'/explore'}>
                                     <i className="fa-solid fa-magnifying-glass"></i>
                                     <span>Explore</span>
                                     <i className="fa-solid fa-chevron-right chevron"></i>
@@ -87,6 +87,12 @@ export default function HeaderNav({ isLoggedIn, authLoading, handleLogout, userN
                                 <Link onClick={() => setUserNavOpen(false)} className={`header-nav-link ${isActive('/user/visited') ? 'active' : ''}`} to={'user/visited'}>
                                     <i className="fa-regular fa-circle-check"></i>
                                     <span>Visited Parks</span>
+                                    <i className="fa-solid fa-chevron-right chevron"></i>
+                                </Link>
+
+                                <Link onClick={() => setUserNavOpen(false)} className={`header-nav-link ${isActive('/about') ? 'active' : ''}`} to={'/about'}>
+                                    <i className="fa-solid fa-circle-info"></i>
+                                    <span>About</span>
                                     <i className="fa-solid fa-chevron-right chevron"></i>
                                 </Link>
 
@@ -112,7 +118,7 @@ export default function HeaderNav({ isLoggedIn, authLoading, handleLogout, userN
                             </>
                         ) : (
                             <>
-                                <Link onClick={() => setUserNavOpen(false)} className={`header-nav-link ${isActive('/') ? 'active' : ''}`} to={'/'}>
+                                <Link onClick={() => setUserNavOpen(false)} className={`header-nav-link ${isActive('/explore') ? 'active' : ''}`} to={'/explore'}>
                                     <i className="fa-solid fa-magnifying-glass"></i>
                                     <span>Explore</span>
                                     <i className="fa-solid fa-chevron-right chevron"></i>
@@ -138,6 +144,12 @@ export default function HeaderNav({ isLoggedIn, authLoading, handleLogout, userN
                                     <span>Visited Parks</span>
                                     <i className="fa-solid fa-chevron-right chevron"></i>
                                 </button>
+
+                                <Link onClick={() => setUserNavOpen(false)} className={`header-nav-link ${isActive('/about') ? 'active' : ''}`} to={'/about'}>
+                                    <i className="fa-solid fa-circle-info"></i>
+                                    <span>About</span>
+                                    <i className="fa-solid fa-chevron-right chevron"></i>
+                                </Link>
 
                                 <div className="header-nav-separator"></div>
 

@@ -4,8 +4,8 @@
     z-index: 1003;
     border-bottom: 5px solid var(--neutral-dark);
     position: -webkit-sticky;
-	position: sticky;
-	top: 0;
+    position: sticky;
+    top: 0;
 }
 
 .header-nav {
@@ -88,6 +88,10 @@
         width: 220px;
         transition: transform 0.3s ease-in-out;
         z-index: 1;
+    }
+
+    .header-nav-content a i, .header-nav-content button i {
+      color: var(--neutral-dark);
     }
 }
 

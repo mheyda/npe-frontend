@@ -10,6 +10,8 @@ import {
   selectSort, 
   selectFilter, 
 } from '../features/explore/exploreSlice.js';
+import LandingPage from './landingPage/LandingPage.js';
+import About from './about/About';
 import Explore from '../features/explore/Explore.js';
 import ExplorePark from '../features/explore/explorePark/ExplorePark';
 import Favorites from '../features/lists/favorites/Favorites';
@@ -70,8 +72,9 @@ function App() {
 			<NavBar />
 			<ScrollToTop />
 			<Routes>
-				<Route index element={<Explore />} />
-				<Route path='/' element={<Explore />} />
+				<Route index element={<LandingPage />} />
+				<Route path='/explore' element={<Explore />} />
+				<Route path='/about' element={<About />} />
 				<Route path='/guide' element={<Chatbot />} />
 				<Route path="/user" element={<User />} />
 				<Route path="/user/signup" element={<Signup />} />

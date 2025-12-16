@@ -31,7 +31,7 @@ export default function FooterNav({ isLoggedIn, authLoading, handleLogout, userN
             <div className='footer-nav'>
                 {isLoggedIn ? (
                     <>
-                        <Link className={`footer-nav-link ${location.pathname === '/' ? 'active' : ''}`} to={'/'}>
+                        <Link className={`footer-nav-link ${location.pathname === '/explore' ? 'active' : ''}`} to={'/explore'}>
                             <i className="fa-solid fa-magnifying-glass"></i>
                             <span>Explore</span>
                         </Link>
@@ -54,18 +54,18 @@ export default function FooterNav({ isLoggedIn, authLoading, handleLogout, userN
                             <span>Visited</span>
                         </Link>
                         <button
-                            className={`footer-nav-menu-toggler footer-nav-link ${location.pathname === '/user' ? 'active' : ''}`}
+                            className={`footer-nav-menu-toggler footer-nav-link ${location.pathname === '/user' || location.pathname === '/about' ? 'active' : ''}`}
                             type='button'
                             onClick={() => setUserNavOpen(prev => !prev)}
-                            aria-label="Toggle account menu"
+                            aria-label="Toggle more menu options"
                         >
-                            <i className="fa-regular fa-user"></i>
-                            <span>Account</span>
+                            <i className="fa-solid fa-ellipsis"></i>
+                            <span>More</span>
                         </button>
                     </>
                 ) : (
                     <>
-                        <Link className={`footer-nav-link ${location.pathname === '/' ? 'active' : ''}`} to={'/'}>
+                        <Link className={`footer-nav-link ${location.pathname === '/explore' ? 'active' : ''}`} to={'/explore'}>
                             <i className="fa-solid fa-magnifying-glass"></i>
                             <span>Explore</span>
                         </Link>
@@ -99,13 +99,19 @@ export default function FooterNav({ isLoggedIn, authLoading, handleLogout, userN
                             <i className="fa-regular fa-circle-check"></i>
                             <span>Visited</span>
                         </button>
-                        <Link
-                            className={`footer-nav-link ${location.pathname === '/user/login' || location.pathname === '/user/signup' ? 'active' : ''}`}
-                            to="/user/login"
+
+                        <button
+                            className={`footer-nav-menu-toggler footer-nav-link ${location.pathname === '/user/login' || location.pathname === '/user/signup' || location.pathname === '/about' ? 'active' : ''}`}
+                            type='button'
+                            onClick={() => {
+                                setNavPromptTarget('more');
+                                setUserNavOpen(prev => !prev);
+                            }}
+                            aria-label="Toggle more menu options"
                         >
-                            <i className="fa-regular fa-user"></i>
-                            <span>Log in</span>
-                        </Link>
+                            <i className="fa-solid fa-ellipsis"></i>
+                            <span>More</span>
+                        </button>
                     </>
                 )}
 
@@ -119,35 +125,55 @@ export default function FooterNav({ isLoggedIn, authLoading, handleLogout, userN
                     </button>
                     {isLoggedIn ? (
                         <div className='logged-in'>
-                            <h3 className='footer-nav-menu-heading'>My Account</h3>
+                            <h3 className='footer-nav-menu-heading'>More Options</h3>
                             <Link to="/user" onClick={() => setUserNavOpen(false)}>
                                 <i className="fa-regular fa-address-card"></i>
-                                <span className="menu-label">Profile</span>
+                                <span className="menu-label">My Profile</span>
                                 <i className="fa-solid fa-chevron-right chevron"></i>
                             </Link>
+                            <Link to="/about" onClick={() => setUserNavOpen(false)}>
+                                <i className="fa-solid fa-circle-info"></i>
+                                <span className="menu-label">About</span>
+                                <i className="fa-solid fa-chevron-right chevron"></i>
+                            </Link>
+                            <div className="footer-nav-separator"></div>
                             <button onClick={() => { setUserNavOpen(false); handleLogout(); }}>
                                 <i className="fa-solid fa-right-from-bracket"></i>
                                 <span className="menu-label">Log out</span>
                                 <i className="fa-solid fa-chevron-right chevron"></i>
                             </button>
                         </div>
-                    ) : (
-                        <div className='logged-out'>
-                            <h3 className='footer-nav-menu-heading'>{capitalizeFirstLetters(navPromptTarget)} Parks</h3>
-                            <p className="login-prompt-message">
-                                Log in to view or edit your {navPromptTarget} parks
-                            </p>
-                            <div className='login-prompt-btn'>
-                                <Link
-                                    to={`/user/login?next=${navPromptTarget === 'saved' ? '/user/favorites' : '/user/visited'}`}
-                                    className="btn-login"
-                                    onClick={() => setUserNavOpen(false)}
-                                >
-                                    Log in
+                    ) : navPromptTarget === 'more'
+                        ? (<div className='logged-in'>
+                                <h3 className='footer-nav-menu-heading'>More Options</h3>
+                                <Link to="/about" onClick={() => setUserNavOpen(false)}>
+                                    <i className="fa-solid fa-circle-info"></i>
+                                    <span className="menu-label">About</span>
+                                    <i className="fa-solid fa-chevron-right chevron"></i>
                                 </Link>
-                            </div>
-                        </div>
-                    )}
+                                <div className="footer-nav-separator"></div>
+                                <Link to="/user/login" onClick={() => setUserNavOpen(false)}>
+                                    <i className="fa-regular fa-address-card"></i>
+                                    <span className="menu-label">Log in</span>
+                                    <i className="fa-solid fa-chevron-right chevron"></i>
+                                </Link>
+                            </div>)
+                        : (<div className='logged-out'>
+                                <h3 className='footer-nav-menu-heading'>{capitalizeFirstLetters(navPromptTarget)} Parks</h3>
+                                <p className="login-prompt-message">
+                                    Log in to view or edit your {navPromptTarget} parks
+                                </p>
+                                <div className='login-prompt-btn'>
+                                    <Link
+                                        to={`/user/login?next=${navPromptTarget === 'saved' ? '/user/favorites' : '/user/visited'}`}
+                                        className="btn-login"
+                                        onClick={() => setUserNavOpen(false)}
+                                    >
+                                        Log in
+                                    </Link>
+                                </div>
+                            </div>)
+                        }
                 </div>
 
                 {userNavOpen && (
