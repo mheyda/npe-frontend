@@ -7,6 +7,13 @@ export const sendMessage = createAsyncThunk(
     const state = getState().chatbot;
 
     // Status tests
+    if (userMessage === "__force_test") {
+      dispatch(addUserMessage("(TEST) forcing test message"));
+      dispatch(setStatus("succeeded"));
+      dispatch(addBotMessage("Hello! How can I help today?"));
+      return userMessage;
+    }
+
     if (userMessage === "__force_failed") {
       dispatch(addUserMessage("(TEST) forcing failed"));
       dispatch(setStatus("failed"));
