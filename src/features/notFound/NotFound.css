@@ -18,10 +18,8 @@
   color: var(--primary);
   font-weight: bold;
   text-decoration: underline;
-}
-
-.not-found-heading {
-    
+  background-color: transparent;
+  border: none;
 }
 
 .not-found-message {
