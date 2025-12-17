@@ -89,7 +89,7 @@ function App() {
 					<Visited />
 				</RequireAuth>} 
 				/>
-				<Route path="/:parkFullName/:parkCode" element={<ExplorePark />} />
+				<Route path="/explore/:parkFullName/:parkCode" element={<ExplorePark />} />
 				<Route path="*" element={<NotFound />} />
 			</Routes>
 		</>
