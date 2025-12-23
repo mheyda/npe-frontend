@@ -125,7 +125,7 @@ export default function ListTile({ park, list }) {
         <li className="list-tile">
             <div className="list-tile-content">
                 <Link
-                    to={`/${park.parkCode}`}
+                    to={`/explore/${park.parkCode}`}
                     className="list-tile-link"
                     onClick={() => sessionStorage.setItem('currentPark', JSON.stringify(park))}
                 >
