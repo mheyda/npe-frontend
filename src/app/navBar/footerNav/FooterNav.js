@@ -16,6 +16,11 @@ export default function FooterNav({ isLoggedIn, authLoading, handleLogout, userN
         </div>
     ));
 
+
+    if (location.pathname === '/') {
+        return
+    }
+    
     if (authLoading) {
         return (
             <nav className='footer-nav-container'>
@@ -24,10 +29,6 @@ export default function FooterNav({ isLoggedIn, authLoading, handleLogout, userN
                 </div>
             </nav>
         );
-    }
-
-    if (location.pathname === '/') {
-        return
     }
 
     return (
