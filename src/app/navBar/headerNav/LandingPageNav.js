@@ -51,7 +51,7 @@ export default function LandingPageNav({ isLoggedIn, authLoading }) {
                         <div className="landing-page-skeleton"></div>
                     ) : isLoggedIn ? (
                         <span className="landing-page-welcome">
-                            Welcome, {user?.firstName || user?.username || 'User'}
+                            Welcome, {user?.first_name || user?.username || 'user'}
                         </span>
                     ) : (
                         <Link to="/user/login" className="landing-page-login-btn">
