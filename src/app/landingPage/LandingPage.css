@@ -289,9 +289,9 @@
   margin-bottom: 0.5rem;
 }
 
-.browse-item span {
-  font-size: 0.95rem;
-  font-weight: 500;
+.browse-item div {
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
 /* Footer */
