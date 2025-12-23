@@ -26,9 +26,18 @@
 .landing-page-nav-logo img {
     height: 60px;
     filter: 
-        drop-shadow(0 0 1px rgba(255, 255, 255, 0.5))
-        drop-shadow(0 0 1px rgba(255, 255, 255, 0.5))
-        drop-shadow(0 0 1px rgba(255, 255, 255, 0.5));
+        drop-shadow(0 0 2px rgba(255, 255, 255, 0.7))
+        drop-shadow(0 0 2px rgba(255, 255, 255, 0.7))
+        drop-shadow(0 0 2px rgba(255, 255, 255, 0.7));
+}
+
+@media (min-width: 768px) {
+    .landing-page-nav-logo img {
+        filter: 
+            drop-shadow(0 0 1px rgba(255, 255, 255, 0.5))
+            drop-shadow(0 0 1px rgba(255, 255, 255, 0.5))
+            drop-shadow(0 0 1px rgba(255, 255, 255, 0.5));
+    }
 }
 
 .landing-page-nav-actions {
