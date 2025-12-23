@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
         e.preventDefault();
 
         const params = new URLSearchParams(location.search);
-        const nextPath = params.get('next') || '/';
+        const nextPath = params.get('next') || '/explore';
 
         const login = await AuthService.makeRequest({ 
             urlExtension: 'token/obtain/', 
@@ -86,7 +86,7 @@ export const AuthProvider = ({ children }) => {
         e.preventDefault();
 
         const params = new URLSearchParams(location.search);
-        const next = params.get('next') || '/';
+        const next = params.get('next') || '/explore';
 
         const signup = await AuthService.makeRequest({ 
             urlExtension: 'user/create/', 

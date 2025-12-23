@@ -141,8 +141,7 @@ export default function ExploreMap({ parks, searchMessage, filterMessage, filter
                             >
                                 <Popup className="popup-container">
                                     <Link
-                                        to={`${park.fullName}/${park.parkCode}`}
-                                        onClick={() => sessionStorage.setItem('currentPark', JSON.stringify(park))}
+                                        to={park.parkCode}
                                     >
                                         <div className="popup-img-container">
                                             <ManualSlideshow images={park.images} />

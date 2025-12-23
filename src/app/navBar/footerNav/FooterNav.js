@@ -7,7 +7,7 @@ export default function FooterNav({ isLoggedIn, authLoading, handleLogout, userN
 
     const location = useLocation();
     const [navPromptTarget, setNavPromptTarget] = useState(null);
-    const [parkGuideOpen, setParkGuideOpen] = useState(false);
+    const isActive = (path) => location.pathname.startsWith(path);
 
     const skeletonButtons = [1, 2, 3, 4, 5].map((_, i) => (
         <div key={i} className="skeleton-nav-button" aria-hidden="true">
@@ -35,16 +35,16 @@ export default function FooterNav({ isLoggedIn, authLoading, handleLogout, userN
             <div className='footer-nav'>
                 {isLoggedIn ? (
                     <>
-                        <Link className={`footer-nav-link ${location.pathname === '/explore' ? 'active' : ''}`} to={'/explore'}>
+                        <Link className={`footer-nav-link ${isActive('/explore') ? 'active' : ''}` } to={'/explore'}>
                             <i className="fa-solid fa-magnifying-glass"></i>
                             <span>Explore</span>
                         </Link>
-                        <Link className={`footer-nav-link ${location.pathname === '/user/favorites' ? 'active' : ''}`} to={'/user/favorites'}>
+                        <Link className={`footer-nav-link ${isActive('/user/favorites') ? 'active' : ''}`} to={'/user/favorites'}>
                             <i className="fa-regular fa-bookmark"></i>
                             <span>Saved</span>
                         </Link>
                         <Link
-                            className={`footer-nav-link ${location.pathname === '/guide' ? 'active' : ''} parkguide-btn`}
+                            className={`footer-nav-link ${isActive('/guide') ? 'active' : ''} parkguide-btn`}
                             to={'/guide'}
                             aria-label="Open ParkGuide"
                         >
@@ -53,12 +53,12 @@ export default function FooterNav({ isLoggedIn, authLoading, handleLogout, userN
                             </div>
                             <span>Guide<sup>AI</sup></span>
                         </Link>
-                        <Link className={`footer-nav-link ${location.pathname === '/user/visited' ? 'active' : ''}`} to={'/user/visited'}>
+                        <Link className={`footer-nav-link ${isActive('/user/visited') ? 'active' : ''}`} to={'/user/visited'}>
                             <i className="fa-regular fa-circle-check"></i>
                             <span>Visited</span>
                         </Link>
                         <button
-                            className={`footer-nav-menu-toggler footer-nav-link ${location.pathname === '/user' || location.pathname === '/about' ? 'active' : ''}`}
+                            className={`footer-nav-menu-toggler footer-nav-link ${isActive('/user') || isActive('') ? 'about' : ''}`}
                             type='button'
                             onClick={() => setUserNavOpen(prev => !prev)}
                             aria-label="Toggle more menu options"
@@ -69,7 +69,7 @@ export default function FooterNav({ isLoggedIn, authLoading, handleLogout, userN
                     </>
                 ) : (
                     <>
-                        <Link className={`footer-nav-link ${location.pathname === '/explore' ? 'active' : ''}`} to={'/explore'}>
+                        <Link className={`footer-nav-link ${isActive('/explore') ? 'active' : ''}`} to={'/explore'}>
                             <i className="fa-solid fa-magnifying-glass"></i>
                             <span>Explore</span>
                         </Link>
@@ -84,7 +84,7 @@ export default function FooterNav({ isLoggedIn, authLoading, handleLogout, userN
                             <span>Saved</span>
                         </button>
                         <Link
-                            className={`footer-nav-link ${location.pathname === '/guide' ? 'active' : ''} parkguide-btn`}
+                            className={`footer-nav-link ${isActive('/guide') ? 'active' : ''} parkguide-btn`}
                             to={'/guide'}
                             aria-label="Open ParkGuide"
                         >
@@ -105,7 +105,7 @@ export default function FooterNav({ isLoggedIn, authLoading, handleLogout, userN
                         </button>
 
                         <button
-                            className={`footer-nav-menu-toggler footer-nav-link ${location.pathname === '/user/login' || location.pathname === '/user/signup' || location.pathname === '/about' ? 'active' : ''}`}
+                            className={`footer-nav-menu-toggler footer-nav-link ${isActive('/user/login') || isActive('/user/signup') || isActive('/about') ? 'active' : ''}`}
                             type='button'
                             onClick={() => {
                                 setNavPromptTarget('more');

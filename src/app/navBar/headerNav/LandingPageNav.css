@@ -1,0 +1,80 @@
+.landing-page-nav-container {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    background: transparent;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+}
+
+@media (min-width: 576px) {
+  .landing-page-nav-container {
+    padding: 1rem 2rem;
+  }
+}
+
+.landing-page-nav {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    align-items: center;
+}
+
+.landing-page-nav-logo img {
+    height: 50px;
+}
+
+.landing-page-nav-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.landing-page-login-btn {
+    padding: 0.5rem 1rem;
+    background-color: transparent;
+    color: white;
+    border: 2px solid var(--neutral-xlight);
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.95rem;
+    transition: 
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.landing-page-login-btn:hover {
+    color: black;
+    background-color: var(--neutral-xlight);
+}
+
+.landing-page-welcome {
+    font-weight: 500;
+    font-size: 1rem;
+    color: #fff;
+}
+
+/* Skeleton loader */
+.landing-page-skeleton {
+    width: 80px;
+    height: 36px;
+    border-radius: 18px;
+    background: linear-gradient(90deg, #ccc 25%, #e0e0e0 50%, #ccc 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}

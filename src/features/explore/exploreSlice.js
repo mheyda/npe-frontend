@@ -22,6 +22,24 @@ export const fetchParks = createAsyncThunk('parks/fetchAllParks', async (options
 
 })
 
+export const syncExploreState = createAsyncThunk(
+  'explore/syncExploreState',
+  async ({ filter, query, sort, setSearchParams }, { getState }) => {
+    // Build URL params
+    const params = {};
+    if (filter.stateCodes.length > 0) params.states = filter.stateCodes.join(',');
+    if (filter.designations.length > 0) params.designations = filter.designations.join(',');
+    if (query) params.q = query;
+    if (sort && sort !== 'Alphabetical (A-Z)') params.sort = sort;
+
+    // Sync URL
+    setSearchParams(params, { replace: true });
+
+    // Return updated state (optional)
+    return { filter, query, sort };
+  }
+);
+
 export const exploreSlice = createSlice({
   name: 'explore',
   initialState: {
@@ -35,11 +53,19 @@ export const exploreSlice = createSlice({
       stateCodes: [],
     },
     query: '',
-    view: sessionStorage.getItem('preferredView') || 'list',
+    view: sessionStorage.getItem('preferredView') || 'map',
     parksStatus: 'idle',
     error: null,
   },
   reducers: {
+    initializeExplore: (state, action) => {
+      const { filter, query, sort } = action.payload;
+      if (filter) state.filter = filter;
+      if (query !== undefined) state.query = query;
+      if (sort) state.sort = sort;
+      state.listParks = [];
+      state.mapParks = [];
+    },
     setFilter: (state, action) => {
       state.filter = action.payload;
     },
@@ -54,6 +80,7 @@ export const exploreSlice = createSlice({
       sessionStorage.setItem('preferredView', action.payload.view);
     },
     filterParks: (state) => {
+      if (!state.allParks.length) return;
       const allParks = state.allParks;
 
       let filteredMapParks = [...allParks];
@@ -165,10 +192,16 @@ export const exploreSlice = createSlice({
         state.parksStatus = 'failed';
         state.error = action.error.message;
       })
+      .addCase(syncExploreState.fulfilled, (state, action) => {
+        const { filter, query, sort } = action.payload;
+        state.filter = filter;
+        state.query = query;
+        state.sort = sort;
+      });
   },
 });
 
-export const { setFilter, setSort, setQuery, setView, filterParks, getNextParks } = exploreSlice.actions;
+export const { initializeExplore, setFilter, setSort, setQuery, setView, filterParks, getNextParks } = exploreSlice.actions;
 
 export const selectAllParks = (state) => state.explore.allParks;
 export const selectParksStatus = (state) => state.explore.parksStatus;

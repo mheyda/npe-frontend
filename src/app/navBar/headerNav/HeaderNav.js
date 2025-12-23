@@ -8,12 +8,11 @@ import './HeaderNav.css';
 export default function HeaderNav({ isLoggedIn, authLoading, handleLogout, userNavOpen, setUserNavOpen }) {
 
     const location = useLocation();
-    const currentPath = location.pathname;
     const menuRef = useRef();
     const toggleButtonRef = useRef();
     const [navPromptTarget, setNavPromptTarget] = useState(null);
 
-    const isActive = (path) => currentPath === path;
+    const isActive = (path) => location.pathname.startsWith(path);
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -41,6 +40,10 @@ export default function HeaderNav({ isLoggedIn, authLoading, handleLogout, userN
         };
     }, [userNavOpen, setUserNavOpen]);
 
+    if (location.pathname === '/') {
+        return
+    }
+    
     return (
         <nav className='header-nav-container'>
             <div className='header-nav'>

@@ -1,6 +1,9 @@
 import ExploreMap from './exploreMap/ExploreMap.js';
 import ExploreTiles from './exploreList/ExploreTiles.js';
 import { 
+    syncExploreState,
+    initializeExplore, 
+    filterParks,
     selectListParks, 
     selectMapParks, 
     selectError, 
@@ -14,7 +17,7 @@ import ViewToggler from './ViewToggler.js';
 import FilterPage from './exploreFilter/FilterPage.js';
 import { useEffect, useState } from 'react';
 import './Explore.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { selectToggleStatus as selectFavoritesToggleStatus, setToggleStatus as setFavoritesToggleStatus } from '../lists/favorites/favoritesSlice.js';
 import { selectToggleStatus as selectVisitedToggleStatus, setToggleStatus as setVisitedToggleStatus } from '../lists/visited/visitedSlice.js';
 import Loader from '../../common/loader/Loader.js';
@@ -25,6 +28,7 @@ const DEFAULT_SORT = 'Alphabetical (A-Z)';
 export default function Explore() {
     
     const [filtersOpen, setFiltersOpen] = useState(false);
+    const [hydrated, setHydrated] = useState(false);
     const listParks = useSelector(selectListParks);
     const mapParks = useSelector(selectMapParks);
     const view = useSelector(selectView);
@@ -37,6 +41,7 @@ export default function Explore() {
     const visitedToggleStatus = useSelector(selectVisitedToggleStatus);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
 
     // Get number of filters and sorts currently applied
     const sortCount = (sort !== DEFAULT_SORT ? 1 : 0);
@@ -64,6 +69,41 @@ export default function Explore() {
             dispatch(setVisitedToggleStatus('idle'));
         }
     }, [visitedToggleStatus, navigate, dispatch]);
+
+    useEffect(() => {
+        // Store current URL with filters whenever Explore renders
+        sessionStorage.setItem('lastExploreURL', window.location.pathname + window.location.search);
+    }, [searchParams]);
+
+    useEffect(() => {
+        // Hydrate Redux state from URL
+        const statesParam = searchParams.get('states');
+        const designationsParam = searchParams.get('designations');
+        const queryParam = searchParams.get('q');
+        const sortParam = searchParams.get('sort');
+
+        dispatch(initializeExplore({
+            filter: {
+                stateCodes: statesParam ? statesParam.split(',') : [],
+                designations: designationsParam ? designationsParam.split(',') : [],
+            },
+            query: queryParam ?? '',
+            sort: sortParam ?? DEFAULT_SORT,
+        }));
+
+        dispatch(filterParks());
+        setHydrated(true);
+    }, [searchParams, dispatch]);
+
+    useEffect(() => {
+        if (hydrated) {
+            dispatch(syncExploreState({ filter, query, sort, setSearchParams }));
+        }
+    }, [filter, query, sort, hydrated, dispatch, setSearchParams]);
+
+    useEffect(() => {
+        dispatch(syncExploreState({ filter, query, sort, setSearchParams }));
+    }, [filter, query, sort, dispatch, setSearchParams]);
 
     useEffect(() => {
         if (view === 'map') {

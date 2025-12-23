@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import getStateFullName from '../../../utilityFunctions/getStateFullName.js';
 import ManualSlideshow from '../../../common/slideshow/ManualSlideshow.js';
@@ -8,20 +8,33 @@ import WeatherForecast from '../../weather/weatherForecast/WeatherForecast.js';
 import WeatherFormatToggler from '../../weather/WeatherFormatToggler.js';
 import { selectVisited, toggleVisited } from '../../lists/visited/visitedSlice';
 import { selectFavorites, toggleFavorite } from '../../lists/favorites/favoritesSlice';
+import { selectAllParks, selectParksStatus } from '../exploreSlice.js';
 import './ExplorePark.css';
+import Loader from '../../../common/loader/Loader.js';
 
 
 export default function ExplorePark() {
 
-    const navigate = useNavigate();
     const dispatch = useDispatch();
     const favorites = useSelector(selectFavorites);
     const visited = useSelector(selectVisited);
-    const park = JSON.parse(sessionStorage.getItem('currentPark'));
+    const allParks = useSelector(selectAllParks);
+    const parksStatus = useSelector(selectParksStatus);
+    const { parkCode } = useParams();
+    const [park, setPark] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         window.scrollTo({top: 0, left: 0, behavior: 'auto'});
     }, [])
+
+    useEffect(() => {
+        if (parksStatus === 'succeeded' && allParks.length > 0) {
+            const foundPark = allParks.find(p => p.parkCode === parkCode);
+            setPark(foundPark);
+            sessionStorage.setItem('currentPark', JSON.stringify({ name: foundPark.name }));
+        }
+    }, [allParks, parksStatus, parkCode]);
 
     const handleImageError = (e) => {
         e.target.src = require('../../../assets/images/plain-gray.webp')
@@ -34,203 +47,225 @@ export default function ExplorePark() {
         document.querySelectorAll('.park-nav-btn')[index].classList.add('active');
     }
 
-    return (
-        <>
-            <header className='park-header'>
-                <button className='park-back-btn' onClick={(e) => {e.preventDefault(); navigate(-1)}} >
-                    <span className="fa-stack">
-                        <i className="fa-solid fa-circle fa-stack-2x"></i>
-                        <i className="fa-solid fa-chevron-left fa-stack-1x"></i>
-                    </span>
-                </button>
-                <div className='park-header-title'>
-                    <h1>{park.name}</h1>
-                    <h1>{park.designation}</h1>
-                    <p>{park.addresses[0].city}, {park.addresses[0].stateCode}</p>
-                </div>
-                <img src={park.images[0].image_large} onError={handleImageError} alt={park.images[0].altText} />
-                <button 
-                    onClick={() => dispatch(toggleVisited({id: park.id}))} 
-                    className='park-toggle-visited'
-                    title={visited && visited.includes(park.id) ? "Unmark as visited" : "Mark as visited"}
-                >
-                    {visited && visited.includes(park.id) ?
-                    <span className="fa-stack">
-                        <i className="fa-solid fa-circle fa-stack-2x selected"></i>
-                        <i className="fa-solid fa-check fa-stack-1x selected"></i>
-                    </span> :
-                    <span className="fa-stack">
-                        <i className="fa-solid fa-circle fa-stack-2x"></i>
-                        <i className="fa-solid fa-check fa-stack-1x"></i>
-                    </span>}
-                </button>
-                <button 
-                    onClick={() => dispatch(toggleFavorite({id: park.id}))} 
-                    className='park-toggle-favorite'
-                    title={favorites && favorites.includes(park.id) ? "Unsave this park" : "Save this park"}
-                >
-                    {favorites && favorites.includes(park.id) ?
-                    <span className="fa-stack">
-                        <i className="fa-solid fa-circle fa-stack-2x selected"></i>
-                        <i className="fa-solid fa-bookmark fa-stack-1x selected"></i>
-                    </span> :
-                    <span className="fa-stack">
-                        <i className="fa-solid fa-circle fa-stack-2x"></i>
-                        <i className="fa-regular fa-bookmark fa-stack-1x"></i>
-                    </span>}
-                </button>
-            </header>
-            <nav className='park-nav'>
-                <button className='park-nav-btn active' onClick={() => setActiveSection(0)}><i className="fa-solid fa-file-lines"></i>Overview</button>
-                <button className='park-nav-btn' onClick={() => setActiveSection(1)}><i className="fa-solid fa-person-biking"></i>Things to Do</button>
-                <button className='park-nav-btn' onClick={() => setActiveSection(2)}><i className="fa-solid fa-ticket"></i>Fees</button>
-                <button className='park-nav-btn' onClick={() => setActiveSection(3)}><i className="fa-solid fa-sun"></i>Weather</button>
-                <button className='park-nav-btn' onClick={() => setActiveSection(4)}><i className="fa-solid fa-clock"></i>Hours</button>
-                <button className='park-nav-btn' onClick={() => setActiveSection(5)}><i className="fa-solid fa-pencil"></i>Topics</button>
-            </nav>
-            <main className='park-container'>
-                <section className='park-section park-overview active'>
-                    <h2 className='park-section-title'>Overview</h2>
-                    <p className='park-section-paragraph'>&emsp;&emsp;{park.description}</p>
-                    <p className='park-section-paragraph'><strong>Location: </strong>{park.states.split(',').map(state => getStateFullName(state)).join(', ')}</p>
-                    <div className='park-img-container'>
-                        <div className='park-img'>
-                            <ManualSlideshow images={park.images} />
-                        </div>
-                    </div>
-                </section>
-                <section className='park-section'>
-                    <h2 className='park-section-title'>Things to Do</h2>
-                    {park.activities && park.activities.length > 0 ? (
-                        <ul className='activities-list'>
-                            {park.activities.map((activity, index) => {
-                                return <li className='activity-item' key={index}>{activity.name}</li>
-                            })}
-                        </ul>
-                    ) : (
-                        <p>This park does not currently list any activities.</p>
-                    )}
-                </section>
-                <section className='park-section'>
-                    <h2 className='park-section-title'>Tickets & Fees</h2>
+    const handleBack = (e) => {
+        e.preventDefault();
 
-                    {park.entranceFees && park.entranceFees.length > 0 ? (
-                        <ul>
-                            {park.entranceFees.map((fee, index) => {
-                                let { title, cost } = fee;
-                                if (cost === '0.00') {
-                                    if (title.toLowerCase().includes('free')) {
-                                        cost = '';
-                                    }
-                                    else {
-                                        cost = ' (FREE)';
-                                    }
-                                } else {
-                                    cost = ': $' + cost;
-                                }
-                                return <li key={index}>{`${title}${cost}`}</li>
-                            })}
-                        </ul>
-                    ) : (
-                        <p>This park does not currently list any entrance fees.</p>
-                    )}
-                </section>
-                <section className='park-section'>
-                    <h2 className='park-section-title'>Weather <WeatherFormatToggler /></h2>
-                    <div className='park-weather'>
-                        <div className='weather-general-and-current'>
-                            <div className='weather-general-container'>
-                                <h3>General</h3>
-                                <p className='weather-general-content'>&emsp;&emsp;{park.weatherInfo}</p>
-                            </div>
-                            <WeatherCurrent lat={park.latitude} lng={park.longitude} />
-                        </div>
-                        <WeatherForecast lat={park.latitude} lng={park.longitude} />
+        const hasHistory = window.history.state && window.history.state.idx > 0;
+        const lastExploreURL = sessionStorage.getItem('lastExploreURL') || '/explore';
+
+        if (hasHistory && document.referrer.includes(window.location.origin) && document.referrer.includes('/explore')) {
+            navigate(-1);
+        } else {
+            navigate(lastExploreURL);
+        }
+    };
+
+    if (parksStatus === 'idle' || parksStatus === 'loading') return <Loader />;
+    if (parksStatus === 'failed') return <p>Failed to load parks. Please try again later.</p>;
+
+    if (park) {
+        return (
+            <>
+                <header className='park-header'>
+                    <button className='park-back-btn' onClick={handleBack} >
+                        <span className="fa-stack">
+                            <i className="fa-solid fa-circle fa-stack-2x"></i>
+                            <i className="fa-solid fa-chevron-left fa-stack-1x"></i>
+                        </span>
+                    </button>
+                    <div className='park-header-title'>
+                        <h1>{park.name}</h1>
+                        <h1>{park.designation}</h1>
+                        <p>{park.addresses[0].city}, {park.addresses[0].stateCode}</p>
                     </div>
-                </section>
-                <section className='park-section'>
-                    <h2 className='park-section-title'>Hours</h2>
-                    {park.operatingHours.map((hours, index) => {
-                        if (hours.name === hours.description) {
-                            return (
-                                <div key={index} className='hours-section'>
-                                    <h3>{hours.name.toLowerCase().trim().split(/\s+/).map(word => word[0].toUpperCase() + word.substr(1)).join(' ')}</h3>
-                                    <div>
-                                        <p><strong>Sunday: </strong>{hours.standardHours[0].sunday}</p>
-                                        <p><strong>Monday: </strong>{hours.standardHours[0].monday}</p>
-                                        <p><strong>Tuesday: </strong>{hours.standardHours[0].tuesday}</p>
-                                        <p><strong>Wednesday: </strong>{hours.standardHours[0].wednesday}</p>
-                                        <p><strong>Thursday: </strong>{hours.standardHours[0].thursday}</p>
-                                        <p><strong>Friday: </strong>{hours.standardHours[0].friday}</p>
-                                        <p><strong>Saturday: </strong>{hours.standardHours[0].saturday}</p>
-                                    </div>
+                    <img src={park.images[0].image_large} onError={handleImageError} alt={park.images[0].altText} />
+                    <button 
+                        onClick={() => dispatch(toggleVisited({id: park.id}))} 
+                        className='park-toggle-visited'
+                        title={visited && visited.includes(park.id) ? "Unmark as visited" : "Mark as visited"}
+                    >
+                        {visited && visited.includes(park.id) ?
+                        <span className="fa-stack">
+                            <i className="fa-solid fa-circle fa-stack-2x selected"></i>
+                            <i className="fa-solid fa-check fa-stack-1x selected"></i>
+                        </span> :
+                        <span className="fa-stack">
+                            <i className="fa-solid fa-circle fa-stack-2x"></i>
+                            <i className="fa-solid fa-check fa-stack-1x"></i>
+                        </span>}
+                    </button>
+                    <button 
+                        onClick={() => dispatch(toggleFavorite({id: park.id}))} 
+                        className='park-toggle-favorite'
+                        title={favorites && favorites.includes(park.id) ? "Unsave this park" : "Save this park"}
+                    >
+                        {favorites && favorites.includes(park.id) ?
+                        <span className="fa-stack">
+                            <i className="fa-solid fa-circle fa-stack-2x selected"></i>
+                            <i className="fa-solid fa-bookmark fa-stack-1x selected"></i>
+                        </span> :
+                        <span className="fa-stack">
+                            <i className="fa-solid fa-circle fa-stack-2x"></i>
+                            <i className="fa-regular fa-bookmark fa-stack-1x"></i>
+                        </span>}
+                    </button>
+                </header>
+                <nav className='park-nav'>
+                    <button className='park-nav-btn active' onClick={() => setActiveSection(0)}><i className="fa-solid fa-file-lines"></i>Overview</button>
+                    <button className='park-nav-btn' onClick={() => setActiveSection(1)}><i className="fa-solid fa-person-biking"></i>Things to Do</button>
+                    <button className='park-nav-btn' onClick={() => setActiveSection(2)}><i className="fa-solid fa-ticket"></i>Fees</button>
+                    <button className='park-nav-btn' onClick={() => setActiveSection(3)}><i className="fa-solid fa-sun"></i>Weather</button>
+                    <button className='park-nav-btn' onClick={() => setActiveSection(4)}><i className="fa-solid fa-clock"></i>Hours</button>
+                    <button className='park-nav-btn' onClick={() => setActiveSection(5)}><i className="fa-solid fa-pencil"></i>Topics</button>
+                </nav>
+                <main className='park-container'>
+                    <section className='park-section park-overview active'>
+                        <h2 className='park-section-title'>Overview</h2>
+                        <p className='park-section-paragraph'>&emsp;&emsp;{park.description}</p>
+                        <p className='park-section-paragraph'><strong>Location: </strong>{park.states.split(',').map(state => getStateFullName(state)).join(', ')}</p>
+                        <div className='park-img-container'>
+                            <div className='park-img'>
+                                <ManualSlideshow images={park.images} />
+                            </div>
+                        </div>
+                    </section>
+                    <section className='park-section'>
+                        <h2 className='park-section-title'>Things to Do</h2>
+                        {park.activities && park.activities.length > 0 ? (
+                            <ul className='activities-list'>
+                                {park.activities.map((activity, index) => {
+                                    return <li className='activity-item' key={index}>{activity.name}</li>
+                                })}
+                            </ul>
+                        ) : (
+                            <p>This park does not currently list any activities.</p>
+                        )}
+                    </section>
+                    <section className='park-section'>
+                        <h2 className='park-section-title'>Tickets & Fees</h2>
+
+                        {park.entranceFees && park.entranceFees.length > 0 ? (
+                            <ul>
+                                {park.entranceFees.map((fee, index) => {
+                                    let { title, cost } = fee;
+                                    if (cost === '0.00') {
+                                        if (title.toLowerCase().includes('free')) {
+                                            cost = '';
+                                        }
+                                        else {
+                                            cost = ' (FREE)';
+                                        }
+                                    } else {
+                                        cost = ': $' + cost;
+                                    }
+                                    return <li key={index}>{`${title}${cost}`}</li>
+                                })}
+                            </ul>
+                        ) : (
+                            <p>This park does not currently list any entrance fees.</p>
+                        )}
+                    </section>
+                    <section className='park-section'>
+                        <h2 className='park-section-title'>Weather <WeatherFormatToggler /></h2>
+                        <div className='park-weather'>
+                            <div className='weather-general-and-current'>
+                                <div className='weather-general-container'>
+                                    <h3>General</h3>
+                                    <p className='weather-general-content'>&emsp;&emsp;{park.weatherInfo}</p>
                                 </div>
-                            );
-                        } else {
-                            return (
-                                <div key={index} className='hours-section'>
-                                    <h3>{hours.name.toLowerCase().trim().split(/\s+/).map(word => word[0].toUpperCase() + word.substr(1)).join(' ')}</h3>
-                                    <p className='park-section-paragraph'>{hours.description}</p>
-                                    <div>
-                                        <p><strong>Sunday: </strong>{hours.standardHours[0].sunday}</p>
-                                        <p><strong>Monday: </strong>{hours.standardHours[0].monday}</p>
-                                        <p><strong>Tuesday: </strong>{hours.standardHours[0].tuesday}</p>
-                                        <p><strong>Wednesday: </strong>{hours.standardHours[0].wednesday}</p>
-                                        <p><strong>Thursday: </strong>{hours.standardHours[0].thursday}</p>
-                                        <p><strong>Friday: </strong>{hours.standardHours[0].friday}</p>
-                                        <p><strong>Saturday: </strong>{hours.standardHours[0].saturday}</p>
-                                    </div>
-                                </div>
-                            );
-                        }
-                    })}
-                </section>
-                <section className='park-section'>
-                    <h2 className='park-section-title'>Topics</h2>
-                    <ul className='activities-list'>
-                        {park.topics.map((topic, index) => {
-                            return <li className='activity-item' key={index}>{topic.name}</li>
-                        })}
-                    </ul>
-                </section>
-            </main>
-            <footer className='park-footer'>
-                <main>
-                    <h3>Contact</h3>
-                    <br></br>
-                    <div className='park-addresses'>
-                        {park.addresses.map((address, index) => {
-                            if (address.type.toLowerCase() === 'physical') {
+                                <WeatherCurrent lat={park.latitude} lng={park.longitude} />
+                            </div>
+                            <WeatherForecast lat={park.latitude} lng={park.longitude} />
+                        </div>
+                    </section>
+                    <section className='park-section'>
+                        <h2 className='park-section-title'>Hours</h2>
+                        {park.operatingHours.map((hours, index) => {
+                            if (hours.name === hours.description) {
                                 return (
-                                    <div key={index} className='park-physical-address'>
-                                        <p><strong>Physical Address</strong></p>
-                                        <p>{address.line1}</p>
-                                        <p>{address.line2}</p>
-                                        <p>{address.line3}</p>
-                                        <p>{address.city}, {address.stateCode} {address.postalCode}</p>
+                                    <div key={index} className='hours-section'>
+                                        <h3>{hours.name.toLowerCase().trim().split(/\s+/).map(word => word[0].toUpperCase() + word.substr(1)).join(' ')}</h3>
+                                        <div>
+                                            <p><strong>Sunday: </strong>{hours.standardHours[0].sunday}</p>
+                                            <p><strong>Monday: </strong>{hours.standardHours[0].monday}</p>
+                                            <p><strong>Tuesday: </strong>{hours.standardHours[0].tuesday}</p>
+                                            <p><strong>Wednesday: </strong>{hours.standardHours[0].wednesday}</p>
+                                            <p><strong>Thursday: </strong>{hours.standardHours[0].thursday}</p>
+                                            <p><strong>Friday: </strong>{hours.standardHours[0].friday}</p>
+                                            <p><strong>Saturday: </strong>{hours.standardHours[0].saturday}</p>
+                                        </div>
                                     </div>
                                 );
                             } else {
                                 return (
-                                    <div key={index} className='park-mailing-address'>
-                                        <p><strong>Mailing Address</strong></p>
-                                        <p>{address.line1}</p>
-                                        <p>{address.line2}</p>
-                                        <p>{address.line3}</p>
-                                        <p>{address.city}, {address.stateCode} {address.postalCode}</p>
+                                    <div key={index} className='hours-section'>
+                                        <h3>{hours.name.toLowerCase().trim().split(/\s+/).map(word => word[0].toUpperCase() + word.substr(1)).join(' ')}</h3>
+                                        <p className='park-section-paragraph'>{hours.description}</p>
+                                        <div>
+                                            <p><strong>Sunday: </strong>{hours.standardHours[0].sunday}</p>
+                                            <p><strong>Monday: </strong>{hours.standardHours[0].monday}</p>
+                                            <p><strong>Tuesday: </strong>{hours.standardHours[0].tuesday}</p>
+                                            <p><strong>Wednesday: </strong>{hours.standardHours[0].wednesday}</p>
+                                            <p><strong>Thursday: </strong>{hours.standardHours[0].thursday}</p>
+                                            <p><strong>Friday: </strong>{hours.standardHours[0].friday}</p>
+                                            <p><strong>Saturday: </strong>{hours.standardHours[0].saturday}</p>
+                                        </div>
                                     </div>
                                 );
                             }
                         })}
-                        <div className='park-contact-info'>
-                            <p><strong>Phone: </strong></p>
-                            <p>{park.contacts.phoneNumbers[0].phoneNumber} ({park.contacts.phoneNumbers[0].type})</p>
-                            <br></br>
-                            <strong><a target="_blank" rel="noreferrer" href={park.url}>Official Website <i className="fa-solid fa-up-right-from-square"></i></a></strong>
-                        </div>
-                    </div>
+                    </section>
+                    <section className='park-section'>
+                        <h2 className='park-section-title'>Topics</h2>
+                        <ul className='activities-list'>
+                            {park.topics.map((topic, index) => {
+                                return <li className='activity-item' key={index}>{topic.name}</li>
+                            })}
+                        </ul>
+                    </section>
                 </main>
-            </footer>
-        </>
-    );
+                <footer className='park-footer'>
+                    <main>
+                        <h3>Contact</h3>
+                        <br></br>
+                        <div className='park-addresses'>
+                            {park.addresses.map((address, index) => {
+                                if (address.type.toLowerCase() === 'physical') {
+                                    return (
+                                        <div key={index} className='park-physical-address'>
+                                            <p><strong>Physical Address</strong></p>
+                                            <p>{address.line1}</p>
+                                            <p>{address.line2}</p>
+                                            <p>{address.line3}</p>
+                                            <p>{address.city}, {address.stateCode} {address.postalCode}</p>
+                                        </div>
+                                    );
+                                } else {
+                                    return (
+                                        <div key={index} className='park-mailing-address'>
+                                            <p><strong>Mailing Address</strong></p>
+                                            <p>{address.line1}</p>
+                                            <p>{address.line2}</p>
+                                            <p>{address.line3}</p>
+                                            <p>{address.city}, {address.stateCode} {address.postalCode}</p>
+                                        </div>
+                                    );
+                                }
+                            })}
+                            <div className='park-contact-info'>
+                                {park.contacts.phoneNumbers[0] && 
+                                    <>
+                                        <p><strong>Phone: </strong></p>
+                                        <p>{park.contacts.phoneNumbers[0].phoneNumber} ({park.contacts.phoneNumbers[0].type})</p>
+                                        <br></br>
+                                    </>
+                                }
+                                <strong><a target="_blank" rel="noreferrer" href={park.url}>Official Website <i className="fa-solid fa-up-right-from-square"></i></a></strong>
+                            </div>
+                        </div>
+                    </main>
+                </footer>
+            </>
+        );
+    }
 }
