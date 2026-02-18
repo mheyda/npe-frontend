@@ -18,9 +18,8 @@ export default function SearchBar() {
 
     const handleSearch = (e) => {
         e.preventDefault();
-        navigate('/explore');
-        const query = e.target.queryTerm.value;
-        dispatch(setQuery(query));
+        const searchTerm = e.target.queryTerm.value;
+        navigate(`/explore?q=${encodeURIComponent(searchTerm)}`);
     }
 
     return (
