@@ -5,8 +5,8 @@ const About = () => {
 
 
   return (
-    <div>
-        About
+    <div className="about">
+        Coming soon...
     </div>
   );
 };
