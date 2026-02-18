@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }) => {
         });
 
         if (login.error) {
-            setUsernameError(login.data.detail);
+            setUsernameError(login.data?.detail || "Invalid username or password");
             setPassword('');
         } else {
             sessionStorage.setItem('tokens', JSON.stringify(login.data));
