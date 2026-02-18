@@ -6,8 +6,8 @@ import ManualSlideshow from '../../../common/slideshow/ManualSlideshow.js';
 import WeatherCurrent from '../../weather/weatherCurrent/WeatherCurrent.js';
 import WeatherForecast from '../../weather/weatherForecast/WeatherForecast.js';
 import WeatherFormatToggler from '../../weather/WeatherFormatToggler.js';
-import { selectVisited, toggleVisited } from '../../lists/visited/visitedSlice';
-import { selectFavorites, toggleFavorite } from '../../lists/favorites/favoritesSlice';
+import { selectVisited, toggleVisited, selectToggleStatus as selectVisitedToggleStatus, setToggleStatus as setVisitedToggleStatus } from '../../lists/visited/visitedSlice';
+import { selectFavorites, toggleFavorite, selectToggleStatus as selectFavoritesToggleStatus, setToggleStatus as setFavoritesToggleStatus } from '../../lists/favorites/favoritesSlice';
 import { selectAllParks, selectParksStatus } from '../exploreSlice.js';
 import './ExplorePark.css';
 import Loader from '../../../common/loader/Loader.js';
@@ -20,6 +20,8 @@ export default function ExplorePark() {
     const visited = useSelector(selectVisited);
     const allParks = useSelector(selectAllParks);
     const parksStatus = useSelector(selectParksStatus);
+    const favoritesToggleStatus = useSelector(selectFavoritesToggleStatus);
+    const visitedToggleStatus = useSelector(selectVisitedToggleStatus);
     const { parkCode } = useParams();
     const [park, setPark] = useState(null);
     const navigate = useNavigate();
@@ -35,6 +37,22 @@ export default function ExplorePark() {
             sessionStorage.setItem('currentPark', JSON.stringify({ name: foundPark.name }));
         }
     }, [allParks, parksStatus, parkCode]);
+
+    // If there was an error toggling a saved park, redirect to login page
+    useEffect(() => {
+        if (favoritesToggleStatus === 'failed') {
+            navigate('/user/login/');
+            dispatch(setFavoritesToggleStatus('idle'));
+        }
+    }, [favoritesToggleStatus, navigate, dispatch])
+
+    // If there was an error toggling a visited park, redirect to login page
+    useEffect(() => {
+        if (visitedToggleStatus === 'failed') {
+            navigate('/user/login/');
+            dispatch(setVisitedToggleStatus('idle'));
+        }
+    }, [visitedToggleStatus, navigate, dispatch]);
 
     const handleImageError = (e) => {
         e.target.src = require('../../../assets/images/plain-gray.webp')
