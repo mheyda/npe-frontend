@@ -117,7 +117,7 @@ const LandingPage = () => {
 					<div className="popular-wrapper">
 						<div className="popular-scroll">
 							{popularParks.map((item, idx) => (
-								<Link key={idx} className="popular-item" to={item.destination}>
+								<Link key={idx} className="popular-item" to={item.destination} state={{ fromIndex: true }}>
 									<div className="popular-image-wrapper">
 										<img src={item.img} alt={item.label} />
 										<div className="popular-overlay" />

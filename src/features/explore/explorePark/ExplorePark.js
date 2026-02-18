@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import getStateFullName from '../../../utilityFunctions/getStateFullName.js';
 import ManualSlideshow from '../../../common/slideshow/ManualSlideshow.js';
@@ -25,6 +25,7 @@ export default function ExplorePark() {
     const { parkCode } = useParams();
     const [park, setPark] = useState(null);
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         window.scrollTo({top: 0, left: 0, behavior: 'auto'});
@@ -67,14 +68,16 @@ export default function ExplorePark() {
 
     const handleBack = (e) => {
         e.preventDefault();
+        
+        const lastExploreURL = '/explore';
+        
+        const cameFromLandingPage = location.state?.fromIndex; // Check if user came from landing page
+        const isFirstPage = window.history.state?.idx === 0; // Check if user came from external link
 
-        const hasHistory = window.history.state && window.history.state.idx > 0;
-        const lastExploreURL = sessionStorage.getItem('lastExploreURL') || '/explore';
-
-        if (hasHistory && document.referrer.includes(window.location.origin) && document.referrer.includes('/explore')) {
-            navigate(-1);
+        if (cameFromLandingPage || isFirstPage) {
+            navigate(lastExploreURL); // Navigate to /explore rather than back to landing page
         } else {
-            navigate(lastExploreURL);
+            navigate(-1);
         }
     };
 
