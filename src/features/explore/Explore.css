@@ -1,3 +1,7 @@
+.explore-container {
+    padding-top: 0;
+}
+
 .explore-map-view {
     overflow: hidden;
     position: relative;
@@ -8,6 +12,12 @@
 .filter-bar {
     display: flex;
     align-items: top;
+    position: sticky;
+    top: 4rem;
+    z-index: 1;
+    padding: 1.25rem 1rem 0.75rem 1rem;
+    background-color: white;
+    margin: 0 -1rem;
 }
 
 .search-result-string {
@@ -22,6 +32,7 @@
     gap: 0.25rem;
     word-break: break-word;      /* Break up long words without spaces */
     overflow-wrap: break-word;
+    justify-content: center;
 }
 
 .search-result-string > div {
@@ -213,6 +224,17 @@
 }
 
 @media (min-width: 576px) {
+    .filter-bar {
+        /* display: flex;
+        align-items: top;
+        position: sticky; */
+        top: 5.5rem;
+        /* z-index: 1;
+        padding: 1.25rem 1rem 0.75rem 1rem;
+        background-color: white;
+        margin: 0 -1rem; */
+    }
+
     .explore-tiles {
         grid-template-columns: repeat(auto-fill, minmax(45%, 1fr));
     }
